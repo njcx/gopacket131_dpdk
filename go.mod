@@ -1,6 +1,6 @@
 module github.com/njcx/gopacket131_dpdk
 
-go 1.23.0
+go 1.19.0
 
 require (
 	github.com/vishvananda/netlink v1.1.0
