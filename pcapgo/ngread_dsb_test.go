@@ -2,7 +2,7 @@ package pcapgo
 
 import (
 	"fmt"
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 	"io"
 	"os"
 	"testing"
@@ -12,7 +12,7 @@ import (
 type BufferPacketSource struct {
 	index int
 	data  [][]byte
-	ci    []gopacket.CaptureInfo
+	ci    []gopacket131_dpdk.CaptureInfo
 }
 
 // TestNgReadDSB tests the readDecryptionSecretsBlock function.

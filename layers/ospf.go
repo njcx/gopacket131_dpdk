@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // OSPFType denotes what kind of OSPF type it is
@@ -481,7 +481,7 @@ func getLSAs(num uint32, data []byte) ([]LSA, error) {
 }
 
 // DecodeFromBytes decodes the given bytes into the OSPF layer.
-func (ospf *OSPFv2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (ospf *OSPFv2) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 24 {
 		return fmt.Errorf("Packet too smal for OSPF Version 2")
 	}
@@ -578,7 +578,7 @@ func (ospf *OSPFv2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) err
 }
 
 // DecodeFromBytes decodes the given bytes into the OSPF layer.
-func (ospf *OSPFv3) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (ospf *OSPFv3) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 
 	if len(data) < 16 {
 		return fmt.Errorf("Packet too smal for OSPF Version 3")
@@ -674,30 +674,30 @@ func (ospf *OSPFv3) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) err
 }
 
 // LayerType returns LayerTypeOSPF
-func (ospf *OSPFv2) LayerType() gopacket.LayerType {
+func (ospf *OSPFv2) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeOSPF
 }
-func (ospf *OSPFv3) LayerType() gopacket.LayerType {
+func (ospf *OSPFv3) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeOSPF
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (ospf *OSPFv2) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (ospf *OSPFv2) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
-func (ospf *OSPFv3) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (ospf *OSPFv3) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (ospf *OSPFv2) CanDecode() gopacket.LayerClass {
+func (ospf *OSPFv2) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeOSPF
 }
-func (ospf *OSPFv3) CanDecode() gopacket.LayerClass {
+func (ospf *OSPFv3) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeOSPF
 }
 
-func decodeOSPF(data []byte, p gopacket.PacketBuilder) error {
+func decodeOSPF(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if len(data) < 14 {
 		return fmt.Errorf("Packet too smal for OSPF")
 	}

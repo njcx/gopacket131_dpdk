@@ -10,7 +10,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 var (
@@ -45,7 +45,7 @@ func TestLCMDecode(t *testing.T) {
 func testShortLCM(t *testing.T) {
 	lcm := &LCM{}
 
-	err := lcm.DecodeFromBytes(shortPacket, gopacket.NilDecodeFeedback)
+	err := lcm.DecodeFromBytes(shortPacket, gopacket131_dpdk.NilDecodeFeedback)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -87,7 +87,7 @@ func testShortLCM(t *testing.T) {
 func testFragmentedLCM(t *testing.T) {
 	lcm := LCM{}
 
-	err := lcm.DecodeFromBytes(fragmentedPacket, gopacket.NilDecodeFeedback)
+	err := lcm.DecodeFromBytes(fragmentedPacket, gopacket131_dpdk.NilDecodeFeedback)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -149,7 +149,7 @@ func testFragmentedLCM(t *testing.T) {
 func testInvalidLCM(t *testing.T) {
 	lcm := LCM{}
 
-	err := lcm.DecodeFromBytes(invalidPacket, gopacket.NilDecodeFeedback)
+	err := lcm.DecodeFromBytes(invalidPacket, gopacket131_dpdk.NilDecodeFeedback)
 	if err == nil {
 		t.Fatal("Did not detect LCM decode error.")
 	}

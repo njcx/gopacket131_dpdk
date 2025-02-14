@@ -14,7 +14,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 //******************************************************************************
@@ -26,7 +26,7 @@ import (
 func checkNTP(desc string, t *testing.T, packetBytes []byte, pExpectedNTP *NTP) {
 
 	// Analyse the packet bytes, yielding a new packet object p.
-	p := gopacket.NewPacket(packetBytes, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(packetBytes, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Errorf("Failed to decode packet %s: %v", desc, p.ErrorLayer().Error())
 	}
@@ -36,7 +36,7 @@ func checkNTP(desc string, t *testing.T, packetBytes []byte, pExpectedNTP *NTP) 
 	//    Network Layer     = IPv4.
 	//    Transport Layer   = UDP.
 	//    Application Layer = NTP.
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet,
 		LayerTypeIPv4,
 		LayerTypeUDP,
@@ -53,8 +53,8 @@ func checkNTP(desc string, t *testing.T, packetBytes []byte, pExpectedNTP *NTP) 
 		t.Errorf("NTP packet processing failed for packet "+desc+
 			":\ngot  :\n%#v\n\nwant :\n%#v\n\n", pResultNTP, pExpectedNTP)
 	}
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{}
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{}
 	err := pResultNTP.SerializeTo(buf, opts)
 	if err != nil {
 		t.Error(err)
@@ -243,12 +243,12 @@ func TestNTPIsomorphism(t *testing.T) {
 		t.Error(err)
 	}
 	ntpLayer := &NTP{}
-	err = ntpLayer.DecodeFromBytes(NTPData, gopacket.NilDecodeFeedback)
+	err = ntpLayer.DecodeFromBytes(NTPData, gopacket131_dpdk.NilDecodeFeedback)
 	if err != nil {
 		t.Error(err)
 	}
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{}
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{}
 	err = ntpLayer.SerializeTo(buf, opts)
 	if err != nil {
 		t.Error(err)

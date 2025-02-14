@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Generator: python layers/test_creator.py --layerType=LayerTypePrismHeader --linkType=LinkTypePrismHeader --name=Prism%s ~/tmp/dump.pcap
@@ -58,11 +58,11 @@ var testPacketPrism = []byte{
 }
 
 func TestPacketPrism(t *testing.T) {
-	p := gopacket.NewPacket(testPacketPrism, LinkTypePrismHeader, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketPrism, LinkTypePrismHeader, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypePrismHeader, LayerTypeDot11, LayerTypeDot11MgmtProbeReq}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypePrismHeader, LayerTypeDot11, LayerTypeDot11MgmtProbeReq}, t)
 
 	if got, ok := p.Layer(LayerTypePrismHeader).(*PrismHeader); ok {
 		want := &PrismHeader{
@@ -115,6 +115,6 @@ func TestPacketPrism(t *testing.T) {
 
 func BenchmarkDecodePacketPrism(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketPrism, LinkTypePrismHeader, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketPrism, LinkTypePrismHeader, gopacket131_dpdk.NoCopy)
 	}
 }

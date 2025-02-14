@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const eapolErrFmt = "%s packet processing failed:\ngot  :\n%#v\n\nwant :\n%#v\n\n"
@@ -46,11 +46,11 @@ var testPacketEAPOLKey = []byte{
 }
 
 func TestPacketEAPOLKey(t *testing.T) {
-	p := gopacket.NewPacket(testPacketEAPOLKey, LayerTypeEAPOL, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketEAPOLKey, LayerTypeEAPOL, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEAPOL, LayerTypeEAPOLKey,
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEAPOL, LayerTypeEAPOLKey,
 		LayerTypeDot11InformationElement}, t)
 
 	{
@@ -118,6 +118,6 @@ func TestPacketEAPOLKey(t *testing.T) {
 
 func BenchmarkDecodePacketEAPOLKey(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketEAPOLKey, nil, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketEAPOLKey, nil, gopacket131_dpdk.NoCopy)
 	}
 }

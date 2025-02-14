@@ -11,7 +11,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // BFD Control Packet Format
@@ -295,7 +295,7 @@ func (d *BFD) Length() int {
 }
 
 // LayerType returns the layer type of the BFD object, which is LayerTypeBFD.
-func (d *BFD) LayerType() gopacket.LayerType {
+func (d *BFD) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeBFD
 }
 
@@ -306,7 +306,7 @@ func (d *BFD) LayerType() gopacket.LayerType {
 // If it fails, it returns an error (non nil).
 //
 // This function is employed in layertypes.go to register the BFD layer.
-func decodeBFD(data []byte, p gopacket.PacketBuilder) error {
+func decodeBFD(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 
 	// Attempt to decode the byte slice.
 	d := &BFD{}
@@ -329,7 +329,7 @@ func decodeBFD(data []byte, p gopacket.PacketBuilder) error {
 // Upon succeeds, it loads the BFD object with information about the packet
 // and returns nil.
 // Upon failure, it returns an error (non nil).
-func (d *BFD) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (d *BFD) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 
 	// If the data block is too short to be a BFD record, then return an error.
 	if len(data) < bfdMinimumRecordSizeInBytes {
@@ -400,9 +400,9 @@ func (d *BFD) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (d *BFD) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (d *BFD) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	data, err := b.PrependBytes(bfdMinimumRecordSizeInBytes)
 	if err != nil {
 		return err
@@ -459,15 +459,15 @@ func (d *BFD) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 // CanDecode returns a set of layers that BFD objects can decode.
 // As BFD objects can only decide the BFD layer, we can return just that layer.
 // Apparently a single layer type implements LayerClass.
-func (d *BFD) CanDecode() gopacket.LayerClass {
+func (d *BFD) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeBFD
 }
 
-// NextLayerType specifies the next layer that GoPacket should attempt to
+// NextLayerType specifies the next layer that gopacket131_dpdk should attempt to
 // analyse after this (BFD) layer. As BFD packets do not contain any payload
 // bytes, there are no further layers to analyse.
-func (d *BFD) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (d *BFD) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 // Payload returns an empty byte slice as BFD packets do not carry a payload

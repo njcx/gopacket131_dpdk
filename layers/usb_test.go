@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Generator python layers/test_creator.py --link_type USB --name USB dongle.pcap
@@ -34,11 +34,11 @@ var testPacketUSB0 = []byte{
 }
 
 func TestPacketUSB0(t *testing.T) {
-	p := gopacket.NewPacket(testPacketUSB0, LinkTypeLinuxUSB, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketUSB0, LinkTypeLinuxUSB, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeUSB, LayerTypeUSBInterrupt}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeUSB, LayerTypeUSBInterrupt}, t)
 
 	if got, ok := p.Layer(LayerTypeUSB).(*USB); ok {
 		want := &USB{
@@ -70,6 +70,6 @@ func TestPacketUSB0(t *testing.T) {
 }
 func BenchmarkDecodePacketUSB0(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketUSB0, LinkTypeLinuxUSB, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketUSB0, LinkTypeLinuxUSB, gopacket131_dpdk.NoCopy)
 	}
 }

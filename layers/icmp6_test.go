@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketICMPv6 is the packet:
@@ -32,11 +32,11 @@ var testPacketICMPv6 = []byte{
 }
 
 func TestPacketICMPv6(t *testing.T) {
-	p := gopacket.NewPacket(testPacketICMPv6, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketICMPv6, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeICMPv6, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeICMPv6, gopacket131_dpdk.LayerTypePayload}, t)
 	checkSerialization(p, t)
 
 	if got, ok := p.Layer(LayerTypeIPv6).(*IPv6); ok {

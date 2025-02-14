@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -13,8 +13,8 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // ErrNgVersionMismatch gets returned for unknown pcapng section versions. This can only happen if ReaderOptions.SkipUnknownVersion == false
@@ -250,7 +250,7 @@ func (r NgResolution) Exponent() uint8 {
 }
 
 // ToTimestampResolution converts an NgResolution to a gopaket.TimestampResolution
-func (r NgResolution) ToTimestampResolution() (ret gopacket.TimestampResolution) {
+func (r NgResolution) ToTimestampResolution() (ret gopacket131_dpdk.TimestampResolution) {
 	if r.Binary() {
 		ret.Base = 2
 	} else {
@@ -313,7 +313,7 @@ type NgInterface struct {
 }
 
 // Resolution returns the timestamp resolution of acquired timestamps before scaling to NanosecondTimestampResolution.
-func (i NgInterface) Resolution() gopacket.TimestampResolution {
+func (i NgInterface) Resolution() gopacket131_dpdk.TimestampResolution {
 	return i.TimestampResolution.ToTimestampResolution()
 }
 

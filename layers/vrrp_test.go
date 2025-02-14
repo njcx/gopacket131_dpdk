@@ -8,7 +8,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // vrrpPacketPriority100 is the packet:
@@ -26,11 +26,11 @@ var vrrpPacketPriority100 = []byte{
 }
 
 func TestVRRPPacketPacket0(t *testing.T) {
-	p := gopacket.NewPacket(vrrpPacketPriority100, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(vrrpPacketPriority100, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeVRRP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeVRRP}, t)
 
 	// Version=2 Type=VRRPv2 Advertisement VirtualRtrID=1 Priority=100
 	vrrp := p.Layer(LayerTypeVRRP).(*VRRPv2)
@@ -52,6 +52,6 @@ func TestVRRPPacketPacket0(t *testing.T) {
 }
 func BenchmarkDecodeVRRPPacket0(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(vrrpPacketPriority100, LayerTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(vrrpPacketPriority100, LayerTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }

@@ -30,14 +30,14 @@ package layers
 import (
   "fmt"
 
-  "github.com/gopacket/gopacket"
+  "github.com/njcx/gopacket131_dpdk"
 )
 
 `
 
 var funcsTmpl = template.Must(template.New("foo").Parse(`
 // Decoder calls {{.Name}}Metadata.DecodeWith's decoder.
-func (a {{.Name}}) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a {{.Name}}) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < {{.Num}} {
 		if metadata := {{.Name}}Metadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -58,7 +58,7 @@ func (a {{.Name}}) String() string {
 	return "Unknown{{.Name}}"
 }
 // LayerType returns {{.Name}}Metadata.LayerType.
-func (a {{.Name}}) LayerType() gopacket.LayerType {
+func (a {{.Name}}) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < {{.Num}} {
 		if metadata := {{.Name}}Metadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType

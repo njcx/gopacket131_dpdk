@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // LLC is the layer used for 802.2 Logical Link Control headers.
@@ -24,11 +24,11 @@ type LLC struct {
 	Control uint16
 }
 
-// LayerType returns gopacket.LayerTypeLLC.
-func (l *LLC) LayerType() gopacket.LayerType { return LayerTypeLLC }
+// LayerType returns gopacket131_dpdk.LayerTypeLLC.
+func (l *LLC) LayerType() gopacket131_dpdk.LayerType { return LayerTypeLLC }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (l *LLC) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (l *LLC) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 3 {
 		return errors.New("LLC header too small")
 	}
@@ -53,19 +53,19 @@ func (l *LLC) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (l *LLC) CanDecode() gopacket.LayerClass {
+func (l *LLC) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeLLC
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (l *LLC) NextLayerType() gopacket.LayerType {
+func (l *LLC) NextLayerType() gopacket131_dpdk.LayerType {
 	switch {
 	case l.DSAP == 0xAA && l.SSAP == 0xAA:
 		return LayerTypeSNAP
 	case l.DSAP == 0x42 && l.SSAP == 0x42:
 		return LayerTypeSTP
 	}
-	return gopacket.LayerTypeZero // Not implemented
+	return gopacket131_dpdk.LayerTypeZero // Not implemented
 }
 
 // SNAP is used inside LLC.  See
@@ -81,11 +81,11 @@ type SNAP struct {
 	Type               EthernetType
 }
 
-// LayerType returns gopacket.LayerTypeSNAP.
-func (s *SNAP) LayerType() gopacket.LayerType { return LayerTypeSNAP }
+// LayerType returns gopacket131_dpdk.LayerTypeSNAP.
+func (s *SNAP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSNAP }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (s *SNAP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (s *SNAP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 5 {
 		return errors.New("SNAP header too small")
 	}
@@ -96,17 +96,17 @@ func (s *SNAP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (s *SNAP) CanDecode() gopacket.LayerClass {
+func (s *SNAP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeSNAP
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (s *SNAP) NextLayerType() gopacket.LayerType {
+func (s *SNAP) NextLayerType() gopacket131_dpdk.LayerType {
 	// See BUG(gconnel) in decodeSNAP
 	return s.Type.LayerType()
 }
 
-func decodeLLC(data []byte, p gopacket.PacketBuilder) error {
+func decodeLLC(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	l := &LLC{}
 	err := l.DecodeFromBytes(data, p)
 	if err != nil {
@@ -116,7 +116,7 @@ func decodeLLC(data []byte, p gopacket.PacketBuilder) error {
 	return p.NextDecoder(l.NextLayerType())
 }
 
-func decodeSNAP(data []byte, p gopacket.PacketBuilder) error {
+func decodeSNAP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	s := &SNAP{}
 	err := s.DecodeFromBytes(data, p)
 	if err != nil {
@@ -130,9 +130,9 @@ func decodeSNAP(data []byte, p gopacket.PacketBuilder) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (l *LLC) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (l *LLC) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var igFlag, crFlag byte
 	var length int
 
@@ -178,9 +178,9 @@ func (l *LLC) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (s *SNAP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (s *SNAP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if buf, err := b.PrependBytes(5); err != nil {
 		return err
 	} else {

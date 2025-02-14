@@ -11,7 +11,7 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -46,10 +46,10 @@ type MDP struct {
 }
 
 // LayerType returns LayerTypeMDP.
-func (m *MDP) LayerType() gopacket.LayerType { return LayerTypeMDP }
+func (m *MDP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeMDP }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (m *MDP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *MDP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	var length int
 	if len(data) < 28 {
 		df.SetTruncated()
@@ -132,8 +132,8 @@ func (m *MDP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer
-func (m *MDP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer
+func (m *MDP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	// bytes, _ := b.PrependBytes(4)
 	// bytes[0] = m.Version
 	// bytes[1] = byte(m.Type)
@@ -142,16 +142,16 @@ func (m *MDP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (m *MDP) CanDecode() gopacket.LayerClass {
+func (m *MDP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeMDP
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (m *MDP) NextLayerType() gopacket.LayerType {
+func (m *MDP) NextLayerType() gopacket131_dpdk.LayerType {
 	return m.Type.LayerType()
 }
 
-func decodeMDP(data []byte, p gopacket.PacketBuilder) error {
+func decodeMDP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	m := &MDP{}
 	err := m.DecodeFromBytes(data, p)
 	if err != nil {

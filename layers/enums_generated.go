@@ -8,7 +8,7 @@ package layers
 import (
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func init() {
@@ -16,7 +16,7 @@ func init() {
 }
 
 // Decoder calls LinkTypeMetadata.DecodeWith's decoder.
-func (a LinkType) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a LinkType) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 277 {
 		if metadata := LinkTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -38,7 +38,7 @@ func (a LinkType) String() string {
 }
 
 // LayerType returns LinkTypeMetadata.LayerType.
-func (a LinkType) LayerType() gopacket.LayerType {
+func (a LinkType) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 277 {
 		if metadata := LinkTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -51,7 +51,7 @@ func (a LinkType) LayerType() gopacket.LayerType {
 var LinkTypeMetadata [277]EnumMetadata
 
 // Decoder calls EthernetTypeMetadata.DecodeWith's decoder.
-func (a EthernetType) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a EthernetType) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 65536 {
 		if metadata := EthernetTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -73,7 +73,7 @@ func (a EthernetType) String() string {
 }
 
 // LayerType returns EthernetTypeMetadata.LayerType.
-func (a EthernetType) LayerType() gopacket.LayerType {
+func (a EthernetType) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 65536 {
 		if metadata := EthernetTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -86,7 +86,7 @@ func (a EthernetType) LayerType() gopacket.LayerType {
 var EthernetTypeMetadata [65536]EnumMetadata
 
 // Decoder calls PPPTypeMetadata.DecodeWith's decoder.
-func (a PPPType) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a PPPType) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 65536 {
 		if metadata := PPPTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -108,7 +108,7 @@ func (a PPPType) String() string {
 }
 
 // LayerType returns PPPTypeMetadata.LayerType.
-func (a PPPType) LayerType() gopacket.LayerType {
+func (a PPPType) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 65536 {
 		if metadata := PPPTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -121,7 +121,7 @@ func (a PPPType) LayerType() gopacket.LayerType {
 var PPPTypeMetadata [65536]EnumMetadata
 
 // Decoder calls IPProtocolMetadata.DecodeWith's decoder.
-func (a IPProtocol) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a IPProtocol) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := IPProtocolMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -143,7 +143,7 @@ func (a IPProtocol) String() string {
 }
 
 // LayerType returns IPProtocolMetadata.LayerType.
-func (a IPProtocol) LayerType() gopacket.LayerType {
+func (a IPProtocol) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := IPProtocolMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -156,7 +156,7 @@ func (a IPProtocol) LayerType() gopacket.LayerType {
 var IPProtocolMetadata [256]EnumMetadata
 
 // Decoder calls SCTPChunkTypeMetadata.DecodeWith's decoder.
-func (a SCTPChunkType) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a SCTPChunkType) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := SCTPChunkTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -178,7 +178,7 @@ func (a SCTPChunkType) String() string {
 }
 
 // LayerType returns SCTPChunkTypeMetadata.LayerType.
-func (a SCTPChunkType) LayerType() gopacket.LayerType {
+func (a SCTPChunkType) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := SCTPChunkTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -191,7 +191,7 @@ func (a SCTPChunkType) LayerType() gopacket.LayerType {
 var SCTPChunkTypeMetadata [256]EnumMetadata
 
 // Decoder calls PPPoECodeMetadata.DecodeWith's decoder.
-func (a PPPoECode) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a PPPoECode) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := PPPoECodeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -213,7 +213,7 @@ func (a PPPoECode) String() string {
 }
 
 // LayerType returns PPPoECodeMetadata.LayerType.
-func (a PPPoECode) LayerType() gopacket.LayerType {
+func (a PPPoECode) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := PPPoECodeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -226,7 +226,7 @@ func (a PPPoECode) LayerType() gopacket.LayerType {
 var PPPoECodeMetadata [256]EnumMetadata
 
 // Decoder calls FDDIFrameControlMetadata.DecodeWith's decoder.
-func (a FDDIFrameControl) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a FDDIFrameControl) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := FDDIFrameControlMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -248,7 +248,7 @@ func (a FDDIFrameControl) String() string {
 }
 
 // LayerType returns FDDIFrameControlMetadata.LayerType.
-func (a FDDIFrameControl) LayerType() gopacket.LayerType {
+func (a FDDIFrameControl) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := FDDIFrameControlMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -261,7 +261,7 @@ func (a FDDIFrameControl) LayerType() gopacket.LayerType {
 var FDDIFrameControlMetadata [256]EnumMetadata
 
 // Decoder calls EAPOLTypeMetadata.DecodeWith's decoder.
-func (a EAPOLType) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a EAPOLType) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := EAPOLTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -283,7 +283,7 @@ func (a EAPOLType) String() string {
 }
 
 // LayerType returns EAPOLTypeMetadata.LayerType.
-func (a EAPOLType) LayerType() gopacket.LayerType {
+func (a EAPOLType) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := EAPOLTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -296,7 +296,7 @@ func (a EAPOLType) LayerType() gopacket.LayerType {
 var EAPOLTypeMetadata [256]EnumMetadata
 
 // Decoder calls ProtocolFamilyMetadata.DecodeWith's decoder.
-func (a ProtocolFamily) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a ProtocolFamily) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := ProtocolFamilyMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -318,7 +318,7 @@ func (a ProtocolFamily) String() string {
 }
 
 // LayerType returns ProtocolFamilyMetadata.LayerType.
-func (a ProtocolFamily) LayerType() gopacket.LayerType {
+func (a ProtocolFamily) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := ProtocolFamilyMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -331,7 +331,7 @@ func (a ProtocolFamily) LayerType() gopacket.LayerType {
 var ProtocolFamilyMetadata [256]EnumMetadata
 
 // Decoder calls Dot11TypeMetadata.DecodeWith's decoder.
-func (a Dot11Type) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a Dot11Type) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := Dot11TypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -353,7 +353,7 @@ func (a Dot11Type) String() string {
 }
 
 // LayerType returns Dot11TypeMetadata.LayerType.
-func (a Dot11Type) LayerType() gopacket.LayerType {
+func (a Dot11Type) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := Dot11TypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType
@@ -366,7 +366,7 @@ func (a Dot11Type) LayerType() gopacket.LayerType {
 var Dot11TypeMetadata [256]EnumMetadata
 
 // Decoder calls USBTransportTypeMetadata.DecodeWith's decoder.
-func (a USBTransportType) Decode(data []byte, p gopacket.PacketBuilder) error {
+func (a USBTransportType) Decode(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if int(a) < 256 {
 		if metadata := USBTransportTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.DecodeWith.Decode(data, p)
@@ -388,7 +388,7 @@ func (a USBTransportType) String() string {
 }
 
 // LayerType returns USBTransportTypeMetadata.LayerType.
-func (a USBTransportType) LayerType() gopacket.LayerType {
+func (a USBTransportType) LayerType() gopacket131_dpdk.LayerType {
 	if int(a) < 256 {
 		if metadata := USBTransportTypeMetadata[a]; metadata.DecodeWith != nil {
 			return metadata.LayerType

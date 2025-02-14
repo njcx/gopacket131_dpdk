@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketIPSecAHTransport is the packet:
@@ -36,11 +36,11 @@ var testPacketIPSecAHTransport = []byte{
 }
 
 func TestPacketIPSecAHTransport(t *testing.T) {
-	p := gopacket.NewPacket(testPacketIPSecAHTransport, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketIPSecAHTransport, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIPSecAH, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIPSecAH, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layer(LayerTypeIPSecAH).(*IPSecAH); ok {
 		want := &IPSecAH{
 			Reserved:           0x0,
@@ -60,7 +60,7 @@ func TestPacketIPSecAHTransport(t *testing.T) {
 
 func BenchmarkDecodePacketIPSecAHTransport(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketIPSecAHTransport, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketIPSecAHTransport, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -89,11 +89,11 @@ var testPacketIPSecAHTunnel = []byte{
 }
 
 func TestPacketIPSecAHTunnel(t *testing.T) {
-	p := gopacket.NewPacket(testPacketIPSecAHTunnel, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketIPSecAHTunnel, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIPSecAH, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIPSecAH, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layer(LayerTypeIPSecAH).(*IPSecAH); ok {
 		want := &IPSecAH{
 			Reserved:           0x0,
@@ -113,7 +113,7 @@ func TestPacketIPSecAHTunnel(t *testing.T) {
 
 func BenchmarkDecodePacketIPSecAHTunnel(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketIPSecAHTunnel, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketIPSecAHTunnel, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -144,15 +144,15 @@ var testPacketIPSecESP = []byte{
 }
 
 func TestPacketIPSecESP(t *testing.T) {
-	p := gopacket.NewPacket(testPacketIPSecESP, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketIPSecESP, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIPSecESP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIPSecESP}, t)
 }
 
 func BenchmarkDecodePacketIPSecESP(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketIPSecESP, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketIPSecESP, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright 2020 The GoPacket Authors. All rights reserved.
+// Copyright 2020 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // https://github.com/tintinweb/scapy-ssl_tls/blob/master/tests/files/RSA_WITH_AES_128_CBC_SHA.pcap
@@ -240,17 +240,17 @@ var testMalformed = []byte{
 	0xd1, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xdf,
 }
 
-var testTLSDecodeOptions = gopacket.DecodeOptions{
+var testTLSDecodeOptions = gopacket131_dpdk.DecodeOptions{
 	SkipDecodeRecovery:       true,
 	DecodeStreamsAsDatagrams: true,
 }
 
 func TestParseTLSClientHello(t *testing.T) {
-	p := gopacket.NewPacket(testClientHello, LinkTypeEthernet, testTLSDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testClientHello, LinkTypeEthernet, testTLSDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeTCP, LayerTypeTLS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeTCP, LayerTypeTLS}, t)
 
 	if got, ok := p.Layer(LayerTypeTLS).(*TLS); ok {
 		want := testClientHelloDecoded
@@ -266,7 +266,7 @@ func TestTLSClientHelloDecodeFromBytes(t *testing.T) {
 	var got TLS
 	want := *testClientKeyExchangeDecoded
 
-	if err := got.DecodeFromBytes(testClientKeyExchange, gopacket.NilDecodeFeedback); err != nil {
+	if err := got.DecodeFromBytes(testClientKeyExchange, gopacket131_dpdk.NilDecodeFeedback); err != nil {
 		t.Errorf("TLS DecodeFromBytes first decode failed:\ngot:\n%#v\n\nwant:\n%#v\n\n", got, want)
 	}
 
@@ -274,7 +274,7 @@ func TestTLSClientHelloDecodeFromBytes(t *testing.T) {
 		t.Errorf("TLS DecodeFromBytes first decode doesn't match:\ngot:\n%#v\n\nwant:\n%#v\n\n", got, want)
 	}
 
-	if err := got.DecodeFromBytes(testClientKeyExchange, gopacket.NilDecodeFeedback); err != nil {
+	if err := got.DecodeFromBytes(testClientKeyExchange, gopacket131_dpdk.NilDecodeFeedback); err != nil {
 		t.Errorf("TLS DecodeFromBytes second decode failed:\ngot:\n%#v\n\nwant:\n%#v\n\n", got, want)
 	}
 
@@ -284,11 +284,11 @@ func TestTLSClientHelloDecodeFromBytes(t *testing.T) {
 }
 
 func TestParseTLSChangeCipherSpec(t *testing.T) {
-	p := gopacket.NewPacket(testClientKeyExchange, LayerTypeTLS, testTLSDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testClientKeyExchange, LayerTypeTLS, testTLSDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeTLS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeTLS}, t)
 
 	if got, ok := p.Layer(LayerTypeTLS).(*TLS); ok {
 		want := testClientKeyExchangeDecoded
@@ -301,11 +301,11 @@ func TestParseTLSChangeCipherSpec(t *testing.T) {
 }
 
 func TestParseTLSAppData(t *testing.T) {
-	p := gopacket.NewPacket(testDoubleAppData, LayerTypeTLS, testTLSDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testDoubleAppData, LayerTypeTLS, testTLSDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeTLS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeTLS}, t)
 
 	if got, ok := p.Layer(LayerTypeTLS).(*TLS); ok {
 		want := testDoubleAppDataDecoded
@@ -318,18 +318,18 @@ func TestParseTLSAppData(t *testing.T) {
 }
 
 func TestSerializeTLSAppData(t *testing.T) {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, testDoubleAppDataDecoded)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, testDoubleAppDataDecoded)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeTLS, testTLSDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeTLS, testTLSDecodeOptions)
 	if p2.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p2.ErrorLayer().Error())
 	}
-	checkLayers(p2, []gopacket.LayerType{LayerTypeTLS}, t)
+	checkLayers(p2, []gopacket131_dpdk.LayerType{LayerTypeTLS}, t)
 
 	if got, ok := p2.Layer(LayerTypeTLS).(*TLS); ok {
 		want := testDoubleAppDataDecoded
@@ -342,14 +342,14 @@ func TestSerializeTLSAppData(t *testing.T) {
 }
 
 func TestParseTLSMalformed(t *testing.T) {
-	p := gopacket.NewPacket(testMalformed, LayerTypeTLS, testTLSDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testMalformed, LayerTypeTLS, testTLSDecodeOptions)
 	if p.ErrorLayer() == nil {
 		t.Error("No Decoding Error when parsing a malformed data")
 	}
 }
 
 func TestParseTLSTooShort(t *testing.T) {
-	p := gopacket.NewPacket(testMalformed[0:2], LayerTypeTLS, testTLSDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testMalformed[0:2], LayerTypeTLS, testTLSDecodeOptions)
 	if p.ErrorLayer() == nil {
 		t.Error("No Decoding Error when parsing a malformed data")
 	}
@@ -360,18 +360,18 @@ func TestParseTLSLengthMismatch(t *testing.T) {
 	copy(testLengthMismatch, testDoubleAppData)
 	testLengthMismatch[3] = 0xFF
 	testLengthMismatch[4] = 0xFF
-	p := gopacket.NewPacket(testLengthMismatch, LayerTypeTLS, testTLSDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testLengthMismatch, LayerTypeTLS, testTLSDecodeOptions)
 	if p.ErrorLayer() == nil {
 		t.Error("No Decoding Error when parsing a malformed data")
 	}
 }
 
 func TestParseTLSAlertEncrypted(t *testing.T) {
-	p := gopacket.NewPacket(testAlertEncrypted, LayerTypeTLS, testTLSDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testAlertEncrypted, LayerTypeTLS, testTLSDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeTLS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeTLS}, t)
 
 	if got, ok := p.Layer(LayerTypeTLS).(*TLS); ok {
 		want := testAlertEncryptedDecoded
@@ -384,18 +384,18 @@ func TestParseTLSAlertEncrypted(t *testing.T) {
 }
 
 func TestSerializeTLSAlertEncrypted(t *testing.T) {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, testAlertEncryptedDecoded)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, testAlertEncryptedDecoded)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeTLS, testTLSDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeTLS, testTLSDecodeOptions)
 	if p2.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p2.ErrorLayer().Error())
 	}
-	checkLayers(p2, []gopacket.LayerType{LayerTypeTLS}, t)
+	checkLayers(p2, []gopacket131_dpdk.LayerType{LayerTypeTLS}, t)
 
 	if got, ok := p2.Layer(LayerTypeTLS).(*TLS); ok {
 		want := testAlertEncryptedDecoded

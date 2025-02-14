@@ -11,7 +11,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestDHCPv4EncodeRequest(t *testing.T) {
@@ -29,14 +29,14 @@ func TestDHCPv4EncodeRequest(t *testing.T) {
 			byte(DHCPOptHostname), byte(DHCPOptNetBIOSTCPNS), byte(DHCPOptInterfaceMTU), byte(DHCPOptClasslessStaticRoute),
 			byte(DHCPOptNTPServers)}))
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dhcp)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dhcp)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDHCPv4, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDHCPv4, testDecodeOptions)
 	dhcp2 := p2.Layer(LayerTypeDHCPv4).(*DHCPv4)
 	testDHCPEqual(t, dhcp, dhcp2)
 }
@@ -47,14 +47,14 @@ func TestDHCPv4EncodeRequestNoOptions(t *testing.T) {
 		ClientHWAddr: net.HardwareAddr{0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc},
 		ServerName:   make([]byte, 64), File: make([]byte, 128)}
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dhcp)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dhcp)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDHCPv4, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDHCPv4, testDecodeOptions)
 	dhcp2 := p2.Layer(LayerTypeDHCPv4).(*DHCPv4)
 	testDHCPEqual(t, dhcp, dhcp2)
 }
@@ -73,14 +73,14 @@ func TestDHCPv4EncodeResponse(t *testing.T) {
 	dhcp.Options = append(dhcp.Options, NewDHCPOption(DHCPOptLeaseTime, []byte{0x00, 0x00, 0x0e, 0x10}))
 	dhcp.Options = append(dhcp.Options, NewDHCPOption(DHCPOptServerID, []byte{192, 168, 0, 1}))
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dhcp)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dhcp)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDHCPv4, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDHCPv4, testDecodeOptions)
 	dhcp2 := p2.Layer(LayerTypeDHCPv4).(*DHCPv4)
 	testDHCPEqual(t, dhcp, dhcp2)
 }

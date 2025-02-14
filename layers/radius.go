@@ -1,4 +1,4 @@
-// Copyright 2020 The GoPacket Authors. All rights reserved.
+// Copyright 2020 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -9,7 +9,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -379,12 +379,12 @@ func (radius *RADIUS) Len() (int, error) {
 }
 
 // LayerType returns LayerTypeRADIUS.
-func (radius *RADIUS) LayerType() gopacket.LayerType {
+func (radius *RADIUS) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeRADIUS
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (radius *RADIUS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (radius *RADIUS) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) > radiusMaximumRecordSizeInBytes {
 		df.SetTruncated()
 		return fmt.Errorf("RADIUS length %d too big", len(data))
@@ -475,9 +475,9 @@ func (radius *RADIUS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) e
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (radius *RADIUS) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (radius *RADIUS) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	plen, err := radius.Len()
 	if err != nil {
 		return err
@@ -517,16 +517,16 @@ func (radius *RADIUS) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Seri
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (radius *RADIUS) CanDecode() gopacket.LayerClass {
+func (radius *RADIUS) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeRADIUS
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (radius *RADIUS) NextLayerType() gopacket.LayerType {
+func (radius *RADIUS) NextLayerType() gopacket131_dpdk.LayerType {
 	if len(radius.BaseLayer.Payload) > 0 {
 		return LayerTypeEAP
 	} else {
-		return gopacket.LayerTypeZero
+		return gopacket131_dpdk.LayerTypeZero
 	}
 }
 
@@ -535,7 +535,7 @@ func (radius *RADIUS) Payload() []byte {
 	return radius.BaseLayer.Payload
 }
 
-func decodeRADIUS(data []byte, p gopacket.PacketBuilder) error {
+func decodeRADIUS(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	radius := &RADIUS{}
 	err := radius.DecodeFromBytes(data, p)
 	if err != nil {
@@ -544,7 +544,7 @@ func decodeRADIUS(data []byte, p gopacket.PacketBuilder) error {
 	p.AddLayer(radius)
 	p.SetApplicationLayer(radius)
 	next := radius.NextLayerType()
-	if next == gopacket.LayerTypeZero {
+	if next == gopacket131_dpdk.LayerTypeZero {
 		return nil
 	}
 	return p.NextDecoder(next)

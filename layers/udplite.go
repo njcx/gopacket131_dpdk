@@ -10,7 +10,7 @@ package layers
 import (
 	"encoding/binary"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // UDPLite is the layer for UDP-Lite headers (rfc 3828).
@@ -22,10 +22,10 @@ type UDPLite struct {
 	sPort, dPort     []byte
 }
 
-// LayerType returns gopacket.LayerTypeUDPLite
-func (u *UDPLite) LayerType() gopacket.LayerType { return LayerTypeUDPLite }
+// LayerType returns gopacket131_dpdk.LayerTypeUDPLite
+func (u *UDPLite) LayerType() gopacket131_dpdk.LayerType { return LayerTypeUDPLite }
 
-func decodeUDPLite(data []byte, p gopacket.PacketBuilder) error {
+func decodeUDPLite(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	udp := &UDPLite{
 		SrcPort:          UDPLitePort(binary.BigEndian.Uint16(data[0:2])),
 		sPort:            data[0:2],
@@ -37,9 +37,9 @@ func decodeUDPLite(data []byte, p gopacket.PacketBuilder) error {
 	}
 	p.AddLayer(udp)
 	p.SetTransportLayer(udp)
-	return p.NextDecoder(gopacket.LayerTypePayload)
+	return p.NextDecoder(gopacket131_dpdk.LayerTypePayload)
 }
 
-func (u *UDPLite) TransportFlow() gopacket.Flow {
-	return gopacket.NewFlow(EndpointUDPLitePort, u.sPort, u.dPort)
+func (u *UDPLite) TransportFlow() gopacket131_dpdk.Flow {
+	return gopacket131_dpdk.NewFlow(EndpointUDPLitePort, u.sPort, u.dPort)
 }

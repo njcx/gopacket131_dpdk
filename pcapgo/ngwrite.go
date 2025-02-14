@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -14,8 +14,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // NgWriterOptions holds options for creating a pcapng file
@@ -29,7 +29,7 @@ var DefaultNgWriterOptions = NgWriterOptions{
 	SectionInfo: NgSectionInfo{
 		Hardware:    runtime.GOARCH,
 		OS:          runtime.GOOS,
-		Application: "gopacket", //spread the word
+		Application: "gopacket131_dpdk", //spread the word
 	},
 }
 
@@ -353,12 +353,12 @@ func (w *NgWriter) WriteInterfaceStats(intf int, stats NgInterfaceStatistics) er
 }
 
 // WritePacket writes out packet with the given data and capture info. The given InterfaceIndex must already be added to the file. InterfaceIndex 0 is automatically added by the NewWriter* methods.
-func (w *NgWriter) WritePacket(ci gopacket.CaptureInfo, data []byte) error {
+func (w *NgWriter) WritePacket(ci gopacket131_dpdk.CaptureInfo, data []byte) error {
 	return w.WritePacketWithOptions(ci, data, NgPacketOptions{})
 }
 
 // WritePacketWithOptions writes out packet with the given data, capture info and options. The given InterfaceIndex must already be added to the file. InterfaceIndex 0 is automatically added by the NewWriter* methods.
-func (w *NgWriter) WritePacketWithOptions(ci gopacket.CaptureInfo, data []byte, opts NgPacketOptions) error {
+func (w *NgWriter) WritePacketWithOptions(ci gopacket131_dpdk.CaptureInfo, data []byte, opts NgPacketOptions) error {
 	if ci.InterfaceIndex >= int(w.intf) || ci.InterfaceIndex < 0 {
 		return fmt.Errorf("Can't send statistics for non existent interface %d; have only %d interfaces", ci.InterfaceIndex, w.intf)
 	}

@@ -9,7 +9,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // igmpv1MembershipReportPacket is the packet:
@@ -27,11 +27,11 @@ var igmpv1MembershipReportPacket = []byte{
 }
 
 func TestIGMPv1MembershipReportPacket(t *testing.T) {
-	p := gopacket.NewPacket(igmpv1MembershipReportPacket, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(igmpv1MembershipReportPacket, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
 
 	igmp := p.Layer(LayerTypeIGMP).(*IGMPv1or2)
 	if igmp.Type != IGMPMembershipReportV1 {
@@ -41,7 +41,7 @@ func TestIGMPv1MembershipReportPacket(t *testing.T) {
 
 func BenchmarkDecodeigmpv1MembershipReportPacket(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(igmpv1MembershipReportPacket, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(igmpv1MembershipReportPacket, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -60,11 +60,11 @@ var igmpv2MembershipQueryPacket = []byte{
 }
 
 func TestIGMPv2MembershipQuery(t *testing.T) {
-	p := gopacket.NewPacket(igmpv2MembershipQueryPacket, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(igmpv2MembershipQueryPacket, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
 
 	igmp := p.Layer(LayerTypeIGMP).(*IGMPv1or2)
 	if igmp.Type != IGMPMembershipQuery {
@@ -73,7 +73,7 @@ func TestIGMPv2MembershipQuery(t *testing.T) {
 }
 func BenchmarkDecodeigmpv2MembershipQueryPacket(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(igmpv2MembershipQueryPacket, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(igmpv2MembershipQueryPacket, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -92,11 +92,11 @@ var igmpv2MembershipReportPacket = []byte{
 }
 
 func TestIGMPv2MembershipReport(t *testing.T) {
-	p := gopacket.NewPacket(igmpv2MembershipReportPacket, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(igmpv2MembershipReportPacket, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
 
 	igmp := p.Layer(LayerTypeIGMP).(*IGMPv1or2)
 	if igmp.Type != IGMPMembershipReportV2 {
@@ -105,7 +105,7 @@ func TestIGMPv2MembershipReport(t *testing.T) {
 }
 func BenchmarkDecodeigmpv2MembershipReportPacket(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(igmpv2MembershipReportPacket, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(igmpv2MembershipReportPacket, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -124,11 +124,11 @@ var igmp3v3MembershipQueryPacket = []byte{
 }
 
 func TestIGMPv3MembershipQuery(t *testing.T) {
-	p := gopacket.NewPacket(igmp3v3MembershipQueryPacket, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(igmp3v3MembershipQueryPacket, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
 
 	igmp := p.Layer(LayerTypeIGMP).(*IGMP)
 	if igmp.Type != IGMPMembershipQuery {
@@ -138,7 +138,7 @@ func TestIGMPv3MembershipQuery(t *testing.T) {
 
 func BenchmarkDecodeigmp3v3MembershipQueryPacket(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(igmp3v3MembershipQueryPacket, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(igmp3v3MembershipQueryPacket, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -157,11 +157,11 @@ var igmpv3MembershipReport2Records = []byte{
 }
 
 func TestIGMPv3MembershipReport2Records(t *testing.T) {
-	p := gopacket.NewPacket(igmpv3MembershipReport2Records, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(igmpv3MembershipReport2Records, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeIGMP}, t)
 
 	igmp := p.Layer(LayerTypeIGMP).(*IGMP)
 	if igmp.Type != IGMPMembershipReportV3 {
@@ -171,6 +171,6 @@ func TestIGMPv3MembershipReport2Records(t *testing.T) {
 
 func BenchmarkDecodeigmpv3MembershipReport2Records(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(igmpv3MembershipReport2Records, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(igmpv3MembershipReport2Records, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }

@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type PFDirection uint8
@@ -39,7 +39,7 @@ type PFLog struct {
 	// The remainder is padding
 }
 
-func (pf *PFLog) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (pf *PFLog) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 60 {
 		df.SetTruncated()
 		return errors.New("PFLog data less than 60 bytes")
@@ -70,15 +70,15 @@ func (pf *PFLog) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error 
 }
 
 // LayerType returns layers.LayerTypePFLog
-func (pf *PFLog) LayerType() gopacket.LayerType { return LayerTypePFLog }
+func (pf *PFLog) LayerType() gopacket131_dpdk.LayerType { return LayerTypePFLog }
 
-func (pf *PFLog) CanDecode() gopacket.LayerClass { return LayerTypePFLog }
+func (pf *PFLog) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypePFLog }
 
-func (pf *PFLog) NextLayerType() gopacket.LayerType {
+func (pf *PFLog) NextLayerType() gopacket131_dpdk.LayerType {
 	return pf.Family.LayerType()
 }
 
-func decodePFLog(data []byte, p gopacket.PacketBuilder) error {
+func decodePFLog(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	pf := &PFLog{}
 	return decodingLayerDecoder(pf, data, p)
 }

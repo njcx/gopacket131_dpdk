@@ -14,7 +14,7 @@ import (
 	"hash/crc32"
 	"strings"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // align calculates the number of bytes needed to align with the width
@@ -1253,7 +1253,7 @@ func (self RadiotapHEData6) MidamblePeriodicity() MidamblePeriodicity {
 	return MidamblePeriodicity((self & RadiotapHEData6MidamblePeriodic) >> 15)
 }
 
-func decodeRadioTap(data []byte, p gopacket.PacketBuilder) error {
+func decodeRadioTap(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &RadioTap{}
 	// TODO: Should we set LinkLayer here? And implement LinkFlow
 	return decodingLayerDecoder(d, data, p)
@@ -1307,9 +1307,9 @@ type RadioTap struct {
 	HE          RadiotapHE
 }
 
-func (m *RadioTap) LayerType() gopacket.LayerType { return LayerTypeRadioTap }
+func (m *RadioTap) LayerType() gopacket131_dpdk.LayerType { return LayerTypeRadioTap }
 
-func (m *RadioTap) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *RadioTap) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	dataLen := uint16(len(data))
 	if dataLen < 8 {
 		df.SetTruncated()
@@ -1504,7 +1504,7 @@ func (m *RadioTap) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) erro
 	return nil
 }
 
-func (m RadioTap) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m RadioTap) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf := make([]byte, 1024)
 
 	buf[0] = m.Version
@@ -1674,5 +1674,5 @@ func (m RadioTap) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serializ
 	return nil
 }
 
-func (m *RadioTap) CanDecode() gopacket.LayerClass    { return LayerTypeRadioTap }
-func (m *RadioTap) NextLayerType() gopacket.LayerType { return LayerTypeDot11 }
+func (m *RadioTap) CanDecode() gopacket131_dpdk.LayerClass    { return LayerTypeRadioTap }
+func (m *RadioTap) NextLayerType() gopacket131_dpdk.LayerType { return LayerTypeDot11 }

@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/bytediff"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/bytediff"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 func TestNotFrag(t *testing.T) {
@@ -279,7 +279,7 @@ func TestDefragIDField(t *testing.T) {
 }
 
 func gentestDefrag(t *testing.T, defrag *IPv4Defragmenter, buf []byte, expect bool, label string) *layers.IPv4 {
-	p := gopacket.NewPacket(buf, layers.LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(buf, layers.LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}

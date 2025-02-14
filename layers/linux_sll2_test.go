@@ -3,7 +3,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 var testParseLinkTypeLinuxSLL2 = []byte{
@@ -20,9 +20,9 @@ var testParseLinkTypeLinuxSLL2 = []byte{
 }
 
 func TestParseLinkTypeLinuxSLL2(t *testing.T) {
-	p := gopacket.NewPacket(testParseLinkTypeLinuxSLL2, LinkTypeLinuxSLL2, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testParseLinkTypeLinuxSLL2, LinkTypeLinuxSLL2, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeLinuxSLL2, LayerTypeIPv4, LayerTypeTCP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeLinuxSLL2, LayerTypeIPv4, LayerTypeTCP}, t)
 }

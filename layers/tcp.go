@@ -13,7 +13,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // TCP is the layer for TCP headers.
@@ -185,13 +185,13 @@ func (t TCPOption) String() string {
 	return fmt.Sprintf("TCPOption(%s:%s)", t.OptionType, hd)
 }
 
-// LayerType returns gopacket.LayerTypeTCP
-func (t *TCP) LayerType() gopacket.LayerType { return LayerTypeTCP }
+// LayerType returns gopacket131_dpdk.LayerTypeTCP
+func (t *TCP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeTCP }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (t *TCP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (t *TCP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var optionLength int
 	for _, o := range t.Options {
 		switch o.OptionType {
@@ -242,7 +242,7 @@ func (t *TCP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 		if err != nil {
 			return err
 		}
-		t.Checksum = gopacket.FoldChecksum(csum)
+		t.Checksum = gopacket131_dpdk.FoldChecksum(csum)
 	}
 	binary.BigEndian.PutUint16(bytes[16:], t.Checksum)
 	return nil
@@ -253,7 +253,7 @@ func (t *TCP) ComputeChecksum() (uint16, error) {
 	if err != nil {
 		return 0, err
 	}
-	return gopacket.FoldChecksum(csum), nil
+	return gopacket131_dpdk.FoldChecksum(csum), nil
 }
 
 func (t *TCP) flagsAndOffset() uint16 {
@@ -288,7 +288,7 @@ func (t *TCP) flagsAndOffset() uint16 {
 	return f
 }
 
-func (tcp *TCP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (tcp *TCP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 20 {
 		df.SetTruncated()
 		return fmt.Errorf("Invalid TCP header. Length %d less than 20", len(data))
@@ -581,19 +581,19 @@ func isValidOptionMptcpAddAddrlen(length uint8, mptcpVer uint8, hmac bool) bool 
 	return ret
 }
 
-func (t *TCP) CanDecode() gopacket.LayerClass {
+func (t *TCP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeTCP
 }
 
-func (t *TCP) NextLayerType() gopacket.LayerType {
+func (t *TCP) NextLayerType() gopacket131_dpdk.LayerType {
 	lt := t.DstPort.LayerType()
-	if lt == gopacket.LayerTypePayload {
+	if lt == gopacket131_dpdk.LayerTypePayload {
 		lt = t.SrcPort.LayerType()
 	}
 	return lt
 }
 
-func decodeTCP(data []byte, p gopacket.PacketBuilder) error {
+func decodeTCP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	tcp := &TCP{}
 	err := tcp.DecodeFromBytes(data, p)
 	p.AddLayer(tcp)
@@ -604,12 +604,12 @@ func decodeTCP(data []byte, p gopacket.PacketBuilder) error {
 	if p.DecodeOptions().DecodeStreamsAsDatagrams {
 		return p.NextDecoder(tcp.NextLayerType())
 	} else {
-		return p.NextDecoder(gopacket.LayerTypePayload)
+		return p.NextDecoder(gopacket131_dpdk.LayerTypePayload)
 	}
 }
 
-func (t *TCP) TransportFlow() gopacket.Flow {
-	return gopacket.NewFlow(EndpointTCPPort, t.sPort, t.dPort)
+func (t *TCP) TransportFlow() gopacket131_dpdk.Flow {
+	return gopacket131_dpdk.NewFlow(EndpointTCPPort, t.sPort, t.dPort)
 }
 
 // For testing only
@@ -620,16 +620,16 @@ func (t *TCP) SetInternalPortsForTesting() {
 	binary.BigEndian.PutUint16(t.dPort, uint16(t.DstPort))
 }
 
-func (t *TCP) VerifyChecksum() (error, gopacket.ChecksumVerificationResult) {
+func (t *TCP) VerifyChecksum() (error, gopacket131_dpdk.ChecksumVerificationResult) {
 	bytes := append(t.Contents, t.Payload...)
 
 	existing := t.Checksum
 	verification, err := t.computeChecksum(bytes, IPProtocolTCP)
 	if err != nil {
-		return err, gopacket.ChecksumVerificationResult{}
+		return err, gopacket131_dpdk.ChecksumVerificationResult{}
 	}
-	correct := gopacket.FoldChecksum(verification - uint32(existing))
-	return nil, gopacket.ChecksumVerificationResult{
+	correct := gopacket131_dpdk.FoldChecksum(verification - uint32(existing))
+	return nil, gopacket131_dpdk.ChecksumVerificationResult{
 		Valid:   correct == existing,
 		Correct: uint32(correct),
 		Actual:  uint32(existing),

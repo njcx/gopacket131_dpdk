@@ -2,7 +2,7 @@ package pcapgo
 
 import (
 	"fmt"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk/layers"
 	"io"
 	"math"
 	"net"
@@ -88,7 +88,7 @@ func createPcapng(pcapngFilename string) (*NgWriter, error) {
 	// write interface description
 	ngIface := NgInterface{
 		Name:       "eth0",
-		Comment:    "gopacket: https://github.com/google/gopacket",
+		Comment:    "gopacket131_dpdk: https://github.com/google/gopacket131_dpdk",
 		Filter:     "",
 		LinkType:   layers.LinkTypeEthernet,
 		SnapLength: uint32(math.MaxUint16),

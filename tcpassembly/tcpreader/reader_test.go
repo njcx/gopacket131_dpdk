@@ -13,15 +13,15 @@ import (
 	"net"
 	"testing"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/tcpassembly"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
+	"github.com/njcx/gopacket131_dpdk/tcpassembly"
 )
 
-var netFlow gopacket.Flow
+var netFlow gopacket131_dpdk.Flow
 
 func init() {
-	netFlow, _ = gopacket.FlowFromEndpoints(
+	netFlow, _ = gopacket131_dpdk.FlowFromEndpoints(
 		layers.NewIPEndpoint(net.IP{1, 2, 3, 4}),
 		layers.NewIPEndpoint(net.IP{5, 6, 7, 8}))
 }
@@ -41,7 +41,7 @@ type testReaderFactory struct {
 	output chan []byte
 }
 
-func (t *testReaderFactory) New(a, b gopacket.Flow) tcpassembly.Stream {
+func (t *testReaderFactory) New(a, b gopacket131_dpdk.Flow) tcpassembly.Stream {
 	return &t.ReaderStream
 }
 

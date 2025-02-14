@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testUDPPacketDNS is the packet:
@@ -56,11 +56,11 @@ var testUDPPacketDNS = []byte{
 }
 
 func TestUDPPacketDNS(t *testing.T) {
-	p := gopacket.NewPacket(testUDPPacketDNS, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testUDPPacketDNS, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
 	if got, ok := p.TransportLayer().(*UDP); ok {
 		want := &UDP{
 			BaseLayer: BaseLayer{
@@ -98,11 +98,11 @@ func TestUDPPacketDNS(t *testing.T) {
 }
 
 func loadDNS(dnspacket []byte, t *testing.T) *DNS {
-	p := gopacket.NewPacket(dnspacket, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(dnspacket, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4,
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4,
 		LayerTypeUDP, LayerTypeDNS}, t)
 
 	dnsL := p.Layer(LayerTypeDNS)
@@ -354,19 +354,19 @@ func TestDNSMXSOA(t *testing.T) {
 
 func BenchmarkDecodeDNS(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testDNSQueryA, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testDNSQueryA, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 func BenchmarkDecodeDNSLayer(b *testing.B) {
 	var dns DNS
 	for i := 0; i < b.N; i++ {
-		dns.DecodeFromBytes(testDNSAAAA[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket.NilDecodeFeedback)
+		dns.DecodeFromBytes(testDNSAAAA[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket131_dpdk.NilDecodeFeedback)
 	}
 }
 func TestDNSDoesNotMalloc(t *testing.T) {
 	var dns DNS
 	if n := testing.AllocsPerRun(1000, func() {
-		if err := dns.DecodeFromBytes(testDNSAAAA[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket.NilDecodeFeedback); err != nil {
+		if err := dns.DecodeFromBytes(testDNSAAAA[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket131_dpdk.NilDecodeFeedback); err != nil {
 			t.Fatal(err)
 		}
 	}); n > 0 {
@@ -391,9 +391,9 @@ func TestZeroChecksum(t *testing.T) {
 	}
 	udp.SetNetworkLayerForChecksum(ip)
 
-	buf := gopacket.NewSerializeBuffer()
-	gopacket.SerializeLayers(buf,
-		gopacket.SerializeOptions{
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	gopacket131_dpdk.SerializeLayers(buf,
+		gopacket131_dpdk.SerializeOptions{
 			ComputeChecksums: true,
 			FixLengths:       true,
 		},
@@ -401,7 +401,7 @@ func TestZeroChecksum(t *testing.T) {
 		udp,
 	)
 
-	result := gopacket.NewPacket(buf.Bytes(), LayerTypeIPv4, gopacket.Default)
+	result := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeIPv4, gopacket131_dpdk.Default)
 	if checksum := result.Layer(LayerTypeUDP).(*UDP).Checksum; checksum != 0xFFFF {
 		t.Fatalf("expoected checksum 0xFFFF, got 0x%x", checksum)
 	}

@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketOSPF2Hello is the packet:
@@ -32,11 +32,11 @@ var testPacketOSPF2Hello = []byte{
 }
 
 func TestPacketOSPF2Hello(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2Hello, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2Hello, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
 
 	ospf := p.Layer(LayerTypeOSPF).(*OSPFv2)
 	if ospf.Version != 2 {
@@ -73,7 +73,7 @@ func TestPacketOSPF2Hello(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket5(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF2Hello, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF2Hello, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -96,11 +96,11 @@ var testPacketOSPF3Hello = []byte{
 }
 
 func TestPacketOSPF3Hello(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF3Hello, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF3Hello, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
 
 	ospf := p.Layer(LayerTypeOSPF).(*OSPFv3)
 	if ospf.Version != 3 {
@@ -137,7 +137,7 @@ func TestPacketOSPF3Hello(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket0(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF3Hello, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF3Hello, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -158,11 +158,11 @@ var testPacketOSPF2DBDesc = []byte{
 }
 
 func TestPacketOSPF2DBDesc(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2DBDesc, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2DBDesc, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv2); ok {
 		want := &OSPFv2{
 			OSPF: OSPF{
@@ -211,11 +211,11 @@ var testPacketOSPF2DBDescWithLSAheader = []byte{
 }
 
 func TestPacketOSPF2DBDescWithLSAheader(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2DBDescWithLSAheader, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2DBDescWithLSAheader, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv2); ok {
 		want := &OSPFv2{
 			OSPF: OSPF{
@@ -255,7 +255,7 @@ func TestPacketOSPF2DBDescWithLSAheader(t *testing.T) {
 
 func BenchmarkDecodePacketPacket6(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF2DBDesc, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF2DBDesc, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -278,11 +278,11 @@ var testPacketOSPF3DBDesc = []byte{
 }
 
 func TestPacketOSPF3DBDesc(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF3DBDesc, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF3DBDesc, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv3); ok {
 		want := &OSPFv3{
 			OSPF: OSPF{
@@ -311,7 +311,7 @@ func TestPacketOSPF3DBDesc(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF3DBDesc, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF3DBDesc, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -332,11 +332,11 @@ var testPacketOSPF2LSRequest = []byte{
 }
 
 func TestPacketOSPF2LSRequest(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2LSRequest, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2LSRequest, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv2); ok {
 		want := &OSPFv2{
 			OSPF: OSPF{
@@ -364,7 +364,7 @@ func TestPacketOSPF2LSRequest(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket7(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF2LSRequest, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF2LSRequest, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -395,11 +395,11 @@ var testPacketOSPF3LSRequest = []byte{
 }
 
 func TestPacketOSPF3LSRequest(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF3LSRequest, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF3LSRequest, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv3); ok {
 		want := &OSPFv3{
 			OSPF: OSPF{
@@ -459,7 +459,7 @@ func TestPacketOSPF3LSRequest(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF3LSRequest, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF3LSRequest, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -512,11 +512,11 @@ var testPacketOSPF2LSUpdate = []byte{
 }
 
 func TestPacketOSPF2LSUpdate(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2LSUpdate, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2LSUpdate, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv2); ok {
 		want := &OSPFv2{
 			OSPF: OSPF{
@@ -686,7 +686,7 @@ func TestPacketOSPF2LSUpdate(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket8(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF2LSUpdate, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF2LSUpdate, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -715,11 +715,11 @@ var testPacketOSPF2LSUpdateLSA2 = []byte{
 }
 
 func TestPacketOSPF2LSUpdateLSA2(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2LSUpdateLSA2, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2LSUpdateLSA2, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeDot1Q, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeDot1Q, LayerTypeIPv4, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv2); ok {
 		want := &OSPFv2{
 			OSPF: OSPF{
@@ -814,11 +814,11 @@ var testPacketOSPF2LSUpdateLSA7 = []byte{
 }
 
 func TestPacketOSPF2LSUpdateLSA7(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2LSUpdateLSA7, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2LSUpdateLSA7, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeDot1Q, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeDot1Q, LayerTypeIPv4, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv2); ok {
 		want := &OSPFv2{
 			OSPF: OSPF{
@@ -932,11 +932,11 @@ var testPacketOSPF3LSUpdate = []byte{
 }
 
 func TestPacketOSPF3LSUpdate(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF3LSUpdate, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF3LSUpdate, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv3); ok {
 		want := &OSPFv3{
 			OSPF: OSPF{
@@ -1095,7 +1095,7 @@ func TestPacketOSPF3LSUpdate(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF3LSUpdate, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF3LSUpdate, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -1116,11 +1116,11 @@ var testPacketOSPF2LSAck = []byte{
 }
 
 func TestPacketOSPF2LSAck(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF2LSAck, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF2LSAck, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv2); ok {
 		want := &OSPFv2{
 			OSPF: OSPF{
@@ -1153,7 +1153,7 @@ func TestPacketOSPF2LSAck(t *testing.T) {
 }
 func BenchmarkDecodePacketPacket9(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF3LSAck, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF3LSAck, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -1188,11 +1188,11 @@ var testPacketOSPF3LSAck = []byte{
 }
 
 func TestPacketOSPF3LSAck(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPF3LSAck, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPF3LSAck, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeOSPF}, t)
 	if got, ok := p.Layer(LayerTypeOSPF).(*OSPFv3); ok {
 		want := &OSPFv3{
 			OSPF: OSPF{
@@ -1283,15 +1283,15 @@ var testPacketOSPFInvalidLSA = []byte{
 }
 
 func TestPacketOSPFInvalidLSA(t *testing.T) {
-	p := gopacket.NewPacket(testPacketOSPFInvalidLSA, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketOSPFInvalidLSA, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() == nil {
 		t.Error("Bad packet decoded successfully")
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, gopacket.LayerTypeDecodeFailure}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, gopacket131_dpdk.LayerTypeDecodeFailure}, t)
 }
 
 func BenchmarkDecodePacketPacket4(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketOSPF3LSAck, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketOSPF3LSAck, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }

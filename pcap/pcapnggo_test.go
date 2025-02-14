@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/pcapgo"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
+	"github.com/njcx/gopacket131_dpdk/pcapgo"
 )
 
 func TestPCAPGoNgWrite(t *testing.T) {
@@ -24,7 +24,7 @@ func TestPCAPGoNgWrite(t *testing.T) {
 		t.Fatal(err)
 	}
 	data := []byte{0xab, 0xcd, 0xef, 0x01, 0x02, 0x03, 0x04}
-	ci := gopacket.CaptureInfo{
+	ci := gopacket131_dpdk.CaptureInfo{
 		Timestamp:     time.Unix(12345667, 1234567123),
 		Length:        700,
 		CaptureLength: len(data),

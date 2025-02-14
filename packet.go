@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package gopacket
+package gopacket131_dpdk
 
 import (
 	"bytes"
@@ -64,7 +64,7 @@ type PacketMetadata struct {
 	Truncated bool
 }
 
-// Packet is the primary object used by gopacket.  Packets are created by a
+// Packet is the primary object used by gopacket131_dpdk.  Packets are created by a
 // Decoder's Decode call.  A packet is made up of a set of Data, which
 // is broken into a number of Layers as it is decoded.
 type Packet interface {
@@ -664,7 +664,7 @@ func (p *lazyPacket) LayerClass(lc LayerClass) Layer {
 func (p *lazyPacket) String() string { p.Layers(); return p.packetString() }
 func (p *lazyPacket) Dump() string   { p.Layers(); return p.packetDump() }
 
-// DecodeOptions tells gopacket how to decode a packet.
+// DecodeOptions tells gopacket131_dpdk how to decode a packet.
 type DecodeOptions struct {
 	// Lazy decoding decodes the minimum number of layers needed to return data
 	// for a packet at each function call.  Be careful using this with concurrent
@@ -764,8 +764,8 @@ func NewPacket(data []byte, firstLayerDecoder Decoder, options DecodeOptions) (p
 
 // PacketDataSource is an interface for some source of packet data.  Users may
 // create their own implementations, or use the existing implementations in
-// gopacket/pcap (libpcap, allows reading from live interfaces or from
-// pcap files) or gopacket/pfring (PF_RING, allows reading from live
+// gopacket131_dpdk/pcap (libpcap, allows reading from live interfaces or from
+// pcap files) or gopacket131_dpdk/pfring (PF_RING, allows reading from live
 // interfaces).
 type PacketDataSource interface {
 	// ReadPacketData returns the next packet available from this data source.

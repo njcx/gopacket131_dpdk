@@ -19,9 +19,9 @@ import (
 
 	"github.com/vishvananda/netlink"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/pcapgo"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
+	"github.com/njcx/gopacket131_dpdk/pcapgo"
 )
 
 const (
@@ -44,7 +44,7 @@ func Example_captureEthernet() {
 		log.Fatalf("OpenEthernet: %v", err)
 	}
 
-	pkgsrc := gopacket.NewPacketSource(handle, layers.LayerTypeEthernet)
+	pkgsrc := gopacket131_dpdk.NewPacketSource(handle, layers.LayerTypeEthernet)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	for packet := range pkgsrc.PacketsCtx(ctx) {
@@ -69,7 +69,7 @@ func TestEthernetHandle_Close_WithTimeout(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	pkgsrc := gopacket.NewPacketSource(handle, layers.LayerTypeEthernet)
+	pkgsrc := gopacket131_dpdk.NewPacketSource(handle, layers.LayerTypeEthernet)
 
 	go consumePacketSource(ctx, t, pkgsrc, done)
 
@@ -98,7 +98,7 @@ func TestEthernetHandle_Close_WithCancel(t *testing.T) {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
-	pkgsrc := gopacket.NewPacketSource(handle, layers.LayerTypeEthernet)
+	pkgsrc := gopacket131_dpdk.NewPacketSource(handle, layers.LayerTypeEthernet)
 	go consumePacketSource(ctx, t, pkgsrc, done)
 
 	go func() {
@@ -117,7 +117,7 @@ func TestEthernetHandle_Close_WithCancel(t *testing.T) {
 	}
 }
 
-func consumePacketSource(ctx context.Context, tb testing.TB, pkgsrc *gopacket.PacketSource, done chan<- struct{}) {
+func consumePacketSource(ctx context.Context, tb testing.TB, pkgsrc *gopacket131_dpdk.PacketSource, done chan<- struct{}) {
 	tb.Helper()
 	var writer = pcapgo.NewWriter(new(bytes.Buffer))
 	defer close(done)

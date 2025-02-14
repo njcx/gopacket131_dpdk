@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Test packet collected from live network. See the test below for contents
@@ -405,11 +405,11 @@ var SFlowTestPacket13 = []byte{
 }
 
 func TestDecodeUDPSFlow(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket1, LayerTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket1, LayerTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeSFlow}, t)
 	if got, ok := p.TransportLayer().(*UDP); ok {
 		want := &UDP{
 			BaseLayer: BaseLayer{SFlowTestPacket1[34:42], SFlowTestPacket1[42:]},
@@ -429,11 +429,11 @@ func TestDecodeUDPSFlow(t *testing.T) {
 }
 
 func TestDecodeSFlowDatagram(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket1, LayerTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket1, LayerTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeSFlow}, t)
 	if got, ok := p.ApplicationLayer().(*SFlowDatagram); ok {
 		want := &SFlowDatagram{
 			DatagramVersion: uint32(5),
@@ -467,7 +467,7 @@ func TestDecodeSFlowDatagram(t *testing.T) {
 							FrameLength:    0x5d2,
 							PayloadRemoved: 0x4,
 							HeaderLength:   0x80,
-							Header:         gopacket.NewPacket(SFlowTestPacket1[134:262], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket1[134:262], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 						SFlowExtendedSwitchFlowRecord{
 							SFlowBaseFlowRecord: SFlowBaseFlowRecord{
@@ -506,7 +506,7 @@ func TestDecodeSFlowDatagram(t *testing.T) {
 							FrameLength:    0x5ee,
 							PayloadRemoved: 0x4,
 							HeaderLength:   0x80,
-							Header:         gopacket.NewPacket(SFlowTestPacket1[350:478], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket1[350:478], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 						SFlowExtendedSwitchFlowRecord{
 							SFlowBaseFlowRecord: SFlowBaseFlowRecord{
@@ -545,7 +545,7 @@ func TestDecodeSFlowDatagram(t *testing.T) {
 							FrameLength:    0x446,
 							PayloadRemoved: 0x4,
 							HeaderLength:   0x80,
-							Header:         gopacket.NewPacket(SFlowTestPacket1[566:694], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket1[566:694], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 						SFlowExtendedSwitchFlowRecord{
 							SFlowBaseFlowRecord: SFlowBaseFlowRecord{
@@ -584,7 +584,7 @@ func TestDecodeSFlowDatagram(t *testing.T) {
 							FrameLength:    0x5ee,
 							PayloadRemoved: 0x4,
 							HeaderLength:   0x80,
-							Header:         gopacket.NewPacket(SFlowTestPacket1[958:1086], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket1[958:1086], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 						SFlowExtendedSwitchFlowRecord{
 							SFlowBaseFlowRecord: SFlowBaseFlowRecord{
@@ -623,7 +623,7 @@ func TestDecodeSFlowDatagram(t *testing.T) {
 							FrameLength:    0x5ee,
 							PayloadRemoved: 0x4,
 							HeaderLength:   0x80,
-							Header:         gopacket.NewPacket(SFlowTestPacket1[1174:1302], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket1[1174:1302], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 						SFlowExtendedSwitchFlowRecord{
 							SFlowBaseFlowRecord: SFlowBaseFlowRecord{
@@ -662,7 +662,7 @@ func TestDecodeSFlowDatagram(t *testing.T) {
 							FrameLength:    0x46,
 							PayloadRemoved: 0x4,
 							HeaderLength:   0x42,
-							Header:         gopacket.NewPacket(SFlowTestPacket1[1390:1458], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket1[1390:1458], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 						SFlowExtendedSwitchFlowRecord{
 							SFlowBaseFlowRecord: SFlowBaseFlowRecord{
@@ -746,11 +746,11 @@ func TestDecodeSFlowDatagram(t *testing.T) {
 }
 
 func TestPacketPacket0(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket2, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket2, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeSFlow}, t)
 	if got, ok := p.ApplicationLayer().(*SFlowDatagram); ok {
 		want := &SFlowDatagram{
 			DatagramVersion: uint32(5),
@@ -836,7 +836,7 @@ func TestPacketPacket0(t *testing.T) {
 							FrameLength:    70,
 							PayloadRemoved: 4,
 							HeaderLength:   0x42,
-							Header:         gopacket.NewPacket(SFlowTestPacket2[350:418], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket2[350:418], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 					},
 				},
@@ -916,7 +916,7 @@ func TestPacketPacket0(t *testing.T) {
 							FrameLength:    390,
 							PayloadRemoved: 4,
 							HeaderLength:   0x80,
-							Header:         gopacket.NewPacket(SFlowTestPacket2[698:826], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket2[698:826], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 					},
 				},
@@ -996,7 +996,7 @@ func TestPacketPacket0(t *testing.T) {
 							FrameLength:    70,
 							PayloadRemoved: 4,
 							HeaderLength:   0x42,
-							Header:         gopacket.NewPacket(SFlowTestPacket2[1106:1174], LayerTypeEthernet, gopacket.Default),
+							Header:         gopacket131_dpdk.NewPacket(SFlowTestPacket2[1106:1174], LayerTypeEthernet, gopacket131_dpdk.Default),
 						},
 					},
 				},
@@ -1011,12 +1011,12 @@ func TestPacketPacket0(t *testing.T) {
 }
 
 func TestDecodeProcessorCounter(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket3, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket3, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1058,12 +1058,12 @@ func TestDecodeProcessorCounter(t *testing.T) {
 }
 
 func TestDecodeExtendedSwitchFlow(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket4, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket4, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1111,12 +1111,12 @@ func TestDecodeExtendedSwitchFlow(t *testing.T) {
 }
 
 func TestDecodeExtendedRouterFlow(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket5, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket5, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1163,12 +1163,12 @@ func TestDecodeExtendedRouterFlow(t *testing.T) {
 }
 
 func TestDecodeExtendedRouterFlowIPv6(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket8, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket8, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1215,12 +1215,12 @@ func TestDecodeExtendedRouterFlowIPv6(t *testing.T) {
 }
 
 func TestDecodeExtendedIpv4TunnelIngressFlow(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket6, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket6, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1274,12 +1274,12 @@ func TestDecodeExtendedIpv4TunnelIngressFlow(t *testing.T) {
 }
 
 func TestDecodeExtendedIpv4TunnelEgressFlow(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket7, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket7, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1333,12 +1333,12 @@ func TestDecodeExtendedIpv4TunnelEgressFlow(t *testing.T) {
 }
 
 func TestDecodeEthernetFrameFlow(t *testing.T) {
-	p := gopacket.NewPacket(SFlowEthernetFramePacket, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowEthernetFramePacket, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1560,11 +1560,11 @@ func TestDecodeEthernetFrameFlow(t *testing.T) {
 }
 
 func TestDecodePortnameCounter(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket9, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket9, LayerTypeSFlow, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1644,12 +1644,12 @@ func TestDecodePortnameCounter(t *testing.T) {
 }
 
 func TestDecodeVLANCounter(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket10, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket10, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1692,12 +1692,12 @@ func TestDecodeVLANCounter(t *testing.T) {
 }
 
 func TestDecodeLACPCounter(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket11, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket11, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1746,12 +1746,12 @@ func TestDecodeLACPCounter(t *testing.T) {
 }
 
 func TestDecodeOpenflowCounter(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket12, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket12, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1825,12 +1825,12 @@ func TestDecodeOpenflowCounter(t *testing.T) {
 }
 
 func TestDecodeAppResourcesOvsdbCounter(t *testing.T) {
-	p := gopacket.NewPacket(SFlowTestPacket13, LayerTypeSFlow, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(SFlowTestPacket13, LayerTypeSFlow, gopacket131_dpdk.Default)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSFlow}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSFlow}, t)
 
 	got := p.ApplicationLayer().(*SFlowDatagram)
 
@@ -1877,56 +1877,56 @@ func TestDecodeAppResourcesOvsdbCounter(t *testing.T) {
 
 func BenchmarkDecodeSFlowPacket1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(SFlowTestPacket1, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(SFlowTestPacket1, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
 func BenchmarkDecodeSFlowPacket2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(SFlowTestPacket2, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(SFlowTestPacket2, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
 func BenchmarkDecodeSFlowPacket3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(SFlowTestPacket3, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(SFlowTestPacket3, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
 func BenchmarkDecodeSFlowPacket4(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(SFlowTestPacket4, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(SFlowTestPacket4, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
 func BenchmarkDecodeSFlowPacket9(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(SFlowTestPacket9, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(SFlowTestPacket9, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
 func BenchmarkDecodeSFlowPacket10(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(SFlowTestPacket10, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(SFlowTestPacket10, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
 func BenchmarkDecodeSFlowPacket11(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(SFlowTestPacket11, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(SFlowTestPacket11, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
 func BenchmarkDecodeSFlowLayerPacket1(b *testing.B) {
 	var sflow SFlowDatagram
 	for i := 0; i < b.N; i++ {
-		sflow.DecodeFromBytes(SFlowTestPacket1[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket.NilDecodeFeedback)
+		sflow.DecodeFromBytes(SFlowTestPacket1[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket131_dpdk.NilDecodeFeedback)
 	}
 }
 
 func BenchmarkDecodeSFlowLayerPacket2(b *testing.B) {
 	var sflow SFlowDatagram
 	for i := 0; i < b.N; i++ {
-		sflow.DecodeFromBytes(SFlowTestPacket2[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket.NilDecodeFeedback)
+		sflow.DecodeFromBytes(SFlowTestPacket2[ /*eth*/ 14+ /*ipv4*/ 20+ /*udp*/ 8:], gopacket131_dpdk.NilDecodeFeedback)
 	}
 }

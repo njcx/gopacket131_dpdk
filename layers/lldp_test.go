@@ -1,4 +1,4 @@
-// Copyright 2020 The GoPacket Authors. All rights reserved.
+// Copyright 2020 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketLLDP is the packet:
@@ -48,11 +48,11 @@ var testPacketLLDP = []byte{
 }
 
 func TestPacketLLDP(t *testing.T) {
-	p := gopacket.NewPacket(testPacketLLDP, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketLLDP, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeLinkLayerDiscovery, LayerTypeLinkLayerDiscoveryInfo}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeLinkLayerDiscovery, LayerTypeLinkLayerDiscoveryInfo}, t)
 	if got, ok := p.Layer(LayerTypeLinkLayerDiscoveryInfo).(*LinkLayerDiscoveryInfo); ok {
 		want := &LinkLayerDiscoveryInfo{
 			PortDescription: "Siemens, SIMATIC NET, Ethernet Switch Port 01",
@@ -85,6 +85,6 @@ func TestPacketLLDP(t *testing.T) {
 
 func BenchmarkDecodePacketLLDP(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketLLDP, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketLLDP, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }

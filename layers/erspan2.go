@@ -9,7 +9,7 @@ package layers
 import (
 	"encoding/binary"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -29,10 +29,10 @@ type ERSPANII struct {
 	Index                               uint32
 }
 
-func (erspan2 *ERSPANII) LayerType() gopacket.LayerType { return LayerTypeERSPANII }
+func (erspan2 *ERSPANII) LayerType() gopacket131_dpdk.LayerType { return LayerTypeERSPANII }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (erspan2 *ERSPANII) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (erspan2 *ERSPANII) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	erspan2Length := 8
 	erspan2.Version = data[0] & 0xF0 >> 4
 	erspan2.VLANIdentifier = binary.BigEndian.Uint16(data[:2]) & 0x0FFF
@@ -48,9 +48,9 @@ func (erspan2 *ERSPANII) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (erspan2 *ERSPANII) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (erspan2 *ERSPANII) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(8)
 	if err != nil {
 		return err
@@ -71,16 +71,16 @@ func (erspan2 *ERSPANII) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.S
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (erspan2 *ERSPANII) CanDecode() gopacket.LayerClass {
+func (erspan2 *ERSPANII) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeERSPANII
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (erspan2 *ERSPANII) NextLayerType() gopacket.LayerType {
+func (erspan2 *ERSPANII) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeEthernet
 }
 
-func decodeERSPANII(data []byte, p gopacket.PacketBuilder) error {
+func decodeERSPANII(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	erspan2 := &ERSPANII{}
 	return decodingLayerDecoder(erspan2, data, p)
 }

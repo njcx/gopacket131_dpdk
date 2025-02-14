@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -200,7 +200,7 @@ func (a ICMPv4TypeCode) SerializeTo(bytes []byte) {
 }
 
 // CreateICMPv4TypeCode is a convenience function to create an ICMPv4TypeCode
-// gopacket type from the ICMPv4 type and code values.
+// gopacket131_dpdk type from the ICMPv4 type and code values.
 func CreateICMPv4TypeCode(typ uint8, code uint8) ICMPv4TypeCode {
 	return ICMPv4TypeCode(binary.BigEndian.Uint16([]byte{typ, code}))
 }
@@ -215,10 +215,10 @@ type ICMPv4 struct {
 }
 
 // LayerType returns LayerTypeICMPv4.
-func (i *ICMPv4) LayerType() gopacket.LayerType { return LayerTypeICMPv4 }
+func (i *ICMPv4) LayerType() gopacket131_dpdk.LayerType { return LayerTypeICMPv4 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv4) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv4) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 8 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less then 8 bytes for ICMPv4 packet")
@@ -232,9 +232,9 @@ func (i *ICMPv4) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error 
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv4) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv4) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(8)
 	if err != nil {
 		return err
@@ -245,37 +245,37 @@ func (i *ICMPv4) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serialize
 	if opts.ComputeChecksums {
 		bytes[2] = 0
 		bytes[3] = 0
-		csum := gopacket.ComputeChecksum(b.Bytes(), 0)
-		i.Checksum = gopacket.FoldChecksum(csum)
+		csum := gopacket131_dpdk.ComputeChecksum(b.Bytes(), 0)
+		i.Checksum = gopacket131_dpdk.FoldChecksum(csum)
 	}
 	binary.BigEndian.PutUint16(bytes[2:], i.Checksum)
 	return nil
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv4) CanDecode() gopacket.LayerClass {
+func (i *ICMPv4) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv4
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv4) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (i *ICMPv4) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
-func (i *ICMPv4) VerifyChecksum() (error, gopacket.ChecksumVerificationResult) {
+func (i *ICMPv4) VerifyChecksum() (error, gopacket131_dpdk.ChecksumVerificationResult) {
 	bytes := append(i.Contents, i.Payload...)
 
 	existing := i.Checksum
-	verification := gopacket.ComputeChecksum(bytes, 0)
-	correct := gopacket.FoldChecksum(verification - uint32(existing))
-	return nil, gopacket.ChecksumVerificationResult{
+	verification := gopacket131_dpdk.ComputeChecksum(bytes, 0)
+	correct := gopacket131_dpdk.FoldChecksum(verification - uint32(existing))
+	return nil, gopacket131_dpdk.ChecksumVerificationResult{
 		Valid:   correct == existing,
 		Correct: uint32(correct),
 		Actual:  uint32(existing),
 	}
 }
 
-func decodeICMPv4(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv4(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv4{}
 	return decodingLayerDecoder(i, data, p)
 }

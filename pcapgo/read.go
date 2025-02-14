@@ -16,8 +16,8 @@ import (
 	"bufio"
 	"compress/gzip"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // Reader wraps an underlying io.Reader to read packet data in PCAP
@@ -119,7 +119,7 @@ func (r *Reader) readHeader() error {
 }
 
 // ReadPacketData reads next packet from file.
-func (r *Reader) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (r *Reader) ReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	if ci, err = r.readPacketHeader(); err != nil {
 		return
 	}
@@ -141,7 +141,7 @@ func (r *Reader) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, err err
 //
 // It is not true zero copy, as data is still copied from the underlying reader. However,
 // this method avoids allocating heap memory for every packet.
-func (r *Reader) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (r *Reader) ZeroCopyReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	if ci, err = r.readPacketHeader(); err != nil {
 		return
 	}
@@ -166,7 +166,7 @@ func (r *Reader) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo,
 	return data, ci, err
 }
 
-func (r *Reader) readPacketHeader() (ci gopacket.CaptureInfo, err error) {
+func (r *Reader) readPacketHeader() (ci gopacket131_dpdk.CaptureInfo, err error) {
 	if _, err = io.ReadFull(r.r, r.buf[:]); err != nil {
 		return
 	}
@@ -223,9 +223,9 @@ func (r *Reader) String() string {
 }
 
 // Resolution returns the timestamp resolution of acquired timestamps before scaling to NanosecondTimestampResolution.
-func (r *Reader) Resolution() gopacket.TimestampResolution {
+func (r *Reader) Resolution() gopacket131_dpdk.TimestampResolution {
 	if r.nanoSecsFactor == 1000 {
-		return gopacket.TimestampResolutionMicrosecond
+		return gopacket131_dpdk.TimestampResolutionMicrosecond
 	}
-	return gopacket.TimestampResolutionNanosecond
+	return gopacket131_dpdk.TimestampResolutionNanosecond
 }

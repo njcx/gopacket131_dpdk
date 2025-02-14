@@ -11,10 +11,10 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
-func checkLayers(p gopacket.Packet, want []gopacket.LayerType, t *testing.T) {
+func checkLayers(p gopacket131_dpdk.Packet, want []gopacket131_dpdk.LayerType, t *testing.T) {
 	layers := p.Layers()
 	t.Log("Checking packet layers, want", want)
 	for _, l := range layers {
@@ -28,7 +28,7 @@ func checkLayers(p gopacket.Packet, want []gopacket.LayerType, t *testing.T) {
 		return
 	}
 	for i, l := range want {
-		if l == gopacket.LayerTypePayload {
+		if l == gopacket131_dpdk.LayerTypePayload {
 			// done matching layers
 			return
 		}
@@ -42,17 +42,17 @@ func checkLayers(p gopacket.Packet, want []gopacket.LayerType, t *testing.T) {
 
 // Checks that when a serialized version of p is decoded, p and the serialized version of p are the same.
 // Does not work for packets where the order of options can change, like icmpv6 router advertisements, dhcpv6, etc.
-func checkSerialization(p gopacket.Packet, t *testing.T) {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{
+func checkSerialization(p gopacket131_dpdk.Packet, t *testing.T) {
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{
 		ComputeChecksums: false,
 		FixLengths:       false,
 	}
-	if err := gopacket.SerializePacket(buf, opts, p); err != nil {
+	if err := gopacket131_dpdk.SerializePacket(buf, opts, p); err != nil {
 		t.Error("Failed to encode packet:", err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LinkTypeEthernet, gopacket.Default)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p2.ErrorLayer() != nil {
 		t.Error("Failed to decode the re-encoded packet:", p2.ErrorLayer().Error())
 	}

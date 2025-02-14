@@ -1,4 +1,4 @@
-// Copyright 2018 GoPacket Authors. All rights reserved.
+// Copyright 2018 gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -14,7 +14,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -58,7 +58,7 @@ type MLDv2MulticastListenerQueryMessage struct {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (m *MLDv2MulticastListenerQueryMessage) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *MLDv2MulticastListenerQueryMessage) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 24 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less than 24 bytes for Multicast Listener Query Message V2")
@@ -90,14 +90,14 @@ func (m *MLDv2MulticastListenerQueryMessage) DecodeFromBytes(data []byte, df gop
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (*MLDv2MulticastListenerQueryMessage) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (*MLDv2MulticastListenerQueryMessage) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (m *MLDv2MulticastListenerQueryMessage) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (m *MLDv2MulticastListenerQueryMessage) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if err := m.serializeSourceAddressesTo(b, opts); err != nil {
 		return err
 	}
@@ -132,7 +132,7 @@ func (m *MLDv2MulticastListenerQueryMessage) SerializeTo(b gopacket.SerializeBuf
 }
 
 // writes each source address to the buffer preserving the order
-func (m *MLDv2MulticastListenerQueryMessage) serializeSourceAddressesTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m *MLDv2MulticastListenerQueryMessage) serializeSourceAddressesTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	numberOfSourceAddresses := len(m.SourceAddresses)
 	if numberOfSourceAddresses > math.MaxUint16 {
 		return fmt.Errorf(
@@ -180,12 +180,12 @@ func (m *MLDv2MulticastListenerQueryMessage) String() string {
 }
 
 // LayerType returns LayerTypeMLDv2MulticastListenerQuery.
-func (*MLDv2MulticastListenerQueryMessage) LayerType() gopacket.LayerType {
+func (*MLDv2MulticastListenerQueryMessage) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeMLDv2MulticastListenerQuery
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (*MLDv2MulticastListenerQueryMessage) CanDecode() gopacket.LayerClass {
+func (*MLDv2MulticastListenerQueryMessage) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeMLDv2MulticastListenerQuery
 }
 
@@ -306,7 +306,7 @@ type MLDv2MulticastListenerReportMessage struct {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (m *MLDv2MulticastListenerReportMessage) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *MLDv2MulticastListenerReportMessage) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 4 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less than 4 bytes for Multicast Listener Report Message V2")
@@ -333,9 +333,9 @@ func (m *MLDv2MulticastListenerReportMessage) DecodeFromBytes(data []byte, df go
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (m *MLDv2MulticastListenerReportMessage) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (m *MLDv2MulticastListenerReportMessage) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	lastItemIdx := len(m.MulticastAddressRecords) - 1
 	for k := range m.MulticastAddressRecords {
 		i := lastItemIdx - k // reverse order
@@ -377,18 +377,18 @@ func (m *MLDv2MulticastListenerReportMessage) String() string {
 }
 
 // LayerType returns LayerTypeMLDv2MulticastListenerQuery.
-func (*MLDv2MulticastListenerReportMessage) LayerType() gopacket.LayerType {
+func (*MLDv2MulticastListenerReportMessage) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeMLDv2MulticastListenerReport
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (*MLDv2MulticastListenerReportMessage) CanDecode() gopacket.LayerClass {
+func (*MLDv2MulticastListenerReportMessage) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeMLDv2MulticastListenerReport
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (*MLDv2MulticastListenerReportMessage) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (*MLDv2MulticastListenerReportMessage) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // MLDv2MulticastAddressRecordType holds the type of a
@@ -470,7 +470,7 @@ type MLDv2MulticastAddressRecord struct {
 }
 
 // decodes a multicast address record from bytes
-func (m *MLDv2MulticastAddressRecord) decode(data []byte, df gopacket.DecodeFeedback) (int, error) {
+func (m *MLDv2MulticastAddressRecord) decode(data []byte, df gopacket131_dpdk.DecodeFeedback) (int, error) {
 	if len(data) < 20 {
 		df.SetTruncated()
 		return 0, errors.New(
@@ -522,7 +522,7 @@ func (m *MLDv2MulticastAddressRecord) String() string {
 }
 
 // serializes a multicast address record
-func (m *MLDv2MulticastAddressRecord) serializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m *MLDv2MulticastAddressRecord) serializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if err := m.serializeAuxiliaryDataTo(b, opts); err != nil {
 		return err
 	}
@@ -550,7 +550,7 @@ func (m *MLDv2MulticastAddressRecord) serializeTo(b gopacket.SerializeBuffer, op
 }
 
 // serializes the auxiliary data of a multicast address record
-func (m *MLDv2MulticastAddressRecord) serializeAuxiliaryDataTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m *MLDv2MulticastAddressRecord) serializeAuxiliaryDataTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if remainder := len(m.AuxiliaryData) % 4; remainder != 0 {
 		zeroWord := []byte{0x0, 0x0, 0x0, 0x0}
 		m.AuxiliaryData = append(m.AuxiliaryData, zeroWord[:remainder]...)
@@ -576,7 +576,7 @@ func (m *MLDv2MulticastAddressRecord) serializeAuxiliaryDataTo(b gopacket.Serial
 }
 
 // serializes the source addresses of a multicast address record preserving the order
-func (m *MLDv2MulticastAddressRecord) serializeSourceAddressesTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m *MLDv2MulticastAddressRecord) serializeSourceAddressesTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if opts.FixLengths {
 		numberOfSourceAddresses := len(m.SourceAddresses)
 
@@ -608,12 +608,12 @@ func (m *MLDv2MulticastAddressRecord) serializeSourceAddressesTo(b gopacket.Seri
 	return nil
 }
 
-func decodeMLDv2MulticastListenerReport(data []byte, p gopacket.PacketBuilder) error {
+func decodeMLDv2MulticastListenerReport(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	m := &MLDv2MulticastListenerReportMessage{}
 	return decodingLayerDecoder(m, data, p)
 }
 
-func decodeMLDv2MulticastListenerQuery(data []byte, p gopacket.PacketBuilder) error {
+func decodeMLDv2MulticastListenerQuery(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	m := &MLDv2MulticastListenerQueryMessage{}
 	return decodingLayerDecoder(m, data, p)
 }

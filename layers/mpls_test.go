@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketMPLS
@@ -40,11 +40,11 @@ var testPacketMPLS = []byte{
 }
 
 func TestPacketMPLS(t *testing.T) {
-	p := gopacket.NewPacket(testPacketMPLS, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketMPLS, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeMPLS, LayerTypeMPLS, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeMPLS, LayerTypeMPLS, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layers()[1].(*MPLS); ok {
 		want := &MPLS{
 			BaseLayer: BaseLayer{
@@ -91,6 +91,6 @@ func TestPacketMPLS(t *testing.T) {
 
 func BenchmarkDecodePacketMPLS(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketMPLS, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketMPLS, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }

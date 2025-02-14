@@ -1,9 +1,9 @@
-Contributing To gopacket
+Contributing To gopacket131_dpdk
 ========================
 
-So you've got some code and you'd like it to be part of gopacket... wonderful!
+So you've got some code and you'd like it to be part of gopacket131_dpdk... wonderful!
 We're happy to accept contributions, whether they're fixes to old protocols, new
-protocols entirely, or anything else you think would improve the gopacket
+protocols entirely, or anything else you think would improve the gopacket131_dpdk
 library.  This document is designed to help you to do just that.
 
 The first section deals with the plumbing:  how to actually get a change
@@ -31,13 +31,13 @@ external contributors.  See
 https://help.github.com/articles/creating-a-pull-request/ for details on
 how to create a request.
 
-Also, there's a local script `gc` in the base directory of GoPacket that
+Also, there's a local script `gc` in the base directory of gopacket131_dpdk that
 runs a local set of checks, which should give you relatively high confidence
 that your pull won't fail github pull checks.
 
 ```sh
-go get github.com/gopacket/gopacket
-cd $GOROOT/src/pkg/github.com/gopacket/gopacket
+go get github.com/njcx/gopacket131_dpdk
+cd $GOROOT/src/pkg/github.com/njcx/gopacket131_dpdk
 git checkout -b <mynewfeature>  # create a new branch to work from
 ... code code code ...
 ./gc  # Run this to do local commits, it performs a number of checks
@@ -88,7 +88,7 @@ your error.  Use your own discretion to determine whether the stuff you've
 already decoded should be returned to the caller or not:
 
 ```go
-func decodeMyProtocol(data []byte, p gopacket.PacketBuilder) error {
+func decodeMyProtocol(data []byte, p gopacket131_dpdk.PacketBuilder) error {
   prot := &MyProtocol{}
   if len(data) < 10 {
     // This error occurred before we did ANYTHING, so there's nothing in my
@@ -124,7 +124,7 @@ your decisions during code review. ;)
 
 ### Performance
 
-We strive to make gopacket as fast as possible while still providing lots of
+We strive to make gopacket131_dpdk as fast as possible while still providing lots of
 features.  In general, this means:
 
 * Focus performance tuning on common protocols (IP4/6, TCP, etc), and optimize
@@ -133,7 +133,7 @@ features.  In general, this means:
 * Use fast operations.  See the toplevel benchmark_test for benchmarks of some
   of Go's underlying features and types.
 * Test your performance changes!  You should use the ./gc script's --benchmark
-  flag to submit any performance-related changes.  Use pcap/gopacket_benchmark
+  flag to submit any performance-related changes.  Use pcap/gopacket131_dpdk_benchmark
   to test your change against a PCAP file based on your traffic patterns.
 * Don't be TOO hacky.  Sometimes, removing an unused struct from a field causes
   a huge performance hit, due to the way that Go currently handles its segmented
@@ -161,7 +161,7 @@ type MyProtocol struct {
   VeryCommon []uint32
 }
 
-func decodeMyProtocol(data []byte, p gopacket.PacketBuilder) error {
+func decodeMyProtocol(data []byte, p gopacket131_dpdk.PacketBuilder) error {
   prot := &MyProtocol{}
   prot.VeryCommon = proto.initialAllocation[:0]
   for len(data) > 4 {
@@ -189,7 +189,7 @@ use the slice itself.
 type MyProtocol struct {
   A, B net.IP
 }
-func decodeMyProtocol(data []byte, p gopacket.PacketBuilder) error {
+func decodeMyProtocol(data []byte, p gopacket131_dpdk.PacketBuilder) error {
   p.AddLayer(&MyProtocol{
     A: data[:4],
     B: data[4:8],

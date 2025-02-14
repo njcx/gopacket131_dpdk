@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // TCPPort is a port in a TCP layer.
@@ -50,8 +50,8 @@ func (a TCPPort) String() string {
 // application payload. It uses some well-known ports such as 53 for
 // DNS.
 //
-// Returns gopacket.LayerTypePayload for unknown/unsupported port numbers.
-func (a TCPPort) LayerType() gopacket.LayerType {
+// Returns gopacket131_dpdk.LayerTypePayload for unknown/unsupported port numbers.
+func (a TCPPort) LayerType() gopacket131_dpdk.LayerType {
 	if tcpPortLayerTypeOverride.has(uint16(a)) {
 		return tcpPortLayerType[a]
 	}
@@ -79,16 +79,16 @@ func (a TCPPort) LayerType() gopacket.LayerType {
 	case 5061: // ips
 		return LayerTypeTLS
 	}
-	return gopacket.LayerTypePayload
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 var tcpPortLayerTypeOverride bitfield
 
-var tcpPortLayerType = map[TCPPort]gopacket.LayerType{}
+var tcpPortLayerType = map[TCPPort]gopacket131_dpdk.LayerType{}
 
 // RegisterTCPPortLayerType creates a new mapping between a TCPPort
 // and an underlaying LayerType.
-func RegisterTCPPortLayerType(port TCPPort, layerType gopacket.LayerType) {
+func RegisterTCPPortLayerType(port TCPPort, layerType gopacket131_dpdk.LayerType) {
 	tcpPortLayerTypeOverride.set(uint16(port))
 	tcpPortLayerType[port] = layerType
 }
@@ -107,8 +107,8 @@ func (a UDPPort) String() string {
 // application payload. It uses some well-known ports such as 53 for
 // DNS.
 //
-// Returns gopacket.LayerTypePayload for unknown/unsupported port numbers.
-func (a UDPPort) LayerType() gopacket.LayerType {
+// Returns gopacket131_dpdk.LayerTypePayload for unknown/unsupported port numbers.
+func (a UDPPort) LayerType() gopacket131_dpdk.LayerType {
 	if udpPortLayerTypeOverride.has(uint16(a)) {
 		return udpPortLayerType[a]
 	}
@@ -142,16 +142,16 @@ func (a UDPPort) LayerType() gopacket.LayerType {
 	case 6343:
 		return LayerTypeSFlow
 	}
-	return gopacket.LayerTypePayload
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 var udpPortLayerTypeOverride bitfield
 
-var udpPortLayerType = map[UDPPort]gopacket.LayerType{}
+var udpPortLayerType = map[UDPPort]gopacket131_dpdk.LayerType{}
 
 // RegisterUDPPortLayerType creates a new mapping between a UDPPort
 // and an underlaying LayerType.
-func RegisterUDPPortLayerType(port UDPPort, layerType gopacket.LayerType) {
+func RegisterUDPPortLayerType(port UDPPort, layerType gopacket131_dpdk.LayerType) {
 	udpPortLayerTypeOverride.set(uint16(port))
 	udpPortLayerType[port] = layerType
 }

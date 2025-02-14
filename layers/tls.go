@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // TLSType defines the type of data after the TLS Record
@@ -98,12 +98,12 @@ type TLSRecordHeader struct {
 	Length      uint16
 }
 
-// LayerType returns gopacket.LayerTypeTLS.
-func (t *TLS) LayerType() gopacket.LayerType { return LayerTypeTLS }
+// LayerType returns gopacket131_dpdk.LayerTypeTLS.
+func (t *TLS) LayerType() gopacket131_dpdk.LayerType { return LayerTypeTLS }
 
 // decodeTLS decodes the byte slice into a TLS type. It also
 // setups the application Layer in PacketBuilder.
-func decodeTLS(data []byte, p gopacket.PacketBuilder) error {
+func decodeTLS(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	t := &TLS{}
 	err := t.DecodeFromBytes(data, p)
 	if err != nil {
@@ -115,7 +115,7 @@ func decodeTLS(data []byte, p gopacket.PacketBuilder) error {
 }
 
 // DecodeFromBytes decodes the slice into the TLS struct.
-func (t *TLS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (t *TLS) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	t.BaseLayer.Contents = data
 	t.BaseLayer.Payload = nil
 
@@ -127,7 +127,7 @@ func (t *TLS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 	return t.decodeTLSRecords(data, df)
 }
 
-func (t *TLS) decodeTLSRecords(data []byte, df gopacket.DecodeFeedback) error {
+func (t *TLS) decodeTLSRecords(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 5 {
 		df.SetTruncated()
 		return errors.New("TLS record too short")
@@ -193,14 +193,14 @@ func (t *TLS) decodeTLSRecords(data []byte, df gopacket.DecodeFeedback) error {
 	return t.decodeTLSRecords(data[tl:len(data)], df)
 }
 
-// CanDecode implements gopacket.DecodingLayer.
-func (t *TLS) CanDecode() gopacket.LayerClass {
+// CanDecode implements gopacket131_dpdk.DecodingLayer.
+func (t *TLS) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeTLS
 }
 
-// NextLayerType implements gopacket.DecodingLayer.
-func (t *TLS) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+// NextLayerType implements gopacket131_dpdk.DecodingLayer.
+func (t *TLS) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 // Payload returns nil, since TLS encrypted payload is inside TLSAppDataRecord
@@ -209,8 +209,8 @@ func (t *TLS) Payload() []byte {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-func (t *TLS) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+func (t *TLS) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	totalLength := 0
 	for _, record := range t.ChangeCipherSpec {
 		if opts.FixLengths {

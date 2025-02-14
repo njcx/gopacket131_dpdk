@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestDecodeAndEncode(t *testing.T) {
@@ -25,8 +25,8 @@ func TestDecodeAndEncode(t *testing.T) {
 	}
 	expectedBytes := []byte{0x12, 0xaa, 0x96, 0xaa, 0x15, 0x5F, 0x0F, 0x0F}
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{}
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{}
 	erspan.SerializeTo(buf, opts)
 
 	if !reflect.DeepEqual(buf.Bytes(), expectedBytes) {
@@ -34,7 +34,7 @@ func TestDecodeAndEncode(t *testing.T) {
 	}
 
 	erspan2 := &ERSPANII{}
-	erspan2.DecodeFromBytes(buf.Bytes(), gopacket.NilDecodeFeedback)
+	erspan2.DecodeFromBytes(buf.Bytes(), gopacket131_dpdk.NilDecodeFeedback)
 	if erspan.Version != erspan2.Version {
 		t.Fatalf("Got %+v, expected %+v\n", erspan2.Version, erspan.Version)
 	}

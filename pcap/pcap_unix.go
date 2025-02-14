@@ -18,9 +18,9 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 /*
@@ -107,36 +107,36 @@ int pcap_tstamp_type_name_to_val(const char* t) {
 
 // Windows, Macs, and Linux all use different time types.  Joy.
 #ifdef __APPLE__
-	#define gopacket_time_secs_t __darwin_time_t
-	#define gopacket_time_usecs_t __darwin_suseconds_t
+	#define gopacket131_dpdk_time_secs_t __darwin_time_t
+	#define gopacket131_dpdk_time_usecs_t __darwin_suseconds_t
 #elif __ANDROID__
-	#define gopacket_time_secs_t __kernel_time_t
-	#define gopacket_time_usecs_t __kernel_suseconds_t
+	#define gopacket131_dpdk_time_secs_t __kernel_time_t
+	#define gopacket131_dpdk_time_usecs_t __kernel_suseconds_t
 #elif __GLIBC__
 	#ifndef __USE_TIME_BITS64
-		#define gopacket_time_secs_t __time_t
-		#define gopacket_time_usecs_t __suseconds_t
+		#define gopacket131_dpdk_time_secs_t __time_t
+		#define gopacket131_dpdk_time_usecs_t __suseconds_t
 	#else
 		#if defined(__USE_TIME64_REDIRECTS) || (__TIMESIZE == 32 && __USE_TIME_BITS64)
-			#define gopacket_time_secs_t __time64_t
-			#define gopacket_time_usecs_t __suseconds64_t
+			#define gopacket131_dpdk_time_secs_t __time64_t
+			#define gopacket131_dpdk_time_usecs_t __suseconds64_t
 		#else
-			#define gopacket_time_secs_t __time_t
-			#define gopacket_time_usecs_t __suseconds_t
+			#define gopacket131_dpdk_time_secs_t __time_t
+			#define gopacket131_dpdk_time_usecs_t __suseconds_t
 		#endif
 	#endif
 #else  // Some form of linux/bsd/etc...
 	#include <sys/param.h>
 	#ifdef __OpenBSD__
-		#define gopacket_time_secs_t u_int32_t
-		#define gopacket_time_usecs_t u_int32_t
+		#define gopacket131_dpdk_time_secs_t u_int32_t
+		#define gopacket131_dpdk_time_usecs_t u_int32_t
 	#else
 		#ifdef __time64_t
-			#define gopacket_time_secs_t __time64_t
-			#define gopacket_time_usecs_t __suseconds64_t
+			#define gopacket131_dpdk_time_secs_t __time64_t
+			#define gopacket131_dpdk_time_usecs_t __suseconds64_t
 		#else
-			#define gopacket_time_secs_t time_t
-			#define gopacket_time_usecs_t suseconds_t
+			#define gopacket131_dpdk_time_secs_t time_t
+			#define gopacket131_dpdk_time_usecs_t suseconds_t
 		#endif
 	#endif
 #endif
@@ -355,10 +355,10 @@ func pcapLookupnet(device string) (netp, maskp uint32, err error) {
 	return
 }
 
-func (b *BPF) pcapOfflineFilter(ci gopacket.CaptureInfo, data []byte) bool {
+func (b *BPF) pcapOfflineFilter(ci gopacket131_dpdk.CaptureInfo, data []byte) bool {
 	hdr := (*C.struct_pcap_pkthdr)(&b.hdr)
-	hdr.ts.tv_sec = C.gopacket_time_secs_t(ci.Timestamp.Unix())
-	hdr.ts.tv_usec = C.gopacket_time_usecs_t(ci.Timestamp.Nanosecond() / 1000)
+	hdr.ts.tv_sec = C.gopacket131_dpdk_time_secs_t(ci.Timestamp.Unix())
+	hdr.ts.tv_usec = C.gopacket131_dpdk_time_usecs_t(ci.Timestamp.Nanosecond() / 1000)
 	hdr.caplen = C.bpf_u_int32(len(data)) // Trust actual length over ci.Length.
 	hdr.len = C.bpf_u_int32(ci.Length)
 	dataptr := (*C.u_char)(unsafe.Pointer(&data[0]))

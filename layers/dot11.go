@@ -16,7 +16,7 @@ import (
 	"hash/crc32"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Dot11Flags contains the set of 8 flags in the IEEE 802.11 frame control
@@ -922,7 +922,7 @@ type Dot11 struct {
 	Checksum       uint32
 	QOS            *Dot11QOS
 	HTControl      *Dot11HTControl
-	DataLayer      gopacket.Layer
+	DataLayer      gopacket131_dpdk.Layer
 }
 
 type Dot11QOS struct {
@@ -1005,7 +1005,7 @@ func (m *Dot11HTControlMFB) NoFeedBackPresent() bool {
 	return m.VHTMCS == 15 && m.NumSTS == 7
 }
 
-func decodeDot11(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11{}
 	err := d.DecodeFromBytes(data, p)
 	if err != nil {
@@ -1018,14 +1018,14 @@ func decodeDot11(data []byte, p gopacket.PacketBuilder) error {
 	return p.NextDecoder(d.NextLayerType())
 }
 
-func (m *Dot11) LayerType() gopacket.LayerType  { return LayerTypeDot11 }
-func (m *Dot11) CanDecode() gopacket.LayerClass { return LayerTypeDot11 }
-func (m *Dot11) NextLayerType() gopacket.LayerType {
+func (m *Dot11) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11 }
+func (m *Dot11) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11 }
+func (m *Dot11) NextLayerType() gopacket131_dpdk.LayerType {
 	if m.DataLayer != nil {
 		if m.Flags.WEP() {
 			return LayerTypeDot11WEP
 		}
-		return m.DataLayer.(gopacket.DecodingLayer).NextLayerType()
+		return m.DataLayer.(gopacket131_dpdk.DecodingLayer).NextLayerType()
 	}
 	return m.Type.LayerType()
 }
@@ -1034,25 +1034,25 @@ func createU8(x uint8) *uint8 {
 	return &x
 }
 
-var dataDecodeMap = map[Dot11Type]func() gopacket.DecodingLayer{
-	Dot11TypeData:                   func() gopacket.DecodingLayer { return &Dot11Data{} },
-	Dot11TypeDataCFAck:              func() gopacket.DecodingLayer { return &Dot11DataCFAck{} },
-	Dot11TypeDataCFPoll:             func() gopacket.DecodingLayer { return &Dot11DataCFPoll{} },
-	Dot11TypeDataCFAckPoll:          func() gopacket.DecodingLayer { return &Dot11DataCFAckPoll{} },
-	Dot11TypeDataNull:               func() gopacket.DecodingLayer { return &Dot11DataNull{} },
-	Dot11TypeDataCFAckNoData:        func() gopacket.DecodingLayer { return &Dot11DataCFAckNoData{} },
-	Dot11TypeDataCFPollNoData:       func() gopacket.DecodingLayer { return &Dot11DataCFPollNoData{} },
-	Dot11TypeDataCFAckPollNoData:    func() gopacket.DecodingLayer { return &Dot11DataCFAckPollNoData{} },
-	Dot11TypeDataQOSData:            func() gopacket.DecodingLayer { return &Dot11DataQOSData{} },
-	Dot11TypeDataQOSDataCFAck:       func() gopacket.DecodingLayer { return &Dot11DataQOSDataCFAck{} },
-	Dot11TypeDataQOSDataCFPoll:      func() gopacket.DecodingLayer { return &Dot11DataQOSDataCFPoll{} },
-	Dot11TypeDataQOSDataCFAckPoll:   func() gopacket.DecodingLayer { return &Dot11DataQOSDataCFAckPoll{} },
-	Dot11TypeDataQOSNull:            func() gopacket.DecodingLayer { return &Dot11DataQOSNull{} },
-	Dot11TypeDataQOSCFPollNoData:    func() gopacket.DecodingLayer { return &Dot11DataQOSCFPollNoData{} },
-	Dot11TypeDataQOSCFAckPollNoData: func() gopacket.DecodingLayer { return &Dot11DataQOSCFAckPollNoData{} },
+var dataDecodeMap = map[Dot11Type]func() gopacket131_dpdk.DecodingLayer{
+	Dot11TypeData:                   func() gopacket131_dpdk.DecodingLayer { return &Dot11Data{} },
+	Dot11TypeDataCFAck:              func() gopacket131_dpdk.DecodingLayer { return &Dot11DataCFAck{} },
+	Dot11TypeDataCFPoll:             func() gopacket131_dpdk.DecodingLayer { return &Dot11DataCFPoll{} },
+	Dot11TypeDataCFAckPoll:          func() gopacket131_dpdk.DecodingLayer { return &Dot11DataCFAckPoll{} },
+	Dot11TypeDataNull:               func() gopacket131_dpdk.DecodingLayer { return &Dot11DataNull{} },
+	Dot11TypeDataCFAckNoData:        func() gopacket131_dpdk.DecodingLayer { return &Dot11DataCFAckNoData{} },
+	Dot11TypeDataCFPollNoData:       func() gopacket131_dpdk.DecodingLayer { return &Dot11DataCFPollNoData{} },
+	Dot11TypeDataCFAckPollNoData:    func() gopacket131_dpdk.DecodingLayer { return &Dot11DataCFAckPollNoData{} },
+	Dot11TypeDataQOSData:            func() gopacket131_dpdk.DecodingLayer { return &Dot11DataQOSData{} },
+	Dot11TypeDataQOSDataCFAck:       func() gopacket131_dpdk.DecodingLayer { return &Dot11DataQOSDataCFAck{} },
+	Dot11TypeDataQOSDataCFPoll:      func() gopacket131_dpdk.DecodingLayer { return &Dot11DataQOSDataCFPoll{} },
+	Dot11TypeDataQOSDataCFAckPoll:   func() gopacket131_dpdk.DecodingLayer { return &Dot11DataQOSDataCFAckPoll{} },
+	Dot11TypeDataQOSNull:            func() gopacket131_dpdk.DecodingLayer { return &Dot11DataQOSNull{} },
+	Dot11TypeDataQOSCFPollNoData:    func() gopacket131_dpdk.DecodingLayer { return &Dot11DataQOSCFPollNoData{} },
+	Dot11TypeDataQOSCFAckPollNoData: func() gopacket131_dpdk.DecodingLayer { return &Dot11DataQOSCFAckPollNoData{} },
 }
 
-func (m *Dot11) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 10 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11 length %v too short, %v required", len(data), 10)
@@ -1211,7 +1211,7 @@ func (m *Dot11) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 		if err != nil {
 			return err
 		}
-		m.DataLayer = l.(gopacket.Layer)
+		m.DataLayer = l.(gopacket131_dpdk.Layer)
 	}
 
 	m.Checksum = binary.LittleEndian.Uint32(data[len(data)-4 : len(data)])
@@ -1226,7 +1226,7 @@ func (m *Dot11) ChecksumValid() bool {
 	return m.Checksum == h.Sum32()
 }
 
-func (m Dot11) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(24)
 
 	if err != nil {
@@ -1272,8 +1272,10 @@ type Dot11Mgmt struct {
 	BaseLayer
 }
 
-func (m *Dot11Mgmt) NextLayerType() gopacket.LayerType { return gopacket.LayerTypePayload }
-func (m *Dot11Mgmt) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11Mgmt) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
+}
+func (m *Dot11Mgmt) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Contents = data
 	return nil
 }
@@ -1283,16 +1285,18 @@ type Dot11Ctrl struct {
 	BaseLayer
 }
 
-func (m *Dot11Ctrl) NextLayerType() gopacket.LayerType { return gopacket.LayerTypePayload }
+func (m *Dot11Ctrl) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
+}
 
-func (m *Dot11Ctrl) LayerType() gopacket.LayerType  { return LayerTypeDot11Ctrl }
-func (m *Dot11Ctrl) CanDecode() gopacket.LayerClass { return LayerTypeDot11Ctrl }
-func (m *Dot11Ctrl) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11Ctrl) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11Ctrl }
+func (m *Dot11Ctrl) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11Ctrl }
+func (m *Dot11Ctrl) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Contents = data
 	return nil
 }
 
-func decodeDot11Ctrl(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11Ctrl(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11Ctrl{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -1302,16 +1306,18 @@ type Dot11WEP struct {
 	BaseLayer
 }
 
-func (m *Dot11WEP) NextLayerType() gopacket.LayerType { return gopacket.LayerTypePayload }
+func (m *Dot11WEP) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
+}
 
-func (m *Dot11WEP) LayerType() gopacket.LayerType  { return LayerTypeDot11WEP }
-func (m *Dot11WEP) CanDecode() gopacket.LayerClass { return LayerTypeDot11WEP }
-func (m *Dot11WEP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11WEP) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11WEP }
+func (m *Dot11WEP) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11WEP }
+func (m *Dot11WEP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Contents = data
 	return nil
 }
 
-func decodeDot11WEP(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11WEP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11WEP{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -1321,18 +1327,18 @@ type Dot11Data struct {
 	BaseLayer
 }
 
-func (m *Dot11Data) NextLayerType() gopacket.LayerType {
+func (m *Dot11Data) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeLLC
 }
 
-func (m *Dot11Data) LayerType() gopacket.LayerType  { return LayerTypeDot11Data }
-func (m *Dot11Data) CanDecode() gopacket.LayerClass { return LayerTypeDot11Data }
-func (m *Dot11Data) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11Data) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11Data }
+func (m *Dot11Data) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11Data }
+func (m *Dot11Data) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Payload = data
 	return nil
 }
 
-func decodeDot11Data(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11Data(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11Data{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -1341,14 +1347,14 @@ type Dot11DataCFAck struct {
 	Dot11Data
 }
 
-func decodeDot11DataCFAck(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataCFAck(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataCFAck{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataCFAck) LayerType() gopacket.LayerType  { return LayerTypeDot11DataCFAck }
-func (m *Dot11DataCFAck) CanDecode() gopacket.LayerClass { return LayerTypeDot11DataCFAck }
-func (m *Dot11DataCFAck) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataCFAck) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11DataCFAck }
+func (m *Dot11DataCFAck) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11DataCFAck }
+func (m *Dot11DataCFAck) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Data.DecodeFromBytes(data, df)
 }
 
@@ -1356,14 +1362,14 @@ type Dot11DataCFPoll struct {
 	Dot11Data
 }
 
-func decodeDot11DataCFPoll(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataCFPoll(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataCFPoll{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataCFPoll) LayerType() gopacket.LayerType  { return LayerTypeDot11DataCFPoll }
-func (m *Dot11DataCFPoll) CanDecode() gopacket.LayerClass { return LayerTypeDot11DataCFPoll }
-func (m *Dot11DataCFPoll) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataCFPoll) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11DataCFPoll }
+func (m *Dot11DataCFPoll) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11DataCFPoll }
+func (m *Dot11DataCFPoll) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Data.DecodeFromBytes(data, df)
 }
 
@@ -1371,14 +1377,18 @@ type Dot11DataCFAckPoll struct {
 	Dot11Data
 }
 
-func decodeDot11DataCFAckPoll(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataCFAckPoll(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataCFAckPoll{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataCFAckPoll) LayerType() gopacket.LayerType  { return LayerTypeDot11DataCFAckPoll }
-func (m *Dot11DataCFAckPoll) CanDecode() gopacket.LayerClass { return LayerTypeDot11DataCFAckPoll }
-func (m *Dot11DataCFAckPoll) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataCFAckPoll) LayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11DataCFAckPoll
+}
+func (m *Dot11DataCFAckPoll) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11DataCFAckPoll
+}
+func (m *Dot11DataCFAckPoll) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Data.DecodeFromBytes(data, df)
 }
 
@@ -1386,14 +1396,14 @@ type Dot11DataNull struct {
 	Dot11Data
 }
 
-func decodeDot11DataNull(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataNull(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataNull{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataNull) LayerType() gopacket.LayerType  { return LayerTypeDot11DataNull }
-func (m *Dot11DataNull) CanDecode() gopacket.LayerClass { return LayerTypeDot11DataNull }
-func (m *Dot11DataNull) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataNull) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11DataNull }
+func (m *Dot11DataNull) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11DataNull }
+func (m *Dot11DataNull) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Data.DecodeFromBytes(data, df)
 }
 
@@ -1401,14 +1411,18 @@ type Dot11DataCFAckNoData struct {
 	Dot11Data
 }
 
-func decodeDot11DataCFAckNoData(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataCFAckNoData(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataCFAckNoData{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataCFAckNoData) LayerType() gopacket.LayerType  { return LayerTypeDot11DataCFAckNoData }
-func (m *Dot11DataCFAckNoData) CanDecode() gopacket.LayerClass { return LayerTypeDot11DataCFAckNoData }
-func (m *Dot11DataCFAckNoData) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataCFAckNoData) LayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11DataCFAckNoData
+}
+func (m *Dot11DataCFAckNoData) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11DataCFAckNoData
+}
+func (m *Dot11DataCFAckNoData) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Data.DecodeFromBytes(data, df)
 }
 
@@ -1416,16 +1430,18 @@ type Dot11DataCFPollNoData struct {
 	Dot11Data
 }
 
-func decodeDot11DataCFPollNoData(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataCFPollNoData(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataCFPollNoData{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataCFPollNoData) LayerType() gopacket.LayerType { return LayerTypeDot11DataCFPollNoData }
-func (m *Dot11DataCFPollNoData) CanDecode() gopacket.LayerClass {
+func (m *Dot11DataCFPollNoData) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataCFPollNoData
 }
-func (m *Dot11DataCFPollNoData) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataCFPollNoData) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11DataCFPollNoData
+}
+func (m *Dot11DataCFPollNoData) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Data.DecodeFromBytes(data, df)
 }
 
@@ -1433,18 +1449,18 @@ type Dot11DataCFAckPollNoData struct {
 	Dot11Data
 }
 
-func decodeDot11DataCFAckPollNoData(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataCFAckPollNoData(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataCFAckPollNoData{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataCFAckPollNoData) LayerType() gopacket.LayerType {
+func (m *Dot11DataCFAckPollNoData) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataCFAckPollNoData
 }
-func (m *Dot11DataCFAckPollNoData) CanDecode() gopacket.LayerClass {
+func (m *Dot11DataCFAckPollNoData) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11DataCFAckPollNoData
 }
-func (m *Dot11DataCFAckPollNoData) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataCFAckPollNoData) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Data.DecodeFromBytes(data, df)
 }
 
@@ -1452,7 +1468,7 @@ type Dot11DataQOS struct {
 	Dot11Ctrl
 }
 
-func (m *Dot11DataQOS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11DataQOS) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.BaseLayer = BaseLayer{Payload: data}
 	return nil
 }
@@ -1461,15 +1477,15 @@ type Dot11DataQOSData struct {
 	Dot11DataQOS
 }
 
-func decodeDot11DataQOSData(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataQOSData(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataQOSData{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataQOSData) LayerType() gopacket.LayerType  { return LayerTypeDot11DataQOSData }
-func (m *Dot11DataQOSData) CanDecode() gopacket.LayerClass { return LayerTypeDot11DataQOSData }
+func (m *Dot11DataQOSData) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11DataQOSData }
+func (m *Dot11DataQOSData) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11DataQOSData }
 
-func (m *Dot11DataQOSData) NextLayerType() gopacket.LayerType {
+func (m *Dot11DataQOSData) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11Data
 }
 
@@ -1477,50 +1493,56 @@ type Dot11DataQOSDataCFAck struct {
 	Dot11DataQOS
 }
 
-func decodeDot11DataQOSDataCFAck(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataQOSDataCFAck(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataQOSDataCFAck{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataQOSDataCFAck) LayerType() gopacket.LayerType { return LayerTypeDot11DataQOSDataCFAck }
-func (m *Dot11DataQOSDataCFAck) CanDecode() gopacket.LayerClass {
+func (m *Dot11DataQOSDataCFAck) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataQOSDataCFAck
 }
-func (m *Dot11DataQOSDataCFAck) NextLayerType() gopacket.LayerType { return LayerTypeDot11DataCFAck }
+func (m *Dot11DataQOSDataCFAck) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11DataQOSDataCFAck
+}
+func (m *Dot11DataQOSDataCFAck) NextLayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11DataCFAck
+}
 
 type Dot11DataQOSDataCFPoll struct {
 	Dot11DataQOS
 }
 
-func decodeDot11DataQOSDataCFPoll(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataQOSDataCFPoll(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataQOSDataCFPoll{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataQOSDataCFPoll) LayerType() gopacket.LayerType {
+func (m *Dot11DataQOSDataCFPoll) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataQOSDataCFPoll
 }
-func (m *Dot11DataQOSDataCFPoll) CanDecode() gopacket.LayerClass {
+func (m *Dot11DataQOSDataCFPoll) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11DataQOSDataCFPoll
 }
-func (m *Dot11DataQOSDataCFPoll) NextLayerType() gopacket.LayerType { return LayerTypeDot11DataCFPoll }
+func (m *Dot11DataQOSDataCFPoll) NextLayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11DataCFPoll
+}
 
 type Dot11DataQOSDataCFAckPoll struct {
 	Dot11DataQOS
 }
 
-func decodeDot11DataQOSDataCFAckPoll(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataQOSDataCFAckPoll(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataQOSDataCFAckPoll{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataQOSDataCFAckPoll) LayerType() gopacket.LayerType {
+func (m *Dot11DataQOSDataCFAckPoll) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataQOSDataCFAckPoll
 }
-func (m *Dot11DataQOSDataCFAckPoll) CanDecode() gopacket.LayerClass {
+func (m *Dot11DataQOSDataCFAckPoll) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11DataQOSDataCFAckPoll
 }
-func (m *Dot11DataQOSDataCFAckPoll) NextLayerType() gopacket.LayerType {
+func (m *Dot11DataQOSDataCFAckPoll) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataCFAckPoll
 }
 
@@ -1528,31 +1550,31 @@ type Dot11DataQOSNull struct {
 	Dot11DataQOS
 }
 
-func decodeDot11DataQOSNull(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataQOSNull(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataQOSNull{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataQOSNull) LayerType() gopacket.LayerType     { return LayerTypeDot11DataQOSNull }
-func (m *Dot11DataQOSNull) CanDecode() gopacket.LayerClass    { return LayerTypeDot11DataQOSNull }
-func (m *Dot11DataQOSNull) NextLayerType() gopacket.LayerType { return LayerTypeDot11DataNull }
+func (m *Dot11DataQOSNull) LayerType() gopacket131_dpdk.LayerType     { return LayerTypeDot11DataQOSNull }
+func (m *Dot11DataQOSNull) CanDecode() gopacket131_dpdk.LayerClass    { return LayerTypeDot11DataQOSNull }
+func (m *Dot11DataQOSNull) NextLayerType() gopacket131_dpdk.LayerType { return LayerTypeDot11DataNull }
 
 type Dot11DataQOSCFPollNoData struct {
 	Dot11DataQOS
 }
 
-func decodeDot11DataQOSCFPollNoData(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataQOSCFPollNoData(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataQOSCFPollNoData{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataQOSCFPollNoData) LayerType() gopacket.LayerType {
+func (m *Dot11DataQOSCFPollNoData) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataQOSCFPollNoData
 }
-func (m *Dot11DataQOSCFPollNoData) CanDecode() gopacket.LayerClass {
+func (m *Dot11DataQOSCFPollNoData) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11DataQOSCFPollNoData
 }
-func (m *Dot11DataQOSCFPollNoData) NextLayerType() gopacket.LayerType {
+func (m *Dot11DataQOSCFPollNoData) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataCFPollNoData
 }
 
@@ -1560,18 +1582,18 @@ type Dot11DataQOSCFAckPollNoData struct {
 	Dot11DataQOS
 }
 
-func decodeDot11DataQOSCFAckPollNoData(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11DataQOSCFAckPollNoData(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11DataQOSCFAckPollNoData{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11DataQOSCFAckPollNoData) LayerType() gopacket.LayerType {
+func (m *Dot11DataQOSCFAckPollNoData) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataQOSCFAckPollNoData
 }
-func (m *Dot11DataQOSCFAckPollNoData) CanDecode() gopacket.LayerClass {
+func (m *Dot11DataQOSCFAckPollNoData) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11DataQOSCFAckPollNoData
 }
-func (m *Dot11DataQOSCFAckPollNoData) NextLayerType() gopacket.LayerType {
+func (m *Dot11DataQOSCFAckPollNoData) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11DataCFAckPollNoData
 }
 
@@ -1584,18 +1606,18 @@ type Dot11InformationElement struct {
 	ExtensionID Dot11InformationElementExtId
 }
 
-func (m *Dot11InformationElement) LayerType() gopacket.LayerType {
+func (m *Dot11InformationElement) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
-func (m *Dot11InformationElement) CanDecode() gopacket.LayerClass {
-	return LayerTypeDot11InformationElement
-}
-
-func (m *Dot11InformationElement) NextLayerType() gopacket.LayerType {
+func (m *Dot11InformationElement) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11InformationElement
 }
 
-func (m *Dot11InformationElement) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11InformationElement) NextLayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11InformationElement
+}
+
+func (m *Dot11InformationElement) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 2 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11InformationElement length %v too short, %v required", len(data), 2)
@@ -1653,7 +1675,7 @@ func (d *Dot11InformationElement) String() string {
 	}
 }
 
-func (m Dot11InformationElement) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11InformationElement) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	length := len(m.Info) + len(m.OUI)
 	if buf, err := b.PrependBytes(2 + length); err != nil {
 		return err
@@ -1666,7 +1688,7 @@ func (m Dot11InformationElement) SerializeTo(b gopacket.SerializeBuffer, opts go
 	return nil
 }
 
-func decodeDot11InformationElement(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11InformationElement(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11InformationElement{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -1675,18 +1697,18 @@ type Dot11CtrlCTS struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlCTS(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlCTS(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlCTS{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlCTS) LayerType() gopacket.LayerType {
+func (m *Dot11CtrlCTS) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11CtrlCTS
 }
-func (m *Dot11CtrlCTS) CanDecode() gopacket.LayerClass {
+func (m *Dot11CtrlCTS) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11CtrlCTS
 }
-func (m *Dot11CtrlCTS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlCTS) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1694,18 +1716,18 @@ type Dot11CtrlRTS struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlRTS(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlRTS(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlRTS{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlRTS) LayerType() gopacket.LayerType {
+func (m *Dot11CtrlRTS) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11CtrlRTS
 }
-func (m *Dot11CtrlRTS) CanDecode() gopacket.LayerClass {
+func (m *Dot11CtrlRTS) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11CtrlRTS
 }
-func (m *Dot11CtrlRTS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlRTS) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1713,18 +1735,18 @@ type Dot11CtrlBlockAckReq struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlBlockAckReq(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlBlockAckReq(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlBlockAckReq{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlBlockAckReq) LayerType() gopacket.LayerType {
+func (m *Dot11CtrlBlockAckReq) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11CtrlBlockAckReq
 }
-func (m *Dot11CtrlBlockAckReq) CanDecode() gopacket.LayerClass {
+func (m *Dot11CtrlBlockAckReq) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11CtrlBlockAckReq
 }
-func (m *Dot11CtrlBlockAckReq) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlBlockAckReq) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1732,14 +1754,16 @@ type Dot11CtrlBlockAck struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlBlockAck(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlBlockAck(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlBlockAck{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlBlockAck) LayerType() gopacket.LayerType  { return LayerTypeDot11CtrlBlockAck }
-func (m *Dot11CtrlBlockAck) CanDecode() gopacket.LayerClass { return LayerTypeDot11CtrlBlockAck }
-func (m *Dot11CtrlBlockAck) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlBlockAck) LayerType() gopacket131_dpdk.LayerType { return LayerTypeDot11CtrlBlockAck }
+func (m *Dot11CtrlBlockAck) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11CtrlBlockAck
+}
+func (m *Dot11CtrlBlockAck) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1747,18 +1771,18 @@ type Dot11CtrlPowersavePoll struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlPowersavePoll(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlPowersavePoll(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlPowersavePoll{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlPowersavePoll) LayerType() gopacket.LayerType {
+func (m *Dot11CtrlPowersavePoll) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11CtrlPowersavePoll
 }
-func (m *Dot11CtrlPowersavePoll) CanDecode() gopacket.LayerClass {
+func (m *Dot11CtrlPowersavePoll) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11CtrlPowersavePoll
 }
-func (m *Dot11CtrlPowersavePoll) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlPowersavePoll) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1766,14 +1790,14 @@ type Dot11CtrlAck struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlAck(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlAck(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlAck{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlAck) LayerType() gopacket.LayerType  { return LayerTypeDot11CtrlAck }
-func (m *Dot11CtrlAck) CanDecode() gopacket.LayerClass { return LayerTypeDot11CtrlAck }
-func (m *Dot11CtrlAck) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlAck) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11CtrlAck }
+func (m *Dot11CtrlAck) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11CtrlAck }
+func (m *Dot11CtrlAck) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1781,18 +1805,18 @@ type Dot11CtrlCFEnd struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlCFEnd(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlCFEnd(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlCFEnd{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlCFEnd) LayerType() gopacket.LayerType {
+func (m *Dot11CtrlCFEnd) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11CtrlCFEnd
 }
-func (m *Dot11CtrlCFEnd) CanDecode() gopacket.LayerClass {
+func (m *Dot11CtrlCFEnd) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11CtrlCFEnd
 }
-func (m *Dot11CtrlCFEnd) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlCFEnd) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1800,18 +1824,18 @@ type Dot11CtrlCFEndAck struct {
 	Dot11Ctrl
 }
 
-func decodeDot11CtrlCFEndAck(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11CtrlCFEndAck(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11CtrlCFEndAck{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11CtrlCFEndAck) LayerType() gopacket.LayerType {
+func (m *Dot11CtrlCFEndAck) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11CtrlCFEndAck
 }
-func (m *Dot11CtrlCFEndAck) CanDecode() gopacket.LayerClass {
+func (m *Dot11CtrlCFEndAck) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11CtrlCFEndAck
 }
-func (m *Dot11CtrlCFEndAck) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11CtrlCFEndAck) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	return m.Dot11Ctrl.DecodeFromBytes(data, df)
 }
 
@@ -1821,21 +1845,21 @@ type Dot11MgmtAssociationReq struct {
 	ListenInterval uint16
 }
 
-func decodeDot11MgmtAssociationReq(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtAssociationReq(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtAssociationReq{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtAssociationReq) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtAssociationReq) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtAssociationReq
 }
-func (m *Dot11MgmtAssociationReq) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtAssociationReq) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtAssociationReq
 }
-func (m *Dot11MgmtAssociationReq) NextLayerType() gopacket.LayerType {
+func (m *Dot11MgmtAssociationReq) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
-func (m *Dot11MgmtAssociationReq) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtAssociationReq) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 4 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11MgmtAssociationReq length %v too short, %v required", len(data), 4)
@@ -1846,7 +1870,7 @@ func (m *Dot11MgmtAssociationReq) DecodeFromBytes(data []byte, df gopacket.Decod
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m Dot11MgmtAssociationReq) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtAssociationReq) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(4)
 
 	if err != nil {
@@ -1866,21 +1890,21 @@ type Dot11MgmtAssociationResp struct {
 	AID            uint16
 }
 
-func decodeDot11MgmtAssociationResp(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtAssociationResp(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtAssociationResp{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtAssociationResp) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtAssociationResp) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtAssociationResp
 }
-func (m *Dot11MgmtAssociationResp) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtAssociationResp) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtAssociationResp
 }
-func (m *Dot11MgmtAssociationResp) NextLayerType() gopacket.LayerType {
+func (m *Dot11MgmtAssociationResp) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
-func (m *Dot11MgmtAssociationResp) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtAssociationResp) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 6 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11MgmtAssociationResp length %v too short, %v required", len(data), 6)
@@ -1892,7 +1916,7 @@ func (m *Dot11MgmtAssociationResp) DecodeFromBytes(data []byte, df gopacket.Deco
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m Dot11MgmtAssociationResp) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtAssociationResp) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(6)
 
 	if err != nil {
@@ -1913,21 +1937,21 @@ type Dot11MgmtReassociationReq struct {
 	CurrentApAddress net.HardwareAddr
 }
 
-func decodeDot11MgmtReassociationReq(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtReassociationReq(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtReassociationReq{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtReassociationReq) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtReassociationReq) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtReassociationReq
 }
-func (m *Dot11MgmtReassociationReq) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtReassociationReq) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtReassociationReq
 }
-func (m *Dot11MgmtReassociationReq) NextLayerType() gopacket.LayerType {
+func (m *Dot11MgmtReassociationReq) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
-func (m *Dot11MgmtReassociationReq) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtReassociationReq) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 10 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11MgmtReassociationReq length %v too short, %v required", len(data), 10)
@@ -1939,7 +1963,7 @@ func (m *Dot11MgmtReassociationReq) DecodeFromBytes(data []byte, df gopacket.Dec
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m Dot11MgmtReassociationReq) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtReassociationReq) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(10)
 
 	if err != nil {
@@ -1958,18 +1982,18 @@ type Dot11MgmtReassociationResp struct {
 	Dot11Mgmt
 }
 
-func decodeDot11MgmtReassociationResp(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtReassociationResp(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtReassociationResp{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtReassociationResp) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtReassociationResp) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtReassociationResp
 }
-func (m *Dot11MgmtReassociationResp) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtReassociationResp) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtReassociationResp
 }
-func (m *Dot11MgmtReassociationResp) NextLayerType() gopacket.LayerType {
+func (m *Dot11MgmtReassociationResp) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
 
@@ -1977,14 +2001,16 @@ type Dot11MgmtProbeReq struct {
 	Dot11Mgmt
 }
 
-func decodeDot11MgmtProbeReq(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtProbeReq(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtProbeReq{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtProbeReq) LayerType() gopacket.LayerType  { return LayerTypeDot11MgmtProbeReq }
-func (m *Dot11MgmtProbeReq) CanDecode() gopacket.LayerClass { return LayerTypeDot11MgmtProbeReq }
-func (m *Dot11MgmtProbeReq) NextLayerType() gopacket.LayerType {
+func (m *Dot11MgmtProbeReq) LayerType() gopacket131_dpdk.LayerType { return LayerTypeDot11MgmtProbeReq }
+func (m *Dot11MgmtProbeReq) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11MgmtProbeReq
+}
+func (m *Dot11MgmtProbeReq) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
 
@@ -1995,14 +2021,18 @@ type Dot11MgmtProbeResp struct {
 	Flags     uint16
 }
 
-func decodeDot11MgmtProbeResp(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtProbeResp(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtProbeResp{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtProbeResp) LayerType() gopacket.LayerType  { return LayerTypeDot11MgmtProbeResp }
-func (m *Dot11MgmtProbeResp) CanDecode() gopacket.LayerClass { return LayerTypeDot11MgmtProbeResp }
-func (m *Dot11MgmtProbeResp) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtProbeResp) LayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11MgmtProbeResp
+}
+func (m *Dot11MgmtProbeResp) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11MgmtProbeResp
+}
+func (m *Dot11MgmtProbeResp) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 12 {
 		df.SetTruncated()
 
@@ -2017,11 +2047,11 @@ func (m *Dot11MgmtProbeResp) DecodeFromBytes(data []byte, df gopacket.DecodeFeed
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m *Dot11MgmtProbeResp) NextLayerType() gopacket.LayerType {
+func (m *Dot11MgmtProbeResp) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
 
-func (m Dot11MgmtProbeResp) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtProbeResp) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(12)
 
 	if err != nil {
@@ -2039,15 +2069,15 @@ type Dot11MgmtMeasurementPilot struct {
 	Dot11Mgmt
 }
 
-func decodeDot11MgmtMeasurementPilot(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtMeasurementPilot(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtMeasurementPilot{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtMeasurementPilot) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtMeasurementPilot) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtMeasurementPilot
 }
-func (m *Dot11MgmtMeasurementPilot) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtMeasurementPilot) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtMeasurementPilot
 }
 
@@ -2058,14 +2088,14 @@ type Dot11MgmtBeacon struct {
 	Flags     uint16
 }
 
-func decodeDot11MgmtBeacon(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtBeacon(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtBeacon{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtBeacon) LayerType() gopacket.LayerType  { return LayerTypeDot11MgmtBeacon }
-func (m *Dot11MgmtBeacon) CanDecode() gopacket.LayerClass { return LayerTypeDot11MgmtBeacon }
-func (m *Dot11MgmtBeacon) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtBeacon) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11MgmtBeacon }
+func (m *Dot11MgmtBeacon) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11MgmtBeacon }
+func (m *Dot11MgmtBeacon) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 12 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11MgmtBeacon length %v too short, %v required", len(data), 12)
@@ -2077,9 +2107,11 @@ func (m *Dot11MgmtBeacon) DecodeFromBytes(data []byte, df gopacket.DecodeFeedbac
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m *Dot11MgmtBeacon) NextLayerType() gopacket.LayerType { return LayerTypeDot11InformationElement }
+func (m *Dot11MgmtBeacon) NextLayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11InformationElement
+}
 
-func (m Dot11MgmtBeacon) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtBeacon) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(12)
 
 	if err != nil {
@@ -2097,31 +2129,31 @@ type Dot11MgmtATIM struct {
 	Dot11Mgmt
 }
 
-func decodeDot11MgmtATIM(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtATIM(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtATIM{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtATIM) LayerType() gopacket.LayerType  { return LayerTypeDot11MgmtATIM }
-func (m *Dot11MgmtATIM) CanDecode() gopacket.LayerClass { return LayerTypeDot11MgmtATIM }
+func (m *Dot11MgmtATIM) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11MgmtATIM }
+func (m *Dot11MgmtATIM) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11MgmtATIM }
 
 type Dot11MgmtDisassociation struct {
 	Dot11Mgmt
 	Reason Dot11Reason
 }
 
-func decodeDot11MgmtDisassociation(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtDisassociation(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtDisassociation{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtDisassociation) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtDisassociation) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtDisassociation
 }
-func (m *Dot11MgmtDisassociation) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtDisassociation) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtDisassociation
 }
-func (m *Dot11MgmtDisassociation) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtDisassociation) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 2 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11MgmtDisassociation length %v too short, %v required", len(data), 2)
@@ -2130,7 +2162,7 @@ func (m *Dot11MgmtDisassociation) DecodeFromBytes(data []byte, df gopacket.Decod
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m Dot11MgmtDisassociation) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtDisassociation) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(2)
 
 	if err != nil {
@@ -2149,21 +2181,21 @@ type Dot11MgmtAuthentication struct {
 	Status    Dot11Status
 }
 
-func decodeDot11MgmtAuthentication(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtAuthentication(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtAuthentication{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtAuthentication) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtAuthentication) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtAuthentication
 }
-func (m *Dot11MgmtAuthentication) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtAuthentication) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtAuthentication
 }
-func (m *Dot11MgmtAuthentication) NextLayerType() gopacket.LayerType {
+func (m *Dot11MgmtAuthentication) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11InformationElement
 }
-func (m *Dot11MgmtAuthentication) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtAuthentication) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 6 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11MgmtAuthentication length %v too short, %v required", len(data), 6)
@@ -2175,7 +2207,7 @@ func (m *Dot11MgmtAuthentication) DecodeFromBytes(data []byte, df gopacket.Decod
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m Dot11MgmtAuthentication) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtAuthentication) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(6)
 
 	if err != nil {
@@ -2194,18 +2226,18 @@ type Dot11MgmtDeauthentication struct {
 	Reason Dot11Reason
 }
 
-func decodeDot11MgmtDeauthentication(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtDeauthentication(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtDeauthentication{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtDeauthentication) LayerType() gopacket.LayerType {
+func (m *Dot11MgmtDeauthentication) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeDot11MgmtDeauthentication
 }
-func (m *Dot11MgmtDeauthentication) CanDecode() gopacket.LayerClass {
+func (m *Dot11MgmtDeauthentication) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDot11MgmtDeauthentication
 }
-func (m *Dot11MgmtDeauthentication) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *Dot11MgmtDeauthentication) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 2 {
 		df.SetTruncated()
 		return fmt.Errorf("Dot11MgmtDeauthentication length %v too short, %v required", len(data), 2)
@@ -2214,7 +2246,7 @@ func (m *Dot11MgmtDeauthentication) DecodeFromBytes(data []byte, df gopacket.Dec
 	return m.Dot11Mgmt.DecodeFromBytes(data, df)
 }
 
-func (m Dot11MgmtDeauthentication) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (m Dot11MgmtDeauthentication) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(2)
 
 	if err != nil {
@@ -2230,34 +2262,42 @@ type Dot11MgmtAction struct {
 	Dot11Mgmt
 }
 
-func decodeDot11MgmtAction(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtAction(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtAction{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtAction) LayerType() gopacket.LayerType  { return LayerTypeDot11MgmtAction }
-func (m *Dot11MgmtAction) CanDecode() gopacket.LayerClass { return LayerTypeDot11MgmtAction }
+func (m *Dot11MgmtAction) LayerType() gopacket131_dpdk.LayerType  { return LayerTypeDot11MgmtAction }
+func (m *Dot11MgmtAction) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeDot11MgmtAction }
 
 type Dot11MgmtActionNoAck struct {
 	Dot11Mgmt
 }
 
-func decodeDot11MgmtActionNoAck(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtActionNoAck(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtActionNoAck{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtActionNoAck) LayerType() gopacket.LayerType  { return LayerTypeDot11MgmtActionNoAck }
-func (m *Dot11MgmtActionNoAck) CanDecode() gopacket.LayerClass { return LayerTypeDot11MgmtActionNoAck }
+func (m *Dot11MgmtActionNoAck) LayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11MgmtActionNoAck
+}
+func (m *Dot11MgmtActionNoAck) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11MgmtActionNoAck
+}
 
 type Dot11MgmtArubaWLAN struct {
 	Dot11Mgmt
 }
 
-func decodeDot11MgmtArubaWLAN(data []byte, p gopacket.PacketBuilder) error {
+func decodeDot11MgmtArubaWLAN(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &Dot11MgmtArubaWLAN{}
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *Dot11MgmtArubaWLAN) LayerType() gopacket.LayerType  { return LayerTypeDot11MgmtArubaWLAN }
-func (m *Dot11MgmtArubaWLAN) CanDecode() gopacket.LayerClass { return LayerTypeDot11MgmtArubaWLAN }
+func (m *Dot11MgmtArubaWLAN) LayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeDot11MgmtArubaWLAN
+}
+func (m *Dot11MgmtArubaWLAN) CanDecode() gopacket131_dpdk.LayerClass {
+	return LayerTypeDot11MgmtArubaWLAN
+}

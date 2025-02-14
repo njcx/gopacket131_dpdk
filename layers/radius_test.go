@@ -1,4 +1,4 @@
-// Copyright 2020 The GoPacket Authors. All rights reserved.
+// Copyright 2020 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -9,12 +9,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func checkRADIUS(desc string, t *testing.T, packetBytes []byte, pExpectedRADIUS *RADIUS) {
 	// Analyse the packet bytes, yielding a new packet object p.
-	p := gopacket.NewPacket(packetBytes, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(packetBytes, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Errorf("Failed to decode packet %s: %v", desc, p.ErrorLayer().Error())
 	}
@@ -24,7 +24,7 @@ func checkRADIUS(desc string, t *testing.T, packetBytes []byte, pExpectedRADIUS 
 	//    Network Layer     = IPv4.
 	//    Transport Layer   = UDP.
 	//    Application Layer = RADIUS.
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet,
 		LayerTypeIPv4,
 		LayerTypeUDP,
@@ -42,8 +42,8 @@ func checkRADIUS(desc string, t *testing.T, packetBytes []byte, pExpectedRADIUS 
 		t.Errorf("RADIUS packet processing failed for packet "+desc+
 			":\ngot  :\n%#v\n\nwant :\n%#v\n\n", pResultRADIUS, pExpectedRADIUS)
 	}
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{}
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{}
 	err := pResultRADIUS.SerializeTo(buf, opts)
 	if err != nil {
 		t.Error(err)
@@ -56,13 +56,13 @@ func checkRADIUS(desc string, t *testing.T, packetBytes []byte, pExpectedRADIUS 
 
 func faliedRADIUS(t *testing.T, desc string, data *RADIUS) {
 	t.Run(desc, func(t *testing.T) {
-		buf := gopacket.NewSerializeBuffer()
-		opts := gopacket.SerializeOptions{}
+		buf := gopacket131_dpdk.NewSerializeBuffer()
+		opts := gopacket131_dpdk.SerializeOptions{}
 		if err := data.SerializeTo(buf, opts); err != nil {
 			t.Error(err)
 		}
 
-		p := gopacket.NewPacket(buf.Bytes(), LayerTypeRADIUS, gopacket.Default)
+		p := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeRADIUS, gopacket131_dpdk.Default)
 		if p.ErrorLayer() == nil {
 			t.Errorf("No Error layer type found in packet in %s.\n", desc)
 		}
@@ -204,7 +204,7 @@ func TestRADIUSRecordSize(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var testPacketRADIUS = make([]byte, tt.size)
-			p := gopacket.NewPacket(testPacketRADIUS, LayerTypeRADIUS, gopacket.Default)
+			p := gopacket131_dpdk.NewPacket(testPacketRADIUS, LayerTypeRADIUS, gopacket131_dpdk.Default)
 			if p.ErrorLayer() == nil {
 				t.Errorf("No Error layer type found in packet in %s.\n", tt.name)
 			}

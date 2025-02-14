@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 func TestNgWriteSimple(t *testing.T) {
@@ -22,7 +22,7 @@ func TestNgWriteSimple(t *testing.T) {
 	if err != nil {
 		t.Fatal("Opening file failed with: ", err)
 	}
-	ci := gopacket.CaptureInfo{
+	ci := gopacket131_dpdk.CaptureInfo{
 		Timestamp:      time.Unix(0, 0).UTC(),
 		Length:         len(ngPacketSource[0]),
 		CaptureLength:  len(ngPacketSource[0]),
@@ -102,7 +102,7 @@ func TestNgWriteComplex(t *testing.T) {
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(1519128000-900, 195312500).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -111,7 +111,7 @@ func TestNgWriteComplex(t *testing.T) {
 			},
 			{
 				data: ngPacketSource[4],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(1519128000-800, 195312500).UTC(),
 					Length:         len(ngPacketSource[4]),
 					CaptureLength:  len(ngPacketSource[4]),
@@ -120,7 +120,7 @@ func TestNgWriteComplex(t *testing.T) {
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(1519128000-500, 195312500).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -129,7 +129,7 @@ func TestNgWriteComplex(t *testing.T) {
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(1519128000-300, 195312500).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -138,7 +138,7 @@ func TestNgWriteComplex(t *testing.T) {
 			},
 			{
 				data: ngPacketSource[3],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(1519128000-200, 195312500).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  len(ngPacketSource[3]),
@@ -221,7 +221,7 @@ func TestNgWritePacketWithOptions(t *testing.T) {
 	if err != nil {
 		t.Fatalf("init writer failed: %+v", err)
 	}
-	ci := gopacket.CaptureInfo{
+	ci := gopacket131_dpdk.CaptureInfo{
 		Timestamp:      time.Unix(0, 0).UTC(),
 		Length:         len(ngPacketSource[0]),
 		CaptureLength:  len(ngPacketSource[0]),
@@ -286,7 +286,7 @@ func (w *ngDevNull) Write(p []byte) (n int, err error) {
 }
 
 func BenchmarkNgWritePacket(b *testing.B) {
-	ci := gopacket.CaptureInfo{
+	ci := gopacket131_dpdk.CaptureInfo{
 		Timestamp:     time.Unix(0x01020304, 0xAA*1000),
 		Length:        0xABCD,
 		CaptureLength: 10,

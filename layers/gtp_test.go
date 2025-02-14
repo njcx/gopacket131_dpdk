@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testGTPPacket is the packet:
@@ -47,12 +47,12 @@ var testGTPPacket = []byte{
 }
 
 func TestGTPPacket(t *testing.T) {
-	p := gopacket.NewPacket(testGTPPacket, LayerTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testGTPPacket, LayerTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeGTPv1U, LayerTypeIPv4,
-		LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeGTPv1U, LayerTypeIPv4,
+		LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layer(LayerTypeGTPv1U).(*GTPv1U); ok {
 		want := &GTPv1U{
 			Version:             1,
@@ -72,8 +72,8 @@ func TestGTPPacket(t *testing.T) {
 
 		}
 
-		buf := gopacket.NewSerializeBuffer()
-		if err := gopacket.SerializePacket(buf, gopacket.SerializeOptions{}, p); err != nil {
+		buf := gopacket131_dpdk.NewSerializeBuffer()
+		if err := gopacket131_dpdk.SerializePacket(buf, gopacket131_dpdk.SerializeOptions{}, p); err != nil {
 			t.Error(err)
 		} else if !reflect.DeepEqual(testGTPPacket, buf.Bytes()) {
 			t.Errorf("GTP packet serialization failed:\nwire :\n%#v\n\nbuf :\n%#v\n\n", testGTPPacket, buf.Bytes())
@@ -81,7 +81,7 @@ func TestGTPPacket(t *testing.T) {
 
 		buf.Clear()
 		got.MessageLength = 0
-		if err := gopacket.SerializePacket(buf, gopacket.SerializeOptions{FixLengths: true}, p); err != nil {
+		if err := gopacket131_dpdk.SerializePacket(buf, gopacket131_dpdk.SerializeOptions{FixLengths: true}, p); err != nil {
 			t.Error(err)
 		} else if !reflect.DeepEqual(testGTPPacket, buf.Bytes()) {
 			t.Errorf("GTP packet serialization failed:\nwire :\n%#v\n\nbuf :\n%#v\n\n", testGTPPacket, buf.Bytes())
@@ -124,12 +124,12 @@ var testGTPPacketWithEH = []byte{
 }
 
 func TestGTPPacketWithEH(t *testing.T) {
-	p := gopacket.NewPacket(testGTPPacketWithEH, LayerTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testGTPPacketWithEH, LayerTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeGTPv1U, LayerTypeIPv4,
-		LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeGTPv1U, LayerTypeIPv4,
+		LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layer(LayerTypeGTPv1U).(*GTPv1U); ok {
 		want := &GTPv1U{
 			Version:             1,
@@ -150,8 +150,8 @@ func TestGTPPacketWithEH(t *testing.T) {
 
 		}
 
-		buf := gopacket.NewSerializeBuffer()
-		if err := gopacket.SerializePacket(buf, gopacket.SerializeOptions{}, p); err != nil {
+		buf := gopacket131_dpdk.NewSerializeBuffer()
+		if err := gopacket131_dpdk.SerializePacket(buf, gopacket131_dpdk.SerializeOptions{}, p); err != nil {
 			t.Error(err)
 		} else if !reflect.DeepEqual(testGTPPacketWithEH, buf.Bytes()) {
 			t.Errorf("GTP packet serialization failed:\nwire :\n%#v\n\nbuf :\n%#v\n\n", testGTPPacketWithEH, buf.Bytes())
@@ -159,7 +159,7 @@ func TestGTPPacketWithEH(t *testing.T) {
 
 		buf.Clear()
 		got.MessageLength = 0
-		if err := gopacket.SerializePacket(buf, gopacket.SerializeOptions{FixLengths: true}, p); err != nil {
+		if err := gopacket131_dpdk.SerializePacket(buf, gopacket131_dpdk.SerializeOptions{FixLengths: true}, p); err != nil {
 			t.Error(err)
 		} else if !reflect.DeepEqual(testGTPPacketWithEH, buf.Bytes()) {
 			t.Errorf("GTP packet serialization failed:\nwire :\n%#v\n\nbuf :\n%#v\n\n", testGTPPacketWithEH, buf.Bytes())

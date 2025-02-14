@@ -11,7 +11,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // UDP is the layer for UDP headers.
@@ -24,10 +24,10 @@ type UDP struct {
 	tcpipchecksum
 }
 
-// LayerType returns gopacket.LayerTypeUDP
-func (u *UDP) LayerType() gopacket.LayerType { return LayerTypeUDP }
+// LayerType returns gopacket131_dpdk.LayerTypeUDP
+func (u *UDP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeUDP }
 
-func (udp *UDP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (udp *UDP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 8 {
 		df.SetTruncated()
 		return fmt.Errorf("Invalid UDP header. Length %d less than 8", len(data))
@@ -56,9 +56,9 @@ func (udp *UDP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (u *UDP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (u *UDP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var jumbo bool
 
 	payload := b.Bytes()
@@ -90,7 +90,7 @@ func (u *UDP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 		if err != nil {
 			return err
 		}
-		csumFolded := gopacket.FoldChecksum(csum)
+		csumFolded := gopacket131_dpdk.FoldChecksum(csum)
 
 		// RFC768: If the computed checksum is zero, it is transmitted as all ones (the
 		// equivalent in one's complement arithmetic). An all zero transmitted
@@ -104,21 +104,21 @@ func (u *UDP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 	return nil
 }
 
-func (u *UDP) CanDecode() gopacket.LayerClass {
+func (u *UDP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeUDP
 }
 
 // NextLayerType use the destination port to select the
 // right next decoder. It tries first to decode via the
 // destination port, then the source port.
-func (u *UDP) NextLayerType() gopacket.LayerType {
-	if lt := u.DstPort.LayerType(); lt != gopacket.LayerTypePayload {
+func (u *UDP) NextLayerType() gopacket131_dpdk.LayerType {
+	if lt := u.DstPort.LayerType(); lt != gopacket131_dpdk.LayerTypePayload {
 		return lt
 	}
 	return u.SrcPort.LayerType()
 }
 
-func decodeUDP(data []byte, p gopacket.PacketBuilder) error {
+func decodeUDP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	udp := &UDP{}
 	err := udp.DecodeFromBytes(data, p)
 	p.AddLayer(udp)
@@ -129,8 +129,8 @@ func decodeUDP(data []byte, p gopacket.PacketBuilder) error {
 	return p.NextDecoder(udp.NextLayerType())
 }
 
-func (u *UDP) TransportFlow() gopacket.Flow {
-	return gopacket.NewFlow(EndpointUDPPort, u.sPort, u.dPort)
+func (u *UDP) TransportFlow() gopacket131_dpdk.Flow {
+	return gopacket131_dpdk.NewFlow(EndpointUDPPort, u.sPort, u.dPort)
 }
 
 // For testing only
@@ -141,16 +141,16 @@ func (u *UDP) SetInternalPortsForTesting() {
 	binary.BigEndian.PutUint16(u.dPort, uint16(u.DstPort))
 }
 
-func (u *UDP) VerifyChecksum() (error, gopacket.ChecksumVerificationResult) {
+func (u *UDP) VerifyChecksum() (error, gopacket131_dpdk.ChecksumVerificationResult) {
 	bytes := append(u.Contents, u.Payload...)
 
 	existing := u.Checksum
 	verification, err := u.computeChecksum(bytes, IPProtocolUDP)
 	if err != nil {
-		return err, gopacket.ChecksumVerificationResult{}
+		return err, gopacket131_dpdk.ChecksumVerificationResult{}
 	}
-	correct := gopacket.FoldChecksum(verification - uint32(existing))
-	return nil, gopacket.ChecksumVerificationResult{
+	correct := gopacket131_dpdk.FoldChecksum(verification - uint32(existing))
+	return nil, gopacket131_dpdk.ChecksumVerificationResult{
 		Valid:   existing == 0 || correct == existing,
 		Correct: uint32(correct),
 		Actual:  uint32(existing),

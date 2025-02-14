@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestWriteHeaderNanos(t *testing.T) {
@@ -43,7 +43,7 @@ func TestWriteHeader(t *testing.T) {
 }
 
 func TestWritePacket(t *testing.T) {
-	ci := gopacket.CaptureInfo{
+	ci := gopacket131_dpdk.CaptureInfo{
 		Timestamp:     time.Unix(0x01020304, 0xAA*1000),
 		Length:        0xABCD,
 		CaptureLength: 10,
@@ -64,7 +64,7 @@ func TestWritePacket(t *testing.T) {
 
 func BenchmarkWritePacket(b *testing.B) {
 	b.StopTimer()
-	ci := gopacket.CaptureInfo{
+	ci := gopacket131_dpdk.CaptureInfo{
 		Timestamp:     time.Unix(0x01020304, 0xAA*1000),
 		Length:        0xABCD,
 		CaptureLength: 10,
@@ -82,13 +82,13 @@ func BenchmarkWritePacket(b *testing.B) {
 func TestCaptureInfoErrors(t *testing.T) {
 	data := []byte{1, 2, 3, 4}
 	ts := time.Unix(0, 0)
-	for _, test := range []gopacket.CaptureInfo{
-		gopacket.CaptureInfo{
+	for _, test := range []gopacket131_dpdk.CaptureInfo{
+		gopacket131_dpdk.CaptureInfo{
 			Timestamp:     ts,
 			Length:        5,
 			CaptureLength: 5,
 		},
-		gopacket.CaptureInfo{
+		gopacket131_dpdk.CaptureInfo{
 			Timestamp:     ts,
 			Length:        3,
 			CaptureLength: 4,

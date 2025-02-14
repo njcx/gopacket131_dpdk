@@ -1,4 +1,4 @@
-// Copyright 2018 GoPacket Authors. All rights reserved.
+// Copyright 2018 gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -9,7 +9,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Adapted from https://github.com/the-tcpdump-group/tcpdump/blob/master/tests/icmpv6.pcap
@@ -49,12 +49,12 @@ var testPacketMulticastListenerQueryMessageV1 = []byte{
 }
 
 func TestPacketMulticastListenerQueryMessageV1(t *testing.T) {
-	p := gopacket.NewPacket(testPacketMulticastListenerQueryMessageV1, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketMulticastListenerQueryMessageV1, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6, LayerTypeMLDv1MulticastListenerQuery}, t)
-	// See https://github.com/google/gopacket/issues/517
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6, LayerTypeMLDv1MulticastListenerQuery}, t)
+	// See https://github.com/google/gopacket131_dpdk/issues/517
 	// checkSerialization(p, t)
 }
 
@@ -94,12 +94,12 @@ var testPacketMulticastListenerReportMessageV1 = []byte{
 }
 
 func TestPacketMulticastListenerReportMessageV1(t *testing.T) {
-	p := gopacket.NewPacket(testPacketMulticastListenerReportMessageV1, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketMulticastListenerReportMessageV1, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6, LayerTypeMLDv1MulticastListenerReport}, t)
-	// See https://github.com/google/gopacket/issues/517
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6, LayerTypeMLDv1MulticastListenerReport}, t)
+	// See https://github.com/google/gopacket131_dpdk/issues/517
 	// checkSerialization(p, t)
 }
 
@@ -139,11 +139,11 @@ var testPacketMulticastListenerDoneMessageV1 = []byte{
 }
 
 func TestPacketMulticastListenerDoneMessageV1(t *testing.T) {
-	p := gopacket.NewPacket(testPacketMulticastListenerDoneMessageV1, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketMulticastListenerDoneMessageV1, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6, LayerTypeMLDv1MulticastListenerDone}, t)
-	// See https://github.com/google/gopacket/issues/517
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6, LayerTypeMLDv1MulticastListenerDone}, t)
+	// See https://github.com/google/gopacket131_dpdk/issues/517
 	// checkSerialization(p, t)
 }

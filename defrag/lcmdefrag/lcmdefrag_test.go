@@ -9,8 +9,8 @@ package lcmdefrag
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 var (
@@ -38,7 +38,7 @@ func TestOrderedLCMDefrag(t *testing.T) {
 	defragmenter := NewLCMDefragmenter()
 	var err error
 
-	packet := gopacket.NewPacket(fragmentOne, layers.LayerTypeLCM, gopacket.NoCopy)
+	packet := gopacket131_dpdk.NewPacket(fragmentOne, layers.LayerTypeLCM, gopacket131_dpdk.NoCopy)
 	lcm := packet.Layer(layers.LayerTypeLCM).(*layers.LCM)
 
 	lcm, err = defragmenter.Defrag(lcm)
@@ -49,7 +49,7 @@ func TestOrderedLCMDefrag(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	packet = gopacket.NewPacket(fragmentTwo, layers.LayerTypeLCM, gopacket.NoCopy)
+	packet = gopacket131_dpdk.NewPacket(fragmentTwo, layers.LayerTypeLCM, gopacket131_dpdk.NoCopy)
 	lcm = packet.Layer(layers.LayerTypeLCM).(*layers.LCM)
 
 	lcm, err = defragmenter.Defrag(lcm)
@@ -65,7 +65,7 @@ func TestUnorderedLCMDefrag(t *testing.T) {
 	defragmenter := NewLCMDefragmenter()
 	var err error
 
-	packet := gopacket.NewPacket(fragmentTwo, layers.LayerTypeLCM, gopacket.NoCopy)
+	packet := gopacket131_dpdk.NewPacket(fragmentTwo, layers.LayerTypeLCM, gopacket131_dpdk.NoCopy)
 	lcm := packet.Layer(layers.LayerTypeLCM).(*layers.LCM)
 
 	lcm, err = defragmenter.Defrag(lcm)
@@ -76,7 +76,7 @@ func TestUnorderedLCMDefrag(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	packet = gopacket.NewPacket(fragmentOne, layers.LayerTypeLCM, gopacket.NoCopy)
+	packet = gopacket131_dpdk.NewPacket(fragmentOne, layers.LayerTypeLCM, gopacket131_dpdk.NoCopy)
 	lcm = packet.Layer(layers.LayerTypeLCM).(*layers.LCM)
 
 	lcm, err = defragmenter.Defrag(lcm)
@@ -92,7 +92,7 @@ func TestNonLCMDefrag(t *testing.T) {
 	defragmenter := NewLCMDefragmenter()
 	var err error
 
-	packet := gopacket.NewPacket(completePacket, layers.LayerTypeLCM, gopacket.NoCopy)
+	packet := gopacket131_dpdk.NewPacket(completePacket, layers.LayerTypeLCM, gopacket131_dpdk.NoCopy)
 	lcm := packet.Layer(layers.LayerTypeLCM).(*layers.LCM)
 
 	lcm, err = defragmenter.Defrag(lcm)

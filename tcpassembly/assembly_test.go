@@ -12,14 +12,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
-var netFlow gopacket.Flow
+var netFlow gopacket131_dpdk.Flow
 
 func init() {
-	netFlow, _ = gopacket.FlowFromEndpoints(
+	netFlow, _ = gopacket131_dpdk.FlowFromEndpoints(
 		layers.NewIPEndpoint(net.IP{1, 2, 3, 4}),
 		layers.NewIPEndpoint(net.IP{5, 6, 7, 8}))
 }
@@ -39,7 +39,7 @@ type testFactory struct {
 	reassembly []Reassembly
 }
 
-func (t *testFactory) New(a, b gopacket.Flow) Stream {
+func (t *testFactory) New(a, b gopacket131_dpdk.Flow) Stream {
 	return t
 }
 func (t *testFactory) Reassembled(r []Reassembly) {

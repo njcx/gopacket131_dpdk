@@ -1,4 +1,4 @@
-module github.com/gopacket/gopacket
+module github.com/njcx/gopacket131_dpdk
 
 go 1.23.0
 

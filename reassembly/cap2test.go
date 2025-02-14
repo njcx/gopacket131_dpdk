@@ -17,9 +17,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/pcap"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
+	"github.com/njcx/gopacket131_dpdk/pcap"
 )
 
 var input = flag.String("i", "", "Input filename")
@@ -42,13 +42,13 @@ func main() {
 		}
 		handler.Stats()
 	}
-	var decoder gopacket.Decoder
+	var decoder gopacket131_dpdk.Decoder
 	var ok bool
 	linkType := fmt.Sprintf("%s", handler.LinkType())
-	if decoder, ok = gopacket.DecodersByLayerName[linkType]; !ok {
+	if decoder, ok = gopacket131_dpdk.DecodersByLayerName[linkType]; !ok {
 		log.Fatalf("Failed to find decoder to pcap's linktype %s", linkType)
 	}
-	source := gopacket.NewPacketSource(handler, decoder)
+	source := gopacket131_dpdk.NewPacketSource(handler, decoder)
 	count := uint64(0)
 	pktNonTcp := uint64(0)
 	pktTcp := uint64(0)
@@ -90,7 +90,7 @@ func main() {
 			b.WriteString("}},\n")
 			b.WriteString("},\n")
 			// CaptureInfo
-			b.WriteString("ci: gopacket.CaptureInfo{\n")
+			b.WriteString("ci: gopacket131_dpdk.CaptureInfo{\n")
 			ts := packet.Metadata().CaptureInfo.Timestamp
 			b.WriteString(fmt.Sprintf("  Timestamp: time.Unix(%d,%d),\n", ts.Unix(), ts.Nanosecond()))
 			b.WriteString("},\n")

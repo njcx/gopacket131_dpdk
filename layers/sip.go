@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // SIPVersion defines the different versions of the SIP Protocol
@@ -204,7 +204,7 @@ type SIP struct {
 
 // decodeSIP decodes the byte slice into a SIP type. It also
 // setups the application Layer in PacketBuilder.
-func decodeSIP(data []byte, p gopacket.PacketBuilder) error {
+func decodeSIP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	s := NewSIP()
 	err := s.DecodeFromBytes(data, p)
 	if err != nil {
@@ -223,8 +223,8 @@ func NewSIP() *SIP {
 	return s
 }
 
-// LayerType returns gopacket.LayerTypeSIP.
-func (s *SIP) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeSIP.
+func (s *SIP) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeSIP
 }
 
@@ -234,17 +234,17 @@ func (s *SIP) Payload() []byte {
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode
-func (s *SIP) CanDecode() gopacket.LayerClass {
+func (s *SIP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeSIP
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer
-func (s *SIP) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (s *SIP) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // DecodeFromBytes decodes the slice into the SIP struct.
-func (s *SIP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (s *SIP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	// Init some vars for parsing follow-up
 	var countLines int
 	var line []byte
@@ -312,7 +312,7 @@ func (s *SIP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 // have enough data. We are also able to limit the payload to the number bytes actually specified.
 // If the header is not present, we can assume that the data was transported over UDP we can then
 // use the length of the data as payload length.
-func (s *SIP) setBaseLayer(data []byte, offset int, df gopacket.DecodeFeedback) {
+func (s *SIP) setBaseLayer(data []byte, offset int, df gopacket131_dpdk.DecodeFeedback) {
 	// The content-length header was not present in the packet, we use the rest of the packet as payload
 	if s.contentLength == -1 {
 		s.BaseLayer = BaseLayer{Contents: data[:offset], Payload: data[offset:]}

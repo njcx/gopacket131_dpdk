@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // CDPTLVType is the type of each TLV value in a CiscoDiscovery packet.
@@ -213,12 +213,12 @@ type CiscoDiscoveryInfo struct {
 	Unknown          []CiscoDiscoveryValue
 }
 
-// LayerType returns gopacket.LayerTypeCiscoDiscovery.
-func (c *CiscoDiscovery) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeCiscoDiscovery.
+func (c *CiscoDiscovery) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeCiscoDiscovery
 }
 
-func decodeCiscoDiscovery(data []byte, p gopacket.PacketBuilder) error {
+func decodeCiscoDiscovery(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	c := &CiscoDiscovery{
 		Version:  data[0],
 		TTL:      data[1],
@@ -235,15 +235,15 @@ func decodeCiscoDiscovery(data []byte, p gopacket.PacketBuilder) error {
 	c.Contents = data[0:4]
 	c.Payload = data[4:]
 	p.AddLayer(c)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeCiscoDiscoveryInfo))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeCiscoDiscoveryInfo))
 }
 
-// LayerType returns gopacket.LayerTypeCiscoDiscoveryInfo.
-func (c *CiscoDiscoveryInfo) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeCiscoDiscoveryInfo.
+func (c *CiscoDiscoveryInfo) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeCiscoDiscoveryInfo
 }
 
-func decodeCiscoDiscoveryTLVs(data []byte, p gopacket.PacketBuilder) (values []CiscoDiscoveryValue, err error) {
+func decodeCiscoDiscoveryTLVs(data []byte, p gopacket131_dpdk.PacketBuilder) (values []CiscoDiscoveryValue, err error) {
 	for len(data) > 0 {
 		if len(data) < 4 {
 			p.SetTruncated()
@@ -267,7 +267,7 @@ func decodeCiscoDiscoveryTLVs(data []byte, p gopacket.PacketBuilder) (values []C
 	return
 }
 
-func decodeCiscoDiscoveryInfo(data []byte, p gopacket.PacketBuilder) error {
+func decodeCiscoDiscoveryInfo(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	var err error
 	info := &CiscoDiscoveryInfo{BaseLayer: BaseLayer{Contents: data}}
 	p.AddLayer(info)

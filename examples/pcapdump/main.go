@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-// The pcapdump binary implements a tcpdump-like command line tool with gopacket
+// The pcapdump binary implements a tcpdump-like command line tool with gopacket131_dpdk
 // using pcap as a backend data collection mechanism.
 package main
 
@@ -16,9 +16,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gopacket/gopacket/dumpcommand"
-	"github.com/gopacket/gopacket/examples/util"
-	"github.com/gopacket/gopacket/pcap"
+	"github.com/njcx/gopacket131_dpdk/dumpcommand"
+	"github.com/njcx/gopacket131_dpdk/examples/util"
+	"github.com/njcx/gopacket131_dpdk/pcap"
 )
 
 var iface = flag.String("i", "eth0", "Interface to read packets from")

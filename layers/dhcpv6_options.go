@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -12,7 +12,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // DHCPv6Opt represents a DHCP option or parameter from RFC-3315
@@ -596,7 +596,7 @@ func NewDHCPv6Option(code DHCPv6Opt, data []byte) DHCPv6Option {
 	return o
 }
 
-func (o *DHCPv6Option) encode(b []byte, opts gopacket.SerializeOptions) error {
+func (o *DHCPv6Option) encode(b []byte, opts gopacket131_dpdk.SerializeOptions) error {
 	binary.BigEndian.PutUint16(b[0:2], uint16(o.Code))
 	if opts.FixLengths {
 		binary.BigEndian.PutUint16(b[2:4], uint16(len(o.Data)))

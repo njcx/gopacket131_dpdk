@@ -1,4 +1,4 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -10,7 +10,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestASFDecodeFromBytes(t *testing.T) {
@@ -20,7 +20,7 @@ func TestASFDecodeFromBytes(t *testing.T) {
 	}
 
 	asf := &ASF{}
-	if err := asf.DecodeFromBytes(b, gopacket.NilDecodeFeedback); err != nil {
+	if err := asf.DecodeFromBytes(b, gopacket131_dpdk.NilDecodeFeedback); err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 	if !bytes.Equal(asf.BaseLayer.Contents, b[:8]) {
@@ -44,8 +44,8 @@ func TestASFDecodeFromBytes(t *testing.T) {
 }
 
 func serializeASF(asf *ASF) ([]byte, error) {
-	sb := gopacket.NewSerializeBuffer()
-	err := asf.SerializeTo(sb, gopacket.SerializeOptions{
+	sb := gopacket131_dpdk.NewSerializeBuffer()
+	err := asf.SerializeTo(sb, gopacket131_dpdk.SerializeOptions{
 		FixLengths: true,
 	})
 	return sb.Bytes(), err

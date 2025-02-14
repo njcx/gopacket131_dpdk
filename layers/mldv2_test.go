@@ -1,4 +1,4 @@
-// Copyright 2018 GoPacket Authors. All rights reserved.
+// Copyright 2018 gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -9,7 +9,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Adapted from https://github.com/the-tcpdump-group/tcpdump/blob/master/tests/icmpv6.pcap
@@ -54,17 +54,17 @@ var testPacketMulticastListenerQueryMessageV2 = []byte{
 }
 
 func TestPacketMulticastListenerQueryMessageV2(t *testing.T) {
-	p := gopacket.NewPacket(testPacketMulticastListenerQueryMessageV2, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketMulticastListenerQueryMessageV2, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet,
 		LayerTypeIPv6,
 		LayerTypeIPv6HopByHop,
 		LayerTypeICMPv6,
 		LayerTypeMLDv2MulticastListenerQuery}, t)
-	// See https://github.com/google/gopacket/issues/517
+	// See https://github.com/google/gopacket131_dpdk/issues/517
 	// checkSerialization(p, t)
 }
 
@@ -128,16 +128,16 @@ var testPacketMulticastListenerReportMessageV2 = []byte{
 }
 
 func TestPacketMulticastListenerReportMessageV2(t *testing.T) {
-	p := gopacket.NewPacket(testPacketMulticastListenerReportMessageV2, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketMulticastListenerReportMessageV2, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet,
 		LayerTypeIPv6,
 		LayerTypeIPv6HopByHop,
 		LayerTypeICMPv6,
 		LayerTypeMLDv2MulticastListenerReport}, t)
-	// See https://github.com/google/gopacket/issues/517
+	// See https://github.com/google/gopacket131_dpdk/issues/517
 	// checkSerialization(p, t)
 }

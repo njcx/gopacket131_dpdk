@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // EthernetCTPFunction is the function code used by the EthernetCTP protocol to identify each
@@ -31,8 +31,8 @@ type EthernetCTP struct {
 	SkipCount uint16
 }
 
-// LayerType returns gopacket.LayerTypeEthernetCTP.
-func (c *EthernetCTP) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeEthernetCTP.
+func (c *EthernetCTP) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeEthernetCTP
 }
 
@@ -44,14 +44,14 @@ type EthernetCTPForwardData struct {
 	ForwardAddress []byte
 }
 
-// LayerType returns gopacket.LayerTypeEthernetCTPForwardData.
-func (c *EthernetCTPForwardData) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeEthernetCTPForwardData.
+func (c *EthernetCTPForwardData) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeEthernetCTPForwardData
 }
 
 // ForwardEndpoint returns the EthernetCTPForwardData ForwardAddress as an endpoint.
-func (c *EthernetCTPForwardData) ForwardEndpoint() gopacket.Endpoint {
-	return gopacket.NewEndpoint(EndpointMAC, c.ForwardAddress)
+func (c *EthernetCTPForwardData) ForwardEndpoint() gopacket131_dpdk.Endpoint {
+	return gopacket131_dpdk.NewEndpoint(EndpointMAC, c.ForwardAddress)
 }
 
 // EthernetCTPReply is the Reply layer inside EthernetCTP.  See EthernetCTP's docs for more details.
@@ -62,15 +62,15 @@ type EthernetCTPReply struct {
 	Data          []byte
 }
 
-// LayerType returns gopacket.LayerTypeEthernetCTPReply.
-func (c *EthernetCTPReply) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeEthernetCTPReply.
+func (c *EthernetCTPReply) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeEthernetCTPReply
 }
 
 // Payload returns the EthernetCTP reply's Data bytes.
 func (c *EthernetCTPReply) Payload() []byte { return c.Data }
 
-func decodeEthernetCTP(data []byte, p gopacket.PacketBuilder) error {
+func decodeEthernetCTP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	c := &EthernetCTP{
 		SkipCount: binary.LittleEndian.Uint16(data[:2]),
 		BaseLayer: BaseLayer{data[:2], data[2:]},
@@ -79,12 +79,12 @@ func decodeEthernetCTP(data []byte, p gopacket.PacketBuilder) error {
 		return fmt.Errorf("EthernetCTP skip count is odd: %d", c.SkipCount)
 	}
 	p.AddLayer(c)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeEthernetCTPFromFunctionType))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeEthernetCTPFromFunctionType))
 }
 
 // decodeEthernetCTPFromFunctionType reads in the first 2 bytes to determine the EthernetCTP
 // layer type to decode next, then decodes based on that.
-func decodeEthernetCTPFromFunctionType(data []byte, p gopacket.PacketBuilder) error {
+func decodeEthernetCTPFromFunctionType(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	function := EthernetCTPFunction(binary.LittleEndian.Uint16(data[:2]))
 	switch function {
 	case EthernetCTPFunctionReply:
@@ -104,7 +104,7 @@ func decodeEthernetCTPFromFunctionType(data []byte, p gopacket.PacketBuilder) er
 			BaseLayer:      BaseLayer{data[:8], data[8:]},
 		}
 		p.AddLayer(forward)
-		return p.NextDecoder(gopacket.DecodeFunc(decodeEthernetCTPFromFunctionType))
+		return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeEthernetCTPFromFunctionType))
 	}
 	return fmt.Errorf("Unknown EthernetCTP function type %v", function)
 }

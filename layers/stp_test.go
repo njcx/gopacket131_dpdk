@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 var testPacketSTPRDATA = []byte{
@@ -51,16 +51,16 @@ var testPacketSTPRDATA = []byte{
 //   00 0F 00                                          ...
 
 func TestPacketSTPNilRdata(t *testing.T) {
-	p := gopacket.NewPacket(testPacketSTPRDATA, LayerTypeSTP, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testPacketSTPRDATA, LayerTypeSTP, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeSTP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeSTP}, t)
 }
 
 // test decoding stp layer on real packet data
 func TestDecodeSTPRData(t *testing.T) {
-	p := gopacket.NewPacket(testPacketSTPRDATA, LayerTypeSTP, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testPacketSTPRDATA, LayerTypeSTP, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
@@ -100,8 +100,8 @@ func TestDecodeSTPRData(t *testing.T) {
 // test harness to ensure the stp layer can be encoded/decoded properly
 // return error if decoded data not match.
 func testEncodeDecodeSTP(stp *STP) error {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{
 		// ComputeChecksums: true,
 		// FixLengths:       true,
 	}
@@ -113,7 +113,7 @@ func testEncodeDecodeSTP(stp *STP) error {
 	}
 
 	newSTP := &STP{}
-	err = newSTP.DecodeFromBytes(buf.Bytes(), gopacket.NilDecodeFeedback)
+	err = newSTP.DecodeFromBytes(buf.Bytes(), gopacket131_dpdk.NilDecodeFeedback)
 	if err != nil {
 		return err
 	}

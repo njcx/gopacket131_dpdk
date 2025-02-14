@@ -10,7 +10,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 var icmp6NeighborAnnouncementData = []byte{
@@ -69,10 +69,10 @@ func TestPacketICMPv6NeighborAnnouncementFlags(t *testing.T) {
 
 	var icmpNeighAdvLayer ICMPv6NeighborAdvertisement
 
-	parser := gopacket.NewDecodingLayerParser(LayerTypeEthernet, &ethLayer, &ipV6Layer, &icmpLayer)
+	parser := gopacket131_dpdk.NewDecodingLayerParser(LayerTypeEthernet, &ethLayer, &ipV6Layer, &icmpLayer)
 	parser.IgnoreUnsupported = true
 
-	respLayers := make([]gopacket.LayerType, 0)
+	respLayers := make([]gopacket131_dpdk.LayerType, 0)
 	err := parser.DecodeLayers(icmp6NeighborAnnouncementData, &respLayers)
 
 	if err != nil {
@@ -80,7 +80,7 @@ func TestPacketICMPv6NeighborAnnouncementFlags(t *testing.T) {
 		return
 	}
 
-	err = icmpNeighAdvLayer.DecodeFromBytes(icmpLayer.LayerPayload(), gopacket.NilDecodeFeedback)
+	err = icmpNeighAdvLayer.DecodeFromBytes(icmpLayer.LayerPayload(), gopacket131_dpdk.NilDecodeFeedback)
 	if err != nil {
 		t.Errorf("Error while Decodeing From Bytes: %s", err)
 		return
@@ -104,10 +104,10 @@ func TestPacketICMPv6RouterAnnouncementFlags(t *testing.T) {
 
 	var icmpRouterAdvLayer ICMPv6RouterAdvertisement
 
-	parser := gopacket.NewDecodingLayerParser(LayerTypeEthernet, &ethLayer, &ipV6Layer, &icmpLayer)
+	parser := gopacket131_dpdk.NewDecodingLayerParser(LayerTypeEthernet, &ethLayer, &ipV6Layer, &icmpLayer)
 	parser.IgnoreUnsupported = true
 
-	respLayers := make([]gopacket.LayerType, 0)
+	respLayers := make([]gopacket131_dpdk.LayerType, 0)
 	err := parser.DecodeLayers(icmp6RouterAdvertisementData, &respLayers)
 
 	if err != nil {
@@ -115,7 +115,7 @@ func TestPacketICMPv6RouterAnnouncementFlags(t *testing.T) {
 		return
 	}
 
-	err = icmpRouterAdvLayer.DecodeFromBytes(icmpLayer.LayerPayload(), gopacket.NilDecodeFeedback)
+	err = icmpRouterAdvLayer.DecodeFromBytes(icmpLayer.LayerPayload(), gopacket131_dpdk.NilDecodeFeedback)
 	if err != nil {
 		t.Errorf("Error while Decodeing From Bytes: %s", err)
 		return

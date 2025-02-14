@@ -14,7 +14,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type IPv4Flag uint8
@@ -59,9 +59,9 @@ type IPv4 struct {
 }
 
 // LayerType returns LayerTypeIPv4
-func (i *IPv4) LayerType() gopacket.LayerType { return LayerTypeIPv4 }
-func (i *IPv4) NetworkFlow() gopacket.Flow {
-	return gopacket.NewFlow(EndpointIPv4, i.SrcIP, i.DstIP)
+func (i *IPv4) LayerType() gopacket131_dpdk.LayerType { return LayerTypeIPv4 }
+func (i *IPv4) NetworkFlow() gopacket131_dpdk.Flow {
+	return gopacket131_dpdk.NewFlow(EndpointIPv4, i.SrcIP, i.DstIP)
 }
 
 type IPv4Option struct {
@@ -99,8 +99,8 @@ func (ip *IPv4) getIPv4OptionSize() uint8 {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-func (ip *IPv4) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+func (ip *IPv4) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	optionLength := ip.getIPv4OptionSize()
 	bytes, err := b.PrependBytes(20 + int(optionLength))
 	if err != nil {
@@ -153,8 +153,8 @@ func (ip *IPv4) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeO
 		bytes[10] = 0
 		bytes[11] = 0
 
-		csum := gopacket.ComputeChecksum(bytes, 0)
-		ip.Checksum = gopacket.FoldChecksum(csum)
+		csum := gopacket131_dpdk.ComputeChecksum(bytes, 0)
+		ip.Checksum = gopacket131_dpdk.FoldChecksum(csum)
 	}
 	binary.BigEndian.PutUint16(bytes[10:], ip.Checksum)
 	return nil
@@ -167,7 +167,7 @@ func (ip *IPv4) flagsfrags() (ff uint16) {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (ip *IPv4) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (ip *IPv4) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 20 {
 		df.SetTruncated()
 		return fmt.Errorf("Invalid ip4 header. Length %d less than 20", len(data))
@@ -262,18 +262,18 @@ func (ip *IPv4) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 	return nil
 }
 
-func (i *IPv4) CanDecode() gopacket.LayerClass {
+func (i *IPv4) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeIPv4
 }
 
-func (i *IPv4) NextLayerType() gopacket.LayerType {
+func (i *IPv4) NextLayerType() gopacket131_dpdk.LayerType {
 	if i.Flags&IPv4MoreFragments != 0 || i.FragOffset != 0 {
-		return gopacket.LayerTypeFragment
+		return gopacket131_dpdk.LayerTypeFragment
 	}
 	return i.Protocol.LayerType()
 }
 
-func decodeIPv4(data []byte, p gopacket.PacketBuilder) error {
+func decodeIPv4(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	ip := &IPv4{}
 	err := ip.DecodeFromBytes(data, p)
 	p.AddLayer(ip)
@@ -312,11 +312,11 @@ func (ip *IPv4) AddressTo4() error {
 	return nil
 }
 
-func (ip *IPv4) VerifyChecksum() (error, gopacket.ChecksumVerificationResult) {
+func (ip *IPv4) VerifyChecksum() (error, gopacket131_dpdk.ChecksumVerificationResult) {
 	existing := ip.Checksum
-	verification := gopacket.ComputeChecksum(ip.Contents, 0)
-	correct := gopacket.FoldChecksum(verification - uint32(existing))
-	return nil, gopacket.ChecksumVerificationResult{
+	verification := gopacket131_dpdk.ComputeChecksum(ip.Contents, 0)
+	correct := gopacket131_dpdk.FoldChecksum(verification - uint32(existing))
+	return nil, gopacket131_dpdk.ChecksumVerificationResult{
 		Valid:   correct == existing,
 		Correct: uint32(correct),
 		Actual:  uint32(existing),

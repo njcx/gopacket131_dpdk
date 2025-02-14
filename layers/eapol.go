@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // EAPOL defines an EAP over LAN (802.1x) layer.
@@ -22,10 +22,10 @@ type EAPOL struct {
 }
 
 // LayerType returns LayerTypeEAPOL.
-func (e *EAPOL) LayerType() gopacket.LayerType { return LayerTypeEAPOL }
+func (e *EAPOL) LayerType() gopacket131_dpdk.LayerType { return LayerTypeEAPOL }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (e *EAPOL) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (e *EAPOL) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 4 {
 		df.SetTruncated()
 		return fmt.Errorf("EAPOL length %d too short", len(data))
@@ -38,8 +38,8 @@ func (e *EAPOL) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer
-func (e *EAPOL) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer
+func (e *EAPOL) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, _ := b.PrependBytes(4)
 	bytes[0] = e.Version
 	bytes[1] = byte(e.Type)
@@ -48,16 +48,16 @@ func (e *EAPOL) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeO
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (e *EAPOL) CanDecode() gopacket.LayerClass {
+func (e *EAPOL) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeEAPOL
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (e *EAPOL) NextLayerType() gopacket.LayerType {
+func (e *EAPOL) NextLayerType() gopacket131_dpdk.LayerType {
 	return e.Type.LayerType()
 }
 
-func decodeEAPOL(data []byte, p gopacket.PacketBuilder) error {
+func decodeEAPOL(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	e := &EAPOL{}
 	return decodingLayerDecoder(e, data, p)
 }
@@ -162,28 +162,28 @@ type EAPOLKey struct {
 }
 
 // LayerType returns LayerTypeEAPOLKey.
-func (ek *EAPOLKey) LayerType() gopacket.LayerType {
+func (ek *EAPOLKey) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeEAPOLKey
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (ek *EAPOLKey) CanDecode() gopacket.LayerType {
+func (ek *EAPOLKey) CanDecode() gopacket131_dpdk.LayerType {
 	return LayerTypeEAPOLKey
 }
 
 // NextLayerType returns layers.LayerTypeDot11InformationElement if the key
 // data exists and is unencrypted, otherwise it does not expect a next layer.
-func (ek *EAPOLKey) NextLayerType() gopacket.LayerType {
+func (ek *EAPOLKey) NextLayerType() gopacket131_dpdk.LayerType {
 	if !ek.HasEncryptedKeyData && ek.KeyDataLength > 0 {
 		return LayerTypeDot11InformationElement
 	}
-	return gopacket.LayerTypePayload
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 const eapolKeyFrameLen = 95
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (ek *EAPOLKey) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (ek *EAPOLKey) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < eapolKeyFrameLen {
 		df.SetTruncated()
 		return fmt.Errorf("EAPOLKey length %v too short, %v required",
@@ -240,9 +240,9 @@ func (ek *EAPOLKey) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) err
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (ek *EAPOLKey) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (ek *EAPOLKey) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(eapolKeyFrameLen + len(ek.EncryptedKeyData))
 	if err != nil {
 		return err
@@ -297,7 +297,7 @@ func (ek *EAPOLKey) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serial
 	return nil
 }
 
-func decodeEAPOLKey(data []byte, p gopacket.PacketBuilder) error {
+func decodeEAPOLKey(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	ek := &EAPOLKey{}
 	return decodingLayerDecoder(ek, data, p)
 }

@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Based on RFC 4861
@@ -137,22 +137,22 @@ func (i ICMPv6Opt) String() string {
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv6Echo) CanDecode() gopacket.LayerClass {
+func (i *ICMPv6Echo) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv6Echo
 }
 
 // LayerType returns LayerTypeICMPv6Echo.
-func (i *ICMPv6Echo) LayerType() gopacket.LayerType {
+func (i *ICMPv6Echo) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeICMPv6Echo
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv6Echo) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (i *ICMPv6Echo) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6Echo) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6Echo) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 4 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less then 4 bytes for ICMPv6 Echo")
@@ -164,9 +164,9 @@ func (i *ICMPv6Echo) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) er
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6Echo) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6Echo) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(4)
 	if err != nil {
 		return err
@@ -178,17 +178,17 @@ func (i *ICMPv6Echo) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Seria
 }
 
 // LayerType returns LayerTypeICMPv6.
-func (i *ICMPv6RouterSolicitation) LayerType() gopacket.LayerType {
+func (i *ICMPv6RouterSolicitation) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeICMPv6RouterSolicitation
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv6RouterSolicitation) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (i *ICMPv6RouterSolicitation) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6RouterSolicitation) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6RouterSolicitation) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	// first 4 bytes are reserved followed by options
 	if len(data) < 4 {
 		df.SetTruncated()
@@ -202,9 +202,9 @@ func (i *ICMPv6RouterSolicitation) DecodeFromBytes(data []byte, df gopacket.Deco
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6RouterSolicitation) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6RouterSolicitation) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if err := i.Options.SerializeTo(b, opts); err != nil {
 		return err
 	}
@@ -219,22 +219,22 @@ func (i *ICMPv6RouterSolicitation) SerializeTo(b gopacket.SerializeBuffer, opts 
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv6RouterSolicitation) CanDecode() gopacket.LayerClass {
+func (i *ICMPv6RouterSolicitation) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv6RouterSolicitation
 }
 
 // LayerType returns LayerTypeICMPv6RouterAdvertisement.
-func (i *ICMPv6RouterAdvertisement) LayerType() gopacket.LayerType {
+func (i *ICMPv6RouterAdvertisement) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeICMPv6RouterAdvertisement
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv6RouterAdvertisement) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (i *ICMPv6RouterAdvertisement) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6RouterAdvertisement) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6RouterAdvertisement) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 12 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less then 12 bytes for ICMPv6 router advertisement")
@@ -255,9 +255,9 @@ func (i *ICMPv6RouterAdvertisement) DecodeFromBytes(data []byte, df gopacket.Dec
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6RouterAdvertisement) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6RouterAdvertisement) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if err := i.Options.SerializeTo(b, opts); err != nil {
 		return err
 	}
@@ -276,7 +276,7 @@ func (i *ICMPv6RouterAdvertisement) SerializeTo(b gopacket.SerializeBuffer, opts
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv6RouterAdvertisement) CanDecode() gopacket.LayerClass {
+func (i *ICMPv6RouterAdvertisement) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv6RouterAdvertisement
 }
 
@@ -293,17 +293,17 @@ func (i *ICMPv6RouterAdvertisement) OtherConfig() bool {
 }
 
 // LayerType returns LayerTypeICMPv6NeighborSolicitation.
-func (i *ICMPv6NeighborSolicitation) LayerType() gopacket.LayerType {
+func (i *ICMPv6NeighborSolicitation) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeICMPv6NeighborSolicitation
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv6NeighborSolicitation) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (i *ICMPv6NeighborSolicitation) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6NeighborSolicitation) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6NeighborSolicitation) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 20 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less then 20 bytes for ICMPv6 neighbor solicitation")
@@ -319,9 +319,9 @@ func (i *ICMPv6NeighborSolicitation) DecodeFromBytes(data []byte, df gopacket.De
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6NeighborSolicitation) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6NeighborSolicitation) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if err := i.Options.SerializeTo(b, opts); err != nil {
 		return err
 	}
@@ -337,22 +337,22 @@ func (i *ICMPv6NeighborSolicitation) SerializeTo(b gopacket.SerializeBuffer, opt
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv6NeighborSolicitation) CanDecode() gopacket.LayerClass {
+func (i *ICMPv6NeighborSolicitation) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv6NeighborSolicitation
 }
 
 // LayerType returns LayerTypeICMPv6NeighborAdvertisement.
-func (i *ICMPv6NeighborAdvertisement) LayerType() gopacket.LayerType {
+func (i *ICMPv6NeighborAdvertisement) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeICMPv6NeighborAdvertisement
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv6NeighborAdvertisement) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (i *ICMPv6NeighborAdvertisement) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6NeighborAdvertisement) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6NeighborAdvertisement) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 20 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less then 20 bytes for ICMPv6 neighbor advertisement")
@@ -369,9 +369,9 @@ func (i *ICMPv6NeighborAdvertisement) DecodeFromBytes(data []byte, df gopacket.D
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6NeighborAdvertisement) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6NeighborAdvertisement) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if err := i.Options.SerializeTo(b, opts); err != nil {
 		return err
 	}
@@ -388,7 +388,7 @@ func (i *ICMPv6NeighborAdvertisement) SerializeTo(b gopacket.SerializeBuffer, op
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv6NeighborAdvertisement) CanDecode() gopacket.LayerClass {
+func (i *ICMPv6NeighborAdvertisement) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv6NeighborAdvertisement
 }
 
@@ -409,17 +409,17 @@ func (i *ICMPv6NeighborAdvertisement) Override() bool {
 }
 
 // LayerType returns LayerTypeICMPv6Redirect.
-func (i *ICMPv6Redirect) LayerType() gopacket.LayerType {
+func (i *ICMPv6Redirect) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeICMPv6Redirect
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv6Redirect) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (i *ICMPv6Redirect) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6Redirect) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6Redirect) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 36 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less then 36 bytes for ICMPv6 redirect")
@@ -436,9 +436,9 @@ func (i *ICMPv6Redirect) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6Redirect) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6Redirect) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if err := i.Options.SerializeTo(b, opts); err != nil {
 		return err
 	}
@@ -455,7 +455,7 @@ func (i *ICMPv6Redirect) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.S
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv6Redirect) CanDecode() gopacket.LayerClass {
+func (i *ICMPv6Redirect) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv6Redirect
 }
 
@@ -511,7 +511,7 @@ func (i ICMPv6Option) String() string {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6Options) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6Options) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	for len(data) > 0 {
 		if len(data) < 2 {
 			df.SetTruncated()
@@ -546,9 +546,9 @@ func (i *ICMPv6Options) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback)
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6Options) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6Options) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	for _, opt := range []ICMPv6Option(*i) {
 		length := len(opt.Data) + 2
 		buf, err := b.PrependBytes(length)
@@ -564,32 +564,32 @@ func (i *ICMPv6Options) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Se
 	return nil
 }
 
-func decodeICMPv6Echo(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv6Echo(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv6Echo{}
 	return decodingLayerDecoder(i, data, p)
 }
 
-func decodeICMPv6RouterSolicitation(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv6RouterSolicitation(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv6RouterSolicitation{}
 	return decodingLayerDecoder(i, data, p)
 }
 
-func decodeICMPv6RouterAdvertisement(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv6RouterAdvertisement(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv6RouterAdvertisement{}
 	return decodingLayerDecoder(i, data, p)
 }
 
-func decodeICMPv6NeighborSolicitation(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv6NeighborSolicitation(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv6NeighborSolicitation{}
 	return decodingLayerDecoder(i, data, p)
 }
 
-func decodeICMPv6NeighborAdvertisement(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv6NeighborAdvertisement(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv6NeighborAdvertisement{}
 	return decodingLayerDecoder(i, data, p)
 }
 
-func decodeICMPv6Redirect(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv6Redirect(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv6Redirect{}
 	return decodingLayerDecoder(i, data, p)
 }

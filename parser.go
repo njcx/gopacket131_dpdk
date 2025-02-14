@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package gopacket
+package gopacket131_dpdk
 
 import (
 	"fmt"
@@ -262,10 +262,10 @@ func (l *DecodingLayerParser) SetDecodingLayerContainer(dlc DecodingLayerContain
 //	  var ip6 layers.IPv6
 //	  var tcp layers.TCP
 //	  var udp layers.UDP
-//	  var payload gopacket.Payload
-//	  parser := gopacket.NewDecodingLayerParser(layers.LayerTypeEthernet, &eth, &ip4, &ip6, &tcp, &udp, &payload)
-//	  var source gopacket.PacketDataSource = getMyDataSource()
-//	  decodedLayers := make([]gopacket.LayerType, 0, 10)
+//	  var payload gopacket131_dpdk.Payload
+//	  parser := gopacket131_dpdk.NewDecodingLayerParser(layers.LayerTypeEthernet, &eth, &ip4, &ip6, &tcp, &udp, &payload)
+//	  var source gopacket131_dpdk.PacketDataSource = getMyDataSource()
+//	  decodedLayers := make([]gopacket131_dpdk.LayerType, 0, 10)
 //	  for {
 //	    data, _, err := source.ReadPacketData()
 //	    if err != nil {

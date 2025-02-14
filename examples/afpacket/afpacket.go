@@ -16,13 +16,13 @@ import (
 	"runtime/pprof"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/afpacket"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/pcap"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/afpacket"
+	"github.com/njcx/gopacket131_dpdk/layers"
+	"github.com/njcx/gopacket131_dpdk/pcap"
 	"golang.org/x/net/bpf"
 
-	_ "github.com/gopacket/gopacket/layers"
+	_ "github.com/njcx/gopacket131_dpdk/layers"
 )
 
 var (
@@ -70,7 +70,7 @@ func newAfpacketHandle(device string, snaplen int, block_size int, num_blocks in
 }
 
 // ZeroCopyReadPacketData satisfies ZeroCopyPacketDataSource interface
-func (h *afpacketHandle) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (h *afpacketHandle) ZeroCopyReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	return h.TPacket.ZeroCopyReadPacketData()
 }
 
@@ -124,7 +124,7 @@ func afpacketComputeSize(targetSizeMb int, snaplen int, pageSize int) (
 		frameSize = (snaplen/pageSize + 1) * pageSize
 	}
 
-	// 128 is the default from the gopacket library so just use that
+	// 128 is the default from the gopacket131_dpdk library so just use that
 	blockSize = frameSize * 128
 	numBlocks = (targetSizeMb * 1024 * 1024) / blockSize
 
@@ -164,7 +164,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	source := gopacket.ZeroCopyPacketDataSource(afpacketHandle)
+	source := gopacket131_dpdk.ZeroCopyPacketDataSource(afpacketHandle)
 	defer afpacketHandle.Close()
 
 	bytes := uint64(0)

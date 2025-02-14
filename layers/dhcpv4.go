@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // DHCPOp rerprents a bootp operation
@@ -119,11 +119,11 @@ func (o DHCPOptions) String() string {
 	return buf.String()
 }
 
-// LayerType returns gopacket.LayerTypeDHCPv4
-func (d *DHCPv4) LayerType() gopacket.LayerType { return LayerTypeDHCPv4 }
+// LayerType returns gopacket131_dpdk.LayerTypeDHCPv4
+func (d *DHCPv4) LayerType() gopacket131_dpdk.LayerType { return LayerTypeDHCPv4 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (d *DHCPv4) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (d *DHCPv4) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 240 {
 		df.SetTruncated()
 		return fmt.Errorf("DHCPv4 length %d too short", len(data))
@@ -193,9 +193,9 @@ func (d *DHCPv4) Len() uint16 {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (d *DHCPv4) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (d *DHCPv4) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	plen := int(d.Len())
 
 	data, err := b.PrependBytes(plen)
@@ -244,23 +244,23 @@ func (d *DHCPv4) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serialize
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (d *DHCPv4) CanDecode() gopacket.LayerClass {
+func (d *DHCPv4) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDHCPv4
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (d *DHCPv4) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (d *DHCPv4) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
-func decodeDHCPv4(data []byte, p gopacket.PacketBuilder) error {
+func decodeDHCPv4(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	dhcp := &DHCPv4{}
 	err := dhcp.DecodeFromBytes(data, p)
 	if err != nil {
 		return err
 	}
 	p.AddLayer(dhcp)
-	return p.NextDecoder(gopacket.LayerTypePayload)
+	return p.NextDecoder(gopacket131_dpdk.LayerTypePayload)
 }
 
 // DHCPOpt represents a DHCP option or parameter from RFC-2132

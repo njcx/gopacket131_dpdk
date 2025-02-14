@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // PPP is the layer for PPP encapsulation headers.
@@ -23,20 +23,20 @@ type PPP struct {
 // PPPEndpoint is a singleton endpoint for PPP.  Since there is no actual
 // addressing for the two ends of a PPP connection, we use a singleton value
 // named 'point' for each endpoint.
-var PPPEndpoint = gopacket.NewEndpoint(EndpointPPP, nil)
+var PPPEndpoint = gopacket131_dpdk.NewEndpoint(EndpointPPP, nil)
 
 // PPPFlow is a singleton flow for PPP.  Since there is no actual addressing for
 // the two ends of a PPP connection, we use a singleton value to represent the
 // flow for all PPP connections.
-var PPPFlow = gopacket.NewFlow(EndpointPPP, nil, nil)
+var PPPFlow = gopacket131_dpdk.NewFlow(EndpointPPP, nil, nil)
 
 // LayerType returns LayerTypePPP
-func (p *PPP) LayerType() gopacket.LayerType { return LayerTypePPP }
+func (p *PPP) LayerType() gopacket131_dpdk.LayerType { return LayerTypePPP }
 
 // LinkFlow returns PPPFlow.
-func (p *PPP) LinkFlow() gopacket.Flow { return PPPFlow }
+func (p *PPP) LinkFlow() gopacket131_dpdk.Flow { return PPPFlow }
 
-func decodePPP(data []byte, p gopacket.PacketBuilder) error {
+func decodePPP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	ppp := &PPP{}
 	offset := 0
 	if data[0] == 0xff && data[1] == 0x03 {
@@ -61,9 +61,9 @@ func decodePPP(data []byte, p gopacket.PacketBuilder) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (p *PPP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (p *PPP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	if p.PPPType&0x100 == 0 {
 		bytes, err := b.PrependBytes(2)
 		if err != nil {

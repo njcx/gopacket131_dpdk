@@ -10,13 +10,13 @@ import (
 	"net"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestNewIPEndpoint(t *testing.T) {
 	cases := []struct {
 		ip           net.IP
-		endpointType gopacket.EndpointType
+		endpointType gopacket131_dpdk.EndpointType
 	}{
 		{net.ParseIP("192.168.0.1").To4(), EndpointIPv4},
 		{net.ParseIP("192.168.0.1").To16(), EndpointIPv4},
@@ -25,7 +25,7 @@ func TestNewIPEndpoint(t *testing.T) {
 
 	for _, c := range cases {
 		endpoint := NewIPEndpoint(c.ip)
-		if endpoint == gopacket.InvalidEndpoint {
+		if endpoint == gopacket131_dpdk.InvalidEndpoint {
 			t.Errorf("Failed to create an IP endpoint for %s (%d-bytes)",
 				c.ip, len(c.ip))
 		}

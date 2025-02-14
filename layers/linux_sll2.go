@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // The ARPHardwareType contains a Linux ARPHRD_ value for the link-layer device type
@@ -98,24 +98,24 @@ type LinuxSLL2 struct {
 }
 
 // LayerType returns LayerTypeLinuxSLL.
-func (sll *LinuxSLL2) LayerType() gopacket.LayerType { return LayerTypeLinuxSLL2 }
+func (sll *LinuxSLL2) LayerType() gopacket131_dpdk.LayerType { return LayerTypeLinuxSLL2 }
 
-func (sll *LinuxSLL2) CanDecode() gopacket.LayerClass {
+func (sll *LinuxSLL2) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeLinuxSLL2
 }
 
-func (sll *LinuxSLL2) LinkFlow() gopacket.Flow {
-	return gopacket.NewFlow(EndpointMAC, sll.Addr, nil)
+func (sll *LinuxSLL2) LinkFlow() gopacket131_dpdk.Flow {
+	return gopacket131_dpdk.NewFlow(EndpointMAC, sll.Addr, nil)
 }
 
-func (sll *LinuxSLL2) NextLayerType() gopacket.LayerType {
+func (sll *LinuxSLL2) NextLayerType() gopacket131_dpdk.LayerType {
 	switch sll.ARPHardwareType {
 	case ARPHardwareTypeFRAD:
 		// If the ARPHRD_ type is ARPHRD_FRAD (770), the protocol type field is ignored,
 		// and the payload following the LINKTYPE_LINUX_SLL header is a Frame Relay LAPF frame,
 		// beginning with a ITU-T Recommendation Q.922 LAPF header starting with the address field,
 		// and without an FCS at the end of the frame.
-		return gopacket.LayerTypeZero // LAPF layer not yet implemented
+		return gopacket131_dpdk.LayerTypeZero // LAPF layer not yet implemented
 
 	case ARPHardwareTypeDot11Radiotap:
 		return LayerTypeRadioTap
@@ -131,25 +131,25 @@ func (sll *LinuxSLL2) NextLayerType() gopacket.LayerType {
 		switch sll.ProtocolType {
 		case LinuxSLL2EthernetTypeDot3:
 			// Docs: if the frame is a Novell 802.3 frame without an 802.2 LLC header
-			return gopacket.LayerTypeZero // Novell 802.3 frame layer not yet implemented
+			return gopacket131_dpdk.LayerTypeZero // Novell 802.3 frame layer not yet implemented
 
 		case LinuxSLL2EthernetTypeUnknown:
 			// Docs: in some mysterious cases;
-			return gopacket.LayerTypeZero // Mysterious cases not implemented
+			return gopacket131_dpdk.LayerTypeZero // Mysterious cases not implemented
 
 		case LinuxSLL2EthernetTypeLLC:
 			return LayerTypeLLC
 
 		case LinuxSLL2EthernetTypeCAN:
 			// Docs: if the frame is a CAN bus frame that begins with a header of the form
-			return gopacket.LayerTypeZero
+			return gopacket131_dpdk.LayerTypeZero
 		}
 
 		return sll.ProtocolType.LayerType()
 	}
 }
 
-func (sll *LinuxSLL2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (sll *LinuxSLL2) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 20 {
 		return errors.New("Linux SLL2 packet too small")
 	}
@@ -165,7 +165,7 @@ func (sll *LinuxSLL2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) e
 	return nil
 }
 
-func decodeLinuxSLL2(data []byte, p gopacket.PacketBuilder) error {
+func decodeLinuxSLL2(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	sll := &LinuxSLL2{}
 	if err := sll.DecodeFromBytes(data, p); err != nil {
 		return err

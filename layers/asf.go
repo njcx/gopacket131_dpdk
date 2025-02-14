@@ -1,4 +1,4 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -12,7 +12,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -43,19 +43,19 @@ type ASFDataIdentifier struct {
 
 // LayerType returns the payload layer type corresponding to an ASF message
 // type.
-func (a ASFDataIdentifier) LayerType() gopacket.LayerType {
+func (a ASFDataIdentifier) LayerType() gopacket131_dpdk.LayerType {
 	if lt := asfDataLayerTypes[a]; lt != 0 {
 		return lt
 	}
 
 	// some layer types don't have a payload, e.g. ASF-RMCP Presence Ping.
-	return gopacket.LayerTypePayload
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // RegisterASFLayerType allows specifying that the data block of ASF packets
 // with a given enterprise number and type should be processed by a given layer
 // type. This overrides any existing registrations, including defaults.
-func RegisterASFLayerType(a ASFDataIdentifier, l gopacket.LayerType) {
+func RegisterASFLayerType(a ASFDataIdentifier, l gopacket131_dpdk.LayerType) {
 	asfDataLayerTypes[a] = l
 }
 
@@ -81,7 +81,7 @@ var (
 	}
 
 	// asfDataLayerTypes is used to find the next layer for a given ASF header.
-	asfDataLayerTypes = map[ASFDataIdentifier]gopacket.LayerType{
+	asfDataLayerTypes = map[ASFDataIdentifier]gopacket131_dpdk.LayerType{
 		ASFDataIdentifierPresencePong: LayerTypeASFPresencePong,
 	}
 )
@@ -106,18 +106,18 @@ type ASF struct {
 
 // LayerType returns LayerTypeASF. It partially satisfies Layer and
 // SerializableLayer.
-func (*ASF) LayerType() gopacket.LayerType {
+func (*ASF) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeASF
 }
 
 // CanDecode returns LayerTypeASF. It partially satisfies DecodingLayer.
-func (a *ASF) CanDecode() gopacket.LayerClass {
+func (a *ASF) CanDecode() gopacket131_dpdk.LayerClass {
 	return a.LayerType()
 }
 
 // DecodeFromBytes makes the layer represent the provided bytes. It partially
 // satisfies DecodingLayer.
-func (a *ASF) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (a *ASF) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 8 {
 		df.SetTruncated()
 		return fmt.Errorf("invalid ASF data header, length %v less than 8",
@@ -137,13 +137,13 @@ func (a *ASF) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 
 // NextLayerType returns the layer type corresponding to the message type of
 // this ASF data layer. This partially satisfies DecodingLayer.
-func (a *ASF) NextLayerType() gopacket.LayerType {
+func (a *ASF) NextLayerType() gopacket131_dpdk.LayerType {
 	return a.ASFDataIdentifier.LayerType()
 }
 
 // SerializeTo writes the serialized fom of this layer into the SerializeBuffer,
 // partially satisfying SerializableLayer.
-func (a *ASF) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (a *ASF) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	payload := b.Bytes()
 	bytes, err := b.PrependBytes(8)
 	if err != nil {
@@ -161,6 +161,6 @@ func (a *ASF) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 }
 
 // decodeASF decodes the byte slice into an RMCP-ASF data struct.
-func decodeASF(data []byte, p gopacket.PacketBuilder) error {
+func decodeASF(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	return decodingLayerDecoder(&ASF{}, data, p)
 }

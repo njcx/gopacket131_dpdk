@@ -19,8 +19,8 @@ import (
 	"golang.org/x/net/bpf"
 	"golang.org/x/sys/unix"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/endian"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/endian"
 )
 
 var hdrLen = unix.CmsgSpace(0)
@@ -40,7 +40,7 @@ type EthernetHandle struct {
 }
 
 // readOne reads a packet from the handle and returns a capture info + vlan info
-func (h *EthernetHandle) readOne() (ci gopacket.CaptureInfo, vlan int, haveVlan bool, err error) {
+func (h *EthernetHandle) readOne() (ci gopacket131_dpdk.CaptureInfo, vlan int, haveVlan bool, err error) {
 	// we could use unix.Recvmsg, but that does a memory allocation (for the returned sockaddr) :(
 	var msg unix.Msghdr
 	var sa unix.RawSockaddrLinklayer
@@ -145,13 +145,13 @@ func (h *EthernetHandle) readOne() (ci gopacket.CaptureInfo, vlan int, haveVlan 
 	return ci, vlan, haveVlan, nil
 }
 
-// ReadPacketData implements gopacket.PacketDataSource. If this was captured on a vlan, the vlan id will be in the AncillaryData[0]
-func (h *EthernetHandle) ReadPacketData() ([]byte, gopacket.CaptureInfo, error) {
+// ReadPacketData implements gopacket131_dpdk.PacketDataSource. If this was captured on a vlan, the vlan id will be in the AncillaryData[0]
+func (h *EthernetHandle) ReadPacketData() ([]byte, gopacket131_dpdk.CaptureInfo, error) {
 	h.mu.Lock()
 	ci, vlan, haveVlan, err := h.readOne()
 	if err != nil {
 		h.mu.Unlock()
-		return nil, gopacket.CaptureInfo{}, fmt.Errorf("couldn't read packet data: %s", err)
+		return nil, gopacket131_dpdk.CaptureInfo{}, fmt.Errorf("couldn't read packet data: %s", err)
 	}
 
 	b := make([]byte, ci.CaptureLength)
@@ -166,13 +166,13 @@ func (h *EthernetHandle) ReadPacketData() ([]byte, gopacket.CaptureInfo, error) 
 	return b, ci, nil
 }
 
-// ZeroCopyReadPacketData implements gopacket.ZeroCopyPacketDataSource. If this was captured on a vlan, the vlan id will be in the AncillaryData[0].
+// ZeroCopyReadPacketData implements gopacket131_dpdk.ZeroCopyPacketDataSource. If this was captured on a vlan, the vlan id will be in the AncillaryData[0].
 // This function does not allocate memory. Beware that the next call to ZeroCopyReadPacketData will overwrite existing slices (returned data AND AncillaryData)!
 // Due to shared buffers this must not be called concurrently
-func (h *EthernetHandle) ZeroCopyReadPacketData() ([]byte, gopacket.CaptureInfo, error) {
+func (h *EthernetHandle) ZeroCopyReadPacketData() ([]byte, gopacket131_dpdk.CaptureInfo, error) {
 	ci, vlan, haveVlan, err := h.readOne()
 	if err != nil {
-		return nil, gopacket.CaptureInfo{}, fmt.Errorf("couldn't read packet data: %s", err)
+		return nil, gopacket131_dpdk.CaptureInfo{}, fmt.Errorf("couldn't read packet data: %s", err)
 	}
 
 	if haveVlan {
@@ -286,7 +286,7 @@ func (h *EthernetHandle) Stats() (res *unix.TpacketStats, err error) {
 }
 
 // NewEthernetHandle implements pcap.OpenLive for network devices.
-// If you want better performance have a look at github.com/gopacket/gopacket/afpacket.
+// If you want better performance have a look at github.com/njcx/gopacket131_dpdk/afpacket.
 // SetCaptureLength can be used to limit the maximum capture length.
 func NewEthernetHandle(ifname string) (*EthernetHandle, error) {
 	intf, err := net.InterfaceByName(ifname)

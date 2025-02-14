@@ -17,9 +17,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/examples/util"
-	"github.com/gopacket/gopacket/pcap"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/examples/util"
+	"github.com/njcx/gopacket131_dpdk/pcap"
 )
 
 var iface = flag.String("i", "eth0", "Interface to write packets to")
@@ -32,7 +32,7 @@ var lastSend time.Time
 var start time.Time
 var bytesSent int
 
-func writePacketDelayed(handle *pcap.Handle, buf []byte, ci gopacket.CaptureInfo) {
+func writePacketDelayed(handle *pcap.Handle, buf []byte, ci gopacket131_dpdk.CaptureInfo) {
 	if ci.CaptureLength != ci.Length {
 		// do not write truncated packets
 		return

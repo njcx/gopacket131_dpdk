@@ -12,7 +12,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func decodePrismValue(data []byte, pv *PrismValue) {
@@ -97,7 +97,7 @@ func (pv *PrismValue) IsSupplied() bool {
 var ErrPrismExpectedMoreData = errors.New("Expected more data.")
 var ErrPrismInvalidCode = errors.New("Invalid header code.")
 
-func decodePrismHeader(data []byte, p gopacket.PacketBuilder) error {
+func decodePrismHeader(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &PrismHeader{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -110,9 +110,9 @@ type PrismHeader struct {
 	Values     []PrismValue
 }
 
-func (m *PrismHeader) LayerType() gopacket.LayerType { return LayerTypePrismHeader }
+func (m *PrismHeader) LayerType() gopacket131_dpdk.LayerType { return LayerTypePrismHeader }
 
-func (m *PrismHeader) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *PrismHeader) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Code = binary.LittleEndian.Uint16(data[0:4])
 	m.Length = binary.LittleEndian.Uint16(data[4:8])
 	m.DeviceName = string(data[8:24])
@@ -142,5 +142,5 @@ func (m *PrismHeader) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) e
 	return nil
 }
 
-func (m *PrismHeader) CanDecode() gopacket.LayerClass    { return LayerTypePrismHeader }
-func (m *PrismHeader) NextLayerType() gopacket.LayerType { return LayerTypeDot11 }
+func (m *PrismHeader) CanDecode() gopacket131_dpdk.LayerClass    { return LayerTypePrismHeader }
+func (m *PrismHeader) NextLayerType() gopacket131_dpdk.LayerType { return LayerTypeDot11 }

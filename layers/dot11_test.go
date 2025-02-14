@@ -13,7 +13,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Generator: python layers/test_creator.py --layerType=LayerTypeRadioTap --linkType=LinkTypeIEEE80211Radio --name=Dot11%s ~/Downloads/mesh.pcap
@@ -32,11 +32,11 @@ var testPacketDot11CtrlCTS = []byte{
 }
 
 func TestPacketDot11CtrlCTS(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11CtrlCTS, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11CtrlCTS, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
 
 	if got, ok := p.Layer(LayerTypeRadioTap).(*RadioTap); ok {
 		want := &RadioTap{
@@ -98,7 +98,7 @@ func TestPacketDot11CtrlCTS(t *testing.T) {
 
 func BenchmarkDecodePacketDot11CtrlCTS(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11CtrlCTS, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11CtrlCTS, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -139,11 +139,11 @@ var testPacketDot11MgmtBeacon = []byte{
 }
 
 func TestPacketDot11MgmtBeacon(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11MgmtBeacon, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11MgmtBeacon, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	expectedLayers := []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11MgmtBeacon}
+	expectedLayers := []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11MgmtBeacon}
 	for i := 0; i < 12; i++ {
 		expectedLayers = append(expectedLayers, LayerTypeDot11InformationElement)
 	}
@@ -162,7 +162,7 @@ func TestPacketDot11MgmtBeacon(t *testing.T) {
 
 func BenchmarkDecodePacketDot11MgmtBeacon(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11MgmtBeacon, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11MgmtBeacon, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -235,11 +235,11 @@ var testPacketDot11BeaconExtension = []byte{
 }
 
 func TestPacketDot11BeaconExtension(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11BeaconExtension, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11BeaconExtension, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	expectedLayers := []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11MgmtBeacon}
+	expectedLayers := []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11MgmtBeacon}
 	for i := 0; i < 12; i++ {
 		expectedLayers = append(expectedLayers, LayerTypeDot11InformationElement)
 	}
@@ -258,7 +258,7 @@ func TestPacketDot11BeaconExtension(t *testing.T) {
 
 func BenchmarkDecodePacketDot11BeaconExtension(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11BeaconExtension, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11BeaconExtension, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -281,11 +281,11 @@ var testPacketDot11DataQOSData = []byte{
 }
 
 func TestPacketDot11DataQOSData(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11DataQOSData, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11DataQOSData, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11DataQOSData, LayerTypeDot11Data, LayerTypeLLC, LayerTypeSNAP, LayerTypeARP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11DataQOSData, LayerTypeDot11Data, LayerTypeLLC, LayerTypeSNAP, LayerTypeARP}, t)
 
 	if got, ok := p.Layer(LayerTypeARP).(*ARP); ok {
 		want := &ARP{BaseLayer: BaseLayer{
@@ -310,7 +310,7 @@ func TestPacketDot11DataQOSData(t *testing.T) {
 }
 func BenchmarkDecodePacketDot11DataQOSData(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11DataQOSData, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11DataQOSData, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -329,11 +329,11 @@ var testPacketDot11MgmtAction = []byte{
 }
 
 func TestPacketDot11MgmtAction(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11MgmtAction, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11MgmtAction, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11MgmtAction}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11MgmtAction}, t)
 	if got, ok := p.Layer(LayerTypeDot11).(*Dot11); !ok {
 		t.Errorf("dot11 frame was not parsed")
 	} else if !got.ChecksumValid() {
@@ -348,7 +348,7 @@ func TestPacketDot11MgmtAction(t *testing.T) {
 
 func BenchmarkDecodePacketDot11MgmtAction(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11MgmtAction, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11MgmtAction, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -365,11 +365,11 @@ var testPacketDot11CtrlAck = []byte{
 }
 
 func TestPacketDot11CtrlAck(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11CtrlAck, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11CtrlAck, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
 
 	if got, ok := p.Layer(LayerTypeDot11).(*Dot11); ok {
 		if !got.ChecksumValid() {
@@ -403,7 +403,7 @@ func TestPacketDot11CtrlAck(t *testing.T) {
 }
 func BenchmarkDecodePacketDot11CtrlAck(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11CtrlAck, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11CtrlAck, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -426,11 +426,11 @@ var testPacketDot11DataARP = []byte{
 }
 
 func TestPacketDot11DataARP(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11DataARP, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11DataARP, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11Data, LayerTypeLLC, LayerTypeSNAP, LayerTypeARP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11Data, LayerTypeLLC, LayerTypeSNAP, LayerTypeARP}, t)
 
 	if got, ok := p.Layer(LayerTypeARP).(*ARP); ok {
 		want := &ARP{
@@ -457,7 +457,7 @@ func TestPacketDot11DataARP(t *testing.T) {
 
 func BenchmarkDecodePacketDot11DataARP(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11DataARP, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11DataARP, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -518,15 +518,15 @@ var testPacketDot11DataIP = []byte{
 }
 
 func TestPacketDot11DataIP(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11DataIP, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11DataIP, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11Data, LayerTypeLLC, LayerTypeSNAP, LayerTypeIPv4, LayerTypeUDP, LayerTypeDHCPv4}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11Data, LayerTypeLLC, LayerTypeSNAP, LayerTypeIPv4, LayerTypeUDP, LayerTypeDHCPv4}, t)
 }
 func BenchmarkDecodePacketDot11DataIP(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDot11DataIP, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDot11DataIP, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -563,17 +563,17 @@ var testPacketP6196 = []byte{
 }
 
 func TestPacketP6196(t *testing.T) {
-	p := gopacket.NewPacket(testPacketP6196, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketP6196, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
 
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11DataQOSData, LayerTypeDot11WEP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11DataQOSData, LayerTypeDot11WEP}, t)
 }
 
 func BenchmarkDecodePacketP6196(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketP6196, LinkTypeIEEE80211Radio, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketP6196, LinkTypeIEEE80211Radio, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -622,12 +622,12 @@ var wantHTControl = Dot11HTControl{
 }
 
 func TestPacketDot11HTControl(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11HTControl, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11HTControl, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
 
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11DataQOSData, LayerTypeDot11WEP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11DataQOSData, LayerTypeDot11WEP}, t)
 
 	ld11 := p.Layer(LayerTypeDot11)
 	if dot11, ok := ld11.(*Dot11); ok {
@@ -646,14 +646,14 @@ func TestInformationElement(t *testing.T) {
 		0, 2, 1, 3,
 		221, 5, 1, 2, 3, 4, 5,
 	}
-	pkt := gopacket.NewPacket(bin, LayerTypeDot11InformationElement, gopacket.NoCopy)
+	pkt := gopacket131_dpdk.NewPacket(bin, LayerTypeDot11InformationElement, gopacket131_dpdk.NoCopy)
 
-	buf := gopacket.NewSerializeBuffer()
-	var sLayers []gopacket.SerializableLayer
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	var sLayers []gopacket131_dpdk.SerializableLayer
 	for _, l := range pkt.Layers() {
 		sLayers = append(sLayers, l.(*Dot11InformationElement))
 	}
-	if err := gopacket.SerializeLayers(buf, gopacket.SerializeOptions{}, sLayers...); err != nil {
+	if err := gopacket131_dpdk.SerializeLayers(buf, gopacket131_dpdk.SerializeOptions{}, sLayers...); err != nil {
 		t.Error(err.Error())
 	}
 	if !bytes.Equal(bin, buf.Bytes()) {
@@ -676,11 +676,11 @@ var testPacketDot11BlockAck = []byte{
 }
 
 func TestPacketDot11BlockAck(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11BlockAck, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11BlockAck, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
 
 	if got, ok := p.Layer(LayerTypeDot11).(*Dot11); ok {
 		if !got.ChecksumValid() {
@@ -728,11 +728,11 @@ var testPacketDot11BlockAckReq = []byte{
 }
 
 func TestPacketDot11BlockAckReq(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDot11BlockAckReq, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketDot11BlockAckReq, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
 
 	if got, ok := p.Layer(LayerTypeDot11).(*Dot11); ok {
 		if !got.ChecksumValid() {
@@ -818,7 +818,7 @@ func TestDot11InformationElement(t *testing.T) {
 		t.Run(test.Name, func(t *testing.T) {
 			dot11InfoElement := Dot11InformationElement{}
 
-			err := dot11InfoElement.DecodeFromBytes(test.Data, gopacket.NilDecodeFeedback)
+			err := dot11InfoElement.DecodeFromBytes(test.Data, gopacket131_dpdk.NilDecodeFeedback)
 
 			if test.Err == nil && err != nil {
 				t.Errorf("Dot11InformationElement: %s unexpected err %v", test.Name, err)

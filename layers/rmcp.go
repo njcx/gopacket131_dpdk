@@ -1,4 +1,4 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -11,7 +11,7 @@ package layers
 import (
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // RMCPClass is the class of a RMCP layer's payload, e.g. ASF or IPMI. This is a
@@ -20,11 +20,11 @@ import (
 type RMCPClass uint8
 
 // LayerType returns the payload layer type corresponding to a RMCP class.
-func (c RMCPClass) LayerType() gopacket.LayerType {
+func (c RMCPClass) LayerType() gopacket131_dpdk.LayerType {
 	if lt := rmcpClassLayerTypes[uint8(c)]; lt != 0 {
 		return lt
 	}
-	return gopacket.LayerTypePayload
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 func (c RMCPClass) String() string {
@@ -56,7 +56,7 @@ const (
 )
 
 var (
-	rmcpClassLayerTypes = [16]gopacket.LayerType{
+	rmcpClassLayerTypes = [16]gopacket131_dpdk.LayerType{
 		RMCPClassASF: LayerTypeASF,
 		// RMCPClassIPMI is to implement; RMCPClassOEM is deliberately not
 		// implemented, so we return LayerTypePayload
@@ -66,7 +66,7 @@ var (
 // RegisterRMCPLayerType allows specifying that the payload of a RMCP packet of
 // a certain class should processed by the provided layer type. This overrides
 // any existing registrations, including defaults.
-func RegisterRMCPLayerType(c RMCPClass, l gopacket.LayerType) {
+func RegisterRMCPLayerType(c RMCPClass, l gopacket131_dpdk.LayerType) {
 	rmcpClassLayerTypes[c] = l
 }
 
@@ -97,18 +97,18 @@ type RMCP struct {
 
 // LayerType returns LayerTypeRMCP. It partially satisfies Layer and
 // SerializableLayer.
-func (*RMCP) LayerType() gopacket.LayerType {
+func (*RMCP) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeRMCP
 }
 
 // CanDecode returns LayerTypeRMCP. It partially satisfies DecodingLayer.
-func (r *RMCP) CanDecode() gopacket.LayerClass {
+func (r *RMCP) CanDecode() gopacket131_dpdk.LayerClass {
 	return r.LayerType()
 }
 
 // DecodeFromBytes makes the layer represent the provided bytes. It partially
 // satisfies DecodingLayer.
-func (r *RMCP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (r *RMCP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 4 {
 		df.SetTruncated()
 		return fmt.Errorf("invalid RMCP header, length %v less than 4",
@@ -128,7 +128,7 @@ func (r *RMCP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 
 // NextLayerType returns the data layer of this RMCP layer. This partially
 // satisfies DecodingLayer.
-func (r *RMCP) NextLayerType() gopacket.LayerType {
+func (r *RMCP) NextLayerType() gopacket131_dpdk.LayerType {
 	return r.Class.LayerType()
 }
 
@@ -139,7 +139,7 @@ func (r *RMCP) Payload() []byte {
 
 // SerializeTo writes the serialized fom of this layer into the SerializeBuffer,
 // partially satisfying SerializableLayer.
-func (r *RMCP) SerializeTo(b gopacket.SerializeBuffer, _ gopacket.SerializeOptions) error {
+func (r *RMCP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, _ gopacket131_dpdk.SerializeOptions) error {
 	// The IPMI v1.5 spec contains a pad byte for frame sizes of certain lengths
 	// to work around issues in LAN chips. This is no longer necessary as of
 	// IPMI v2.0 (renamed to "legacy pad") so we do not attempt to add it. The
@@ -158,7 +158,7 @@ func (r *RMCP) SerializeTo(b gopacket.SerializeBuffer, _ gopacket.SerializeOptio
 
 // decodeRMCP decodes the byte slice into an RMCP type, and sets the application
 // layer to it.
-func decodeRMCP(data []byte, p gopacket.PacketBuilder) error {
+func decodeRMCP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	rmcp := &RMCP{}
 	err := rmcp.DecodeFromBytes(data, p)
 	p.AddLayer(rmcp)

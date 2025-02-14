@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 //******************************************************************************
@@ -24,7 +24,7 @@ import (
 func checkBFD(desc string, t *testing.T, packetBytes []byte, pExpectedBFD *BFD) {
 
 	// Analyse the packet bytes, yielding a new packet object p.
-	p := gopacket.NewPacket(packetBytes, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(packetBytes, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Errorf("Failed to decode packet %s: %v", desc, p.ErrorLayer().Error())
 	}
@@ -34,7 +34,7 @@ func checkBFD(desc string, t *testing.T, packetBytes []byte, pExpectedBFD *BFD) 
 	//    Network Layer     = IPv4.
 	//    Transport Layer   = UDP.
 	//    Application Layer = BFD.
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet,
 		LayerTypeIPv4,
 		LayerTypeUDP,
@@ -51,8 +51,8 @@ func checkBFD(desc string, t *testing.T, packetBytes []byte, pExpectedBFD *BFD) 
 		t.Errorf("BFD packet processing failed for packet "+desc+
 			":\ngot  :\n%#v\n\nwant :\n%#v\n\n", pResultBFD, pExpectedBFD)
 	}
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{}
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{}
 	err := pResultBFD.SerializeTo(buf, opts)
 	if err != nil {
 		t.Error(err)

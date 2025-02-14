@@ -1,4 +1,4 @@
-// Copyright 2018 GoPacket Authors. All rights reserved.
+// Copyright 2018 gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -14,7 +14,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // MLDv1Message represents the common structure of all MLDv1 messages
@@ -29,7 +29,7 @@ type MLDv1Message struct {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (m *MLDv1Message) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *MLDv1Message) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 20 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less than 20 bytes for Multicast Listener Query Message V1")
@@ -43,14 +43,14 @@ func (m *MLDv1Message) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) 
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (*MLDv1Message) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (*MLDv1Message) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (m *MLDv1Message) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (m *MLDv1Message) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	buf, err := b.PrependBytes(20)
 	if err != nil {
 		return err
@@ -92,7 +92,7 @@ type MLDv1MulticastListenerQueryMessage struct {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (m *MLDv1MulticastListenerQueryMessage) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *MLDv1MulticastListenerQueryMessage) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	err := m.MLDv1Message.DecodeFromBytes(data, df)
 	if err != nil {
 		return err
@@ -106,12 +106,12 @@ func (m *MLDv1MulticastListenerQueryMessage) DecodeFromBytes(data []byte, df gop
 }
 
 // LayerType returns LayerTypeMLDv1MulticastListenerQuery.
-func (*MLDv1MulticastListenerQueryMessage) LayerType() gopacket.LayerType {
+func (*MLDv1MulticastListenerQueryMessage) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeMLDv1MulticastListenerQuery
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (*MLDv1MulticastListenerQueryMessage) CanDecode() gopacket.LayerClass {
+func (*MLDv1MulticastListenerQueryMessage) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeMLDv1MulticastListenerQuery
 }
 
@@ -140,12 +140,12 @@ type MLDv1MulticastListenerReportMessage struct {
 }
 
 // LayerType returns LayerTypeMLDv1MulticastListenerReport.
-func (*MLDv1MulticastListenerReportMessage) LayerType() gopacket.LayerType {
+func (*MLDv1MulticastListenerReportMessage) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeMLDv1MulticastListenerReport
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (*MLDv1MulticastListenerReportMessage) CanDecode() gopacket.LayerClass {
+func (*MLDv1MulticastListenerReportMessage) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeMLDv1MulticastListenerReport
 }
 
@@ -157,26 +157,26 @@ type MLDv1MulticastListenerDoneMessage struct {
 }
 
 // LayerType returns LayerTypeMLDv1MulticastListenerDone.
-func (*MLDv1MulticastListenerDoneMessage) LayerType() gopacket.LayerType {
+func (*MLDv1MulticastListenerDoneMessage) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeMLDv1MulticastListenerDone
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (*MLDv1MulticastListenerDoneMessage) CanDecode() gopacket.LayerClass {
+func (*MLDv1MulticastListenerDoneMessage) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeMLDv1MulticastListenerDone
 }
 
-func decodeMLDv1MulticastListenerReport(data []byte, p gopacket.PacketBuilder) error {
+func decodeMLDv1MulticastListenerReport(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	m := &MLDv1MulticastListenerReportMessage{}
 	return decodingLayerDecoder(m, data, p)
 }
 
-func decodeMLDv1MulticastListenerQuery(data []byte, p gopacket.PacketBuilder) error {
+func decodeMLDv1MulticastListenerQuery(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	m := &MLDv1MulticastListenerQueryMessage{}
 	return decodingLayerDecoder(m, data, p)
 }
 
-func decodeMLDv1MulticastListenerDone(data []byte, p gopacket.PacketBuilder) error {
+func decodeMLDv1MulticastListenerDone(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	m := &MLDv1MulticastListenerDoneMessage{}
 	return decodingLayerDecoder(m, data, p)
 }

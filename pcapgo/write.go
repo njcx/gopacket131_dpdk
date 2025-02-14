@@ -12,8 +12,8 @@ import (
 	"io"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // Writer wraps an underlying io.Writer to write packet data in PCAP
@@ -42,13 +42,13 @@ const versionMinor = 4
 //	f, _ := os.Create("/tmp/file.pcap")
 //	w := pcapgo.NewWriterNanos(f)
 //	w.WriteFileHeader(65536, layers.LinkTypeEthernet)  // new file, must do this.
-//	w.WritePacket(gopacket.CaptureInfo{...}, data1)
+//	w.WritePacket(gopacket131_dpdk.CaptureInfo{...}, data1)
 //	f.Close()
 //	// Append to existing file (must have same snaplen and linktype)
 //	f2, _ := os.OpenFile("/tmp/fileNano.pcap", os.O_APPEND, 0700)
 //	w2 := pcapgo.NewWriter(f2)
 //	// no need for file header, it's already written.
-//	w2.WritePacket(gopacket.CaptureInfo{...}, data2)
+//	w2.WritePacket(gopacket131_dpdk.CaptureInfo{...}, data2)
 //	f2.Close()
 func NewWriterNanos(w io.Writer) *Writer {
 	return &Writer{w: w, tsScaler: nanosPerNano}
@@ -63,13 +63,13 @@ func NewWriterNanos(w io.Writer) *Writer {
 //	f, _ := os.Create("/tmp/file.pcap")
 //	w := pcapgo.NewWriter(f)
 //	w.WriteFileHeader(65536, layers.LinkTypeEthernet)  // new file, must do this.
-//	w.WritePacket(gopacket.CaptureInfo{...}, data1)
+//	w.WritePacket(gopacket131_dpdk.CaptureInfo{...}, data1)
 //	f.Close()
 //	// Append to existing file (must have same snaplen and linktype)
 //	f2, _ := os.OpenFile("/tmp/file.pcap", os.O_APPEND, 0700)
 //	w2 := pcapgo.NewWriter(f2)
 //	// no need for file header, it's already written.
-//	w2.WritePacket(gopacket.CaptureInfo{...}, data2)
+//	w2.WritePacket(gopacket131_dpdk.CaptureInfo{...}, data2)
 //	f2.Close()
 func NewWriter(w io.Writer) *Writer {
 	return &Writer{w: w, tsScaler: nanosPerMicro}
@@ -98,7 +98,7 @@ func (w *Writer) WriteFileHeader(snaplen uint32, linktype layers.LinkType) error
 const nanosPerMicro = 1000
 const nanosPerNano = 1
 
-func (w *Writer) writePacketHeader(ci gopacket.CaptureInfo) error {
+func (w *Writer) writePacketHeader(ci gopacket131_dpdk.CaptureInfo) error {
 	t := ci.Timestamp
 	if t.IsZero() {
 		t = time.Now()
@@ -114,7 +114,7 @@ func (w *Writer) writePacketHeader(ci gopacket.CaptureInfo) error {
 }
 
 // WritePacket writes the given packet data out to the file.
-func (w *Writer) WritePacket(ci gopacket.CaptureInfo, data []byte) error {
+func (w *Writer) WritePacket(ci gopacket131_dpdk.CaptureInfo, data []byte) error {
 	if ci.CaptureLength != len(data) {
 		return fmt.Errorf("capture length %d does not match data length %d", ci.CaptureLength, len(data))
 	}

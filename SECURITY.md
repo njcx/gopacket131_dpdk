@@ -1,8 +1,8 @@
-# Security Policy for `gopacket/gopacket` Module
+# Security Policy for `gopacket131_dpdk/gopacket131_dpdk` Module
 
 ## Supported Versions
 
-This section provides information about the versions of the `gopacket` module that are currently being supported with security updates.
+This section provides information about the versions of the `gopacket131_dpdk` module that are currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -12,7 +12,7 @@ It is highly recommended to use the supported versions to ensure the security an
 
 ## Reporting a Vulnerability
 
-If you discover a vulnerability in the `gopacket` module, please take the following steps to report it:
+If you discover a vulnerability in the `gopacket131_dpdk` module, please take the following steps to report it:
 
 1. **Contact**: please use the private fork and PR function to raise the issue.
 
@@ -24,6 +24,6 @@ If you discover a vulnerability in the `gopacket` module, please take the follow
 
 5. **Acceptance or Decline**: If your report is accepted, you will be credited for the discovery, and the details will be shared in the public disclosure. If the report is declined, the security team will provide an explanation for the decision.
 
-Your cooperation and responsible disclosure are greatly appreciated in helping to keep the `gopacket/gopacket` module and its users secure.
+Your cooperation and responsible disclosure are greatly appreciated in helping to keep the `gopacket131_dpdk/gopacket131_dpdk` module and its users secure.
 
-Keep in mind that `gopacket` is maintained by only a few people, so if there are multiple bugs it might take a while for them to get fixed.
+Keep in mind that `gopacket131_dpdk` is maintained by only a few people, so if there are multiple bugs it might take a while for them to get fixed.

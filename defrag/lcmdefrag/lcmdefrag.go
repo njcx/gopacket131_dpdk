@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 const (
@@ -82,7 +82,7 @@ func (lp *lcmPacket) assemble() (out *layers.LCM, err error) {
 		blob = append(blob, fragment.Payload()...)
 	}
 
-	packet := gopacket.NewPacket(blob, layers.LayerTypeLCM, gopacket.NoCopy)
+	packet := gopacket131_dpdk.NewPacket(blob, layers.LayerTypeLCM, gopacket131_dpdk.NoCopy)
 	lcmHdrLayer := packet.Layer(layers.LayerTypeLCM)
 	out, ok := lcmHdrLayer.(*layers.LCM)
 	if !ok {

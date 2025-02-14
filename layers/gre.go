@@ -9,7 +9,7 @@ package layers
 import (
 	"encoding/binary"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // GRE is a Generic Routing Encapsulation header.
@@ -32,11 +32,11 @@ type GRERouting struct {
 	Next                 *GRERouting
 }
 
-// LayerType returns gopacket.LayerTypeGRE.
-func (g *GRE) LayerType() gopacket.LayerType { return LayerTypeGRE }
+// LayerType returns gopacket131_dpdk.LayerTypeGRE.
+func (g *GRE) LayerType() gopacket131_dpdk.LayerType { return LayerTypeGRE }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (g *GRE) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (g *GRE) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	g.ChecksumPresent = data[0]&0x80 != 0
 	g.RoutingPresent = data[0]&0x40 != 0
 	g.KeyPresent = data[0]&0x20 != 0
@@ -87,8 +87,8 @@ func (g *GRE) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the SerializationBuffer,
-// implementing gopacket.SerializableLayer. See the docs for gopacket.SerializableLayer for more info.
-func (g *GRE) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// implementing gopacket131_dpdk.SerializableLayer. See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (g *GRE) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	size := 4
 	if g.ChecksumPresent || g.RoutingPresent {
 		size += 4
@@ -176,8 +176,8 @@ func (g *GRE) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 	}
 	if g.ChecksumPresent {
 		if opts.ComputeChecksums {
-			csum := gopacket.ComputeChecksum(b.Bytes(), 0)
-			g.Checksum = gopacket.FoldChecksum(csum)
+			csum := gopacket131_dpdk.ComputeChecksum(b.Bytes(), 0)
+			g.Checksum = gopacket131_dpdk.FoldChecksum(csum)
 		}
 
 		binary.BigEndian.PutUint16(buf[4:6], g.Checksum)
@@ -186,29 +186,29 @@ func (g *GRE) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (g *GRE) CanDecode() gopacket.LayerClass {
+func (g *GRE) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeGRE
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (g *GRE) NextLayerType() gopacket.LayerType {
+func (g *GRE) NextLayerType() gopacket131_dpdk.LayerType {
 	return g.Protocol.LayerType()
 }
 
-func (g *GRE) VerifyChecksum() (error, gopacket.ChecksumVerificationResult) {
+func (g *GRE) VerifyChecksum() (error, gopacket131_dpdk.ChecksumVerificationResult) {
 	bytes := append(g.Contents, g.Payload...)
 
 	existing := g.Checksum
-	verification := gopacket.ComputeChecksum(bytes, 0)
-	correct := gopacket.FoldChecksum(verification - uint32(existing))
-	return nil, gopacket.ChecksumVerificationResult{
+	verification := gopacket131_dpdk.ComputeChecksum(bytes, 0)
+	correct := gopacket131_dpdk.FoldChecksum(verification - uint32(existing))
+	return nil, gopacket131_dpdk.ChecksumVerificationResult{
 		Valid:   !g.ChecksumPresent || correct == existing,
 		Correct: uint32(correct),
 		Actual:  uint32(existing),
 	}
 }
 
-func decodeGRE(data []byte, p gopacket.PacketBuilder) error {
+func decodeGRE(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	g := &GRE{}
 	return decodingLayerDecoder(g, data, p)
 }

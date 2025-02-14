@@ -9,7 +9,7 @@ package layers
 import (
 	"encoding/binary"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // EtherIP is the struct for storing RFC 3378 EtherIP packet headers.
@@ -19,11 +19,11 @@ type EtherIP struct {
 	Reserved uint16
 }
 
-// LayerType returns gopacket.LayerTypeEtherIP.
-func (e *EtherIP) LayerType() gopacket.LayerType { return LayerTypeEtherIP }
+// LayerType returns gopacket131_dpdk.LayerTypeEtherIP.
+func (e *EtherIP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeEtherIP }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (e *EtherIP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (e *EtherIP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	e.Version = data[0] >> 4
 	e.Reserved = binary.BigEndian.Uint16(data[:2]) & 0x0fff
 	e.BaseLayer = BaseLayer{data[:2], data[2:]}
@@ -31,16 +31,16 @@ func (e *EtherIP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (e *EtherIP) CanDecode() gopacket.LayerClass {
+func (e *EtherIP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeEtherIP
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (e *EtherIP) NextLayerType() gopacket.LayerType {
+func (e *EtherIP) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeEthernet
 }
 
-func decodeEtherIP(data []byte, p gopacket.PacketBuilder) error {
+func decodeEtherIP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	e := &EtherIP{}
 	return decodingLayerDecoder(e, data, p)
 }

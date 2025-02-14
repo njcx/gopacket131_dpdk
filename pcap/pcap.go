@@ -22,8 +22,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // ErrNotActive is returned if handle is not activated
@@ -247,7 +247,7 @@ const (
 // ReadPacketData returns the next packet read from the pcap handle, along with an error
 // code associated with that packet.  If the packet is read successfully, the
 // returned error is nil.
-func (p *Handle) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (p *Handle) ReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	p.mu.Lock()
 	err = p.getNextBufPtrLocked(&ci)
 	if err == nil {
@@ -299,7 +299,7 @@ func (a activateError) Error() string {
 
 // getNextBufPtrLocked is shared code for ReadPacketData and
 // ZeroCopyReadPacketData.
-func (p *Handle) getNextBufPtrLocked(ci *gopacket.CaptureInfo) error {
+func (p *Handle) getNextBufPtrLocked(ci *gopacket131_dpdk.CaptureInfo) error {
 	if !p.isOpen() {
 		return io.EOF
 	}
@@ -359,7 +359,7 @@ func (p *Handle) getNextBufPtrLocked(ci *gopacket.CaptureInfo) error {
 //	data1, _, _ := handle.ZeroCopyReadPacketData()
 //	// do everything you want with data1 here, copying bytes out of it if you'd like to keep them around.
 //	data2, _, _ := handle.ZeroCopyReadPacketData()  // invalidates bytes in data1
-func (p *Handle) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (p *Handle) ZeroCopyReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	p.mu.Lock()
 	err = p.getNextBufPtrLocked(&ci)
 	if err == nil {
@@ -533,13 +533,13 @@ func (p *Handle) NewBPF(expr string) (*BPF, error) {
 }
 
 // NewBPF allows to create a BPF without requiring an existing handle.
-// This allows to match packets obtained from a-non GoPacket capture source
+// This allows to match packets obtained from a-non gopacket131_dpdk capture source
 // to be matched.
 //
 //	buf := make([]byte, MaxFrameSize)
 //	bpfi, _ := pcap.NewBPF(layers.LinkTypeEthernet, MaxFrameSize, "icmp")
 //	n, _ := someIO.Read(buf)
-//	ci := gopacket.CaptureInfo{CaptureLength: n, Length: n}
+//	ci := gopacket131_dpdk.CaptureInfo{CaptureLength: n, Length: n}
 //	if bpfi.Matches(ci, buf) {
 //		doSomething()
 //	}
@@ -580,7 +580,7 @@ func (b *BPF) String() string {
 }
 
 // Matches returns true if the given packet data matches this filter.
-func (b *BPF) Matches(ci gopacket.CaptureInfo, data []byte) bool {
+func (b *BPF) Matches(ci gopacket131_dpdk.CaptureInfo, data []byte) bool {
 	return b.pcapOfflineFilter(ci, data)
 }
 
@@ -722,11 +722,11 @@ func (p *Handle) SnapLen() int {
 }
 
 // Resolution returns the timestamp resolution of acquired timestamps before scaling to NanosecondTimestampResolution.
-func (p *Handle) Resolution() gopacket.TimestampResolution {
+func (p *Handle) Resolution() gopacket131_dpdk.TimestampResolution {
 	if p.nanoSecsFactor == 1000 {
-		return gopacket.TimestampResolutionMicrosecond
+		return gopacket131_dpdk.TimestampResolutionMicrosecond
 	}
-	return gopacket.TimestampResolutionNanosecond
+	return gopacket131_dpdk.TimestampResolutionNanosecond
 }
 
 // TimestampSource tells PCAP which type of timestamp to use for packets.

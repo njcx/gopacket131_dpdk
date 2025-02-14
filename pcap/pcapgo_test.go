@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/pcapgo"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
+	"github.com/njcx/gopacket131_dpdk/pcapgo"
 )
 
 func TestPCAPGoWrite(t *testing.T) {
@@ -24,7 +24,7 @@ func TestPCAPGoWrite(t *testing.T) {
 		t.Fatal(err)
 	}
 	data := []byte{0xab, 0xcd, 0xef, 0x01, 0x02, 0x03, 0x04}
-	ci := gopacket.CaptureInfo{
+	ci := gopacket131_dpdk.CaptureInfo{
 		Timestamp:     time.Unix(12345667, 1234567000),
 		Length:        700,
 		CaptureLength: len(data),

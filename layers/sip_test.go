@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // First packet is a REGISTER Request
@@ -262,7 +262,7 @@ var testPacketInvalidContentLengthMaxedout = []byte(
 
 func TestSIPDecode(t *testing.T) {
 	type args struct {
-		firstLayerDecoder gopacket.Decoder
+		firstLayerDecoder gopacket131_dpdk.Decoder
 		packetData        []byte
 	}
 	tests := []struct {
@@ -385,7 +385,7 @@ func TestSIPDecode(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := gopacket.NewPacket(tt.args.packetData, tt.args.firstLayerDecoder, gopacket.Default)
+			p := gopacket131_dpdk.NewPacket(tt.args.packetData, tt.args.firstLayerDecoder, gopacket131_dpdk.Default)
 			if p.ErrorLayer() != nil {
 				assertNotEmpty(t, tt.wantError, "error not expected, actual: %v", p.ErrorLayer().Error())
 				assertErrorContains(t, p.ErrorLayer().Error(), tt.wantError)

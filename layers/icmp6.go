@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -166,7 +166,7 @@ func (a ICMPv6TypeCode) SerializeTo(bytes []byte) {
 }
 
 // CreateICMPv6TypeCode is a convenience function to create an ICMPv6TypeCode
-// gopacket type from the ICMPv6 type and code values.
+// gopacket131_dpdk type from the ICMPv6 type and code values.
 func CreateICMPv6TypeCode(typ uint8, code uint8) ICMPv6TypeCode {
 	return ICMPv6TypeCode(binary.BigEndian.Uint16([]byte{typ, code}))
 }
@@ -183,10 +183,10 @@ type ICMPv6 struct {
 }
 
 // LayerType returns LayerTypeICMPv6.
-func (i *ICMPv6) LayerType() gopacket.LayerType { return LayerTypeICMPv6 }
+func (i *ICMPv6) LayerType() gopacket131_dpdk.LayerType { return LayerTypeICMPv6 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *ICMPv6) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *ICMPv6) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 4 {
 		df.SetTruncated()
 		return errors.New("ICMP layer less then 4 bytes for ICMPv6 packet")
@@ -198,9 +198,9 @@ func (i *ICMPv6) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error 
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (i *ICMPv6) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (i *ICMPv6) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(4)
 	if err != nil {
 		return err
@@ -214,7 +214,7 @@ func (i *ICMPv6) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serialize
 		if err != nil {
 			return err
 		}
-		i.Checksum = gopacket.FoldChecksum(csum)
+		i.Checksum = gopacket131_dpdk.FoldChecksum(csum)
 	}
 	binary.BigEndian.PutUint16(bytes[2:], i.Checksum)
 
@@ -222,12 +222,12 @@ func (i *ICMPv6) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serialize
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *ICMPv6) CanDecode() gopacket.LayerClass {
+func (i *ICMPv6) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeICMPv6
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *ICMPv6) NextLayerType() gopacket.LayerType {
+func (i *ICMPv6) NextLayerType() gopacket131_dpdk.LayerType {
 	switch i.TypeCode.Type() {
 	case ICMPv6TypeEchoRequest:
 		return LayerTypeICMPv6Echo
@@ -257,26 +257,26 @@ func (i *ICMPv6) NextLayerType() gopacket.LayerType {
 		return LayerTypeMLDv2MulticastListenerReport
 	}
 
-	return gopacket.LayerTypePayload
+	return gopacket131_dpdk.LayerTypePayload
 }
 
-func (i *ICMPv6) VerifyChecksum() (error, gopacket.ChecksumVerificationResult) {
+func (i *ICMPv6) VerifyChecksum() (error, gopacket131_dpdk.ChecksumVerificationResult) {
 	bytes := append(i.Contents, i.Payload...)
 
 	existing := i.Checksum
 	verification, err := i.computeChecksum(bytes, IPProtocolICMPv6)
 	if err != nil {
-		return err, gopacket.ChecksumVerificationResult{}
+		return err, gopacket131_dpdk.ChecksumVerificationResult{}
 	}
-	correct := gopacket.FoldChecksum(verification - uint32(existing))
-	return nil, gopacket.ChecksumVerificationResult{
+	correct := gopacket131_dpdk.FoldChecksum(verification - uint32(existing))
+	return nil, gopacket131_dpdk.ChecksumVerificationResult{
 		Valid:   correct == existing,
 		Correct: uint32(correct),
 		Actual:  uint32(existing),
 	}
 }
 
-func decodeICMPv6(data []byte, p gopacket.PacketBuilder) error {
+func decodeICMPv6(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &ICMPv6{}
 	return decodingLayerDecoder(i, data, p)
 }

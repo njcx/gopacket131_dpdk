@@ -16,9 +16,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/ip4defrag"
-	"github.com/gopacket/gopacket/layers" // pulls in all layers decoders
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/ip4defrag"
+	"github.com/njcx/gopacket131_dpdk/layers" // pulls in all layers decoders
 )
 
 var (
@@ -32,16 +32,16 @@ var (
 	defrag      = flag.Bool("defrag", false, "If true, do IPv4 defrag")
 )
 
-func Run(src gopacket.PacketDataSource) {
+func Run(src gopacket131_dpdk.PacketDataSource) {
 	if !flag.Parsed() {
 		log.Fatalln("Run called without flags.Parse() being called")
 	}
-	var dec gopacket.Decoder
+	var dec gopacket131_dpdk.Decoder
 	var ok bool
-	if dec, ok = gopacket.DecodersByLayerName[*decoder]; !ok {
+	if dec, ok = gopacket131_dpdk.DecodersByLayerName[*decoder]; !ok {
 		log.Fatalln("No decoder named", *decoder)
 	}
-	source := gopacket.NewPacketSource(src, dec)
+	source := gopacket131_dpdk.NewPacketSource(src, dec)
 	source.Lazy = *lazy
 	source.NoCopy = true
 	source.DecodeStreamsAsDatagrams = true
@@ -51,7 +51,7 @@ func Run(src gopacket.PacketDataSource) {
 	start := time.Now()
 	errors := 0
 	truncated := 0
-	layertypes := map[gopacket.LayerType]int{}
+	layertypes := map[gopacket131_dpdk.LayerType]int{}
 	defragger := ip4defrag.NewIPv4Defragmenter()
 
 	for packet := range source.Packets() {
@@ -75,7 +75,7 @@ func Run(src gopacket.PacketDataSource) {
 			}
 			if newip4.Length != l {
 				fmt.Printf("Decoding re-assembled packet: %s\n", newip4.NextLayerType())
-				pb, ok := packet.(gopacket.PacketBuilder)
+				pb, ok := packet.(gopacket131_dpdk.PacketBuilder)
 				if !ok {
 					panic("Not a PacketBuilder")
 				}

@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // TLS Extensions http://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml
@@ -101,7 +101,7 @@ type TLSHandshakeRecord struct {
 	ClientKeyChange TLSHandshakeRecordClientKeyChange
 }
 
-func (t *TLSHandshakeRecordClientHello) decodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (t *TLSHandshakeRecordClientHello) decodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	t.HandshakeType = data[0]
 	d := make([]byte, 4)
 	for k, v := range data[1:4] {
@@ -148,7 +148,7 @@ func (t *TLSHandshakeRecordClientHello) decodeFromBytes(data []byte, df gopacket
 
 	return nil
 }
-func (t *TLSHandshakeRecordClientKeyChange) decodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (t *TLSHandshakeRecordClientKeyChange) decodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	/*TBD*/
 	return nil
 }
@@ -184,7 +184,7 @@ func (t TLSHandshakeRecord) isEncryptedHandshakeMessage(h TLSRecordHeader, data 
 }
 
 // DecodeFromBytes decodes the slice into the TLS struct.
-func (t *TLSHandshakeRecord) decodeFromBytes(h TLSRecordHeader, data []byte, df gopacket.DecodeFeedback) error {
+func (t *TLSHandshakeRecord) decodeFromBytes(h TLSRecordHeader, data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	// TLS Record Header
 	t.ContentType = h.ContentType
 	t.Version = h.Version

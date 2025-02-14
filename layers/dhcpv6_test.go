@@ -10,7 +10,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestDHCPv6EncodeRequest(t *testing.T) {
@@ -22,14 +22,14 @@ func TestDHCPv6EncodeRequest(t *testing.T) {
 	server := &DHCPv6DUID{Type: DHCPv6DUIDTypeLLT, HardwareType: []byte{0, 1}, Time: []byte{28, 56, 37, 232}, LinkLayerAddress: []byte{8, 0, 39, 212, 16, 187}}
 	dhcpv6.Options = append(dhcpv6.Options, NewDHCPv6Option(DHCPv6OptServerID, server.Encode()))
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dhcpv6)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dhcpv6)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDHCPv6, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDHCPv6, testDecodeOptions)
 	dhcpv62 := p2.Layer(LayerTypeDHCPv6).(*DHCPv6)
 	testDHCPv6Equal(t, dhcpv6, dhcpv62)
 }
@@ -43,14 +43,14 @@ func TestDHCPv6EncodeReply(t *testing.T) {
 	server := &DHCPv6DUID{Type: DHCPv6DUIDTypeLLT, HardwareType: []byte{0, 1}, Time: []byte{28, 56, 37, 232}, LinkLayerAddress: []byte{8, 0, 39, 212, 16, 187}}
 	dhcpv6.Options = append(dhcpv6.Options, NewDHCPv6Option(DHCPv6OptServerID, server.Encode()))
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dhcpv6)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dhcpv6)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDHCPv6, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDHCPv6, testDecodeOptions)
 	dhcpv62 := p2.Layer(LayerTypeDHCPv6).(*DHCPv6)
 	testDHCPv6Equal(t, dhcpv6, dhcpv62)
 }

@@ -1,11 +1,11 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
 // snoopread is a example for read a snoop file using
-// gopacket and its subpackages and output the decoded data with a package count
+// gopacket131_dpdk and its subpackages and output the decoded data with a package count
 package main
 
 import (
@@ -13,8 +13,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/pcapgo"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/pcapgo"
 )
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 		log.Fatal(err)
 		return
 	}
-	packetSource := gopacket.NewPacketSource(handle, lt)
+	packetSource := gopacket131_dpdk.NewPacketSource(handle, lt)
 
 	cnt := 0
 	for packet := range packetSource.Packets() {

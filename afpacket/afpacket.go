@@ -28,8 +28,8 @@ import (
 	"golang.org/x/net/bpf"
 	"golang.org/x/sys/unix"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/endian"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/endian"
 )
 
 var pageSize = unix.Getpagesize()
@@ -149,7 +149,7 @@ type TPacket struct {
 	socketStatsV3 SocketStatsV3
 }
 
-var _ gopacket.ZeroCopyPacketDataSource = &TPacket{}
+var _ gopacket131_dpdk.ZeroCopyPacketDataSource = &TPacket{}
 
 // bindToInterface binds the TPacket socket to a particular named interface.
 func (h *TPacket) bindToInterface(ifaceName string) error {
@@ -319,7 +319,7 @@ func (h *TPacket) releaseCurrentPacket() error {
 //	data1, _, _ := tp.ZeroCopyReadPacketData()
 //	// do everything you want with data1 here, copying bytes out of it if you'd like to keep them around.
 //	data2, _, _ := tp.ZeroCopyReadPacketData()  // invalidates bytes in data1
-func (h *TPacket) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (h *TPacket) ZeroCopyReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	h.mu.Lock()
 retry:
 	if h.current == nil || !h.headerNextNeeded || !h.current.next() {
@@ -422,7 +422,7 @@ func (h *TPacket) SocketStats() (SocketStats, SocketStatsV3, error) {
 // The number of bytes read into data will be returned in ci.CaptureLength,
 // which is the minimum of the size of the passed-in buffer and the size of
 // the captured packet.
-func (h *TPacket) ReadPacketDataTo(data []byte) (ci gopacket.CaptureInfo, err error) {
+func (h *TPacket) ReadPacketDataTo(data []byte) (ci gopacket131_dpdk.CaptureInfo, err error) {
 	var d []byte
 	d, ci, err = h.ZeroCopyReadPacketData()
 	if err != nil {
@@ -434,8 +434,8 @@ func (h *TPacket) ReadPacketDataTo(data []byte) (ci gopacket.CaptureInfo, err er
 
 // ReadPacketData reads the next packet, copies it into a new buffer, and returns
 // that buffer.  Since the buffer is allocated by ReadPacketData, it is safe for long-term
-// use.  This implements gopacket.PacketDataSource.
-func (h *TPacket) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+// use.  This implements gopacket131_dpdk.PacketDataSource.
+func (h *TPacket) ReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	var d []byte
 	d, ci, err = h.ZeroCopyReadPacketData()
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // VXLAN is specifed in RFC 7348
@@ -50,11 +50,11 @@ var testPacketVXLAN = []byte{
 }
 
 func TestPacketVXLAN(t *testing.T) {
-	p := gopacket.NewPacket(testPacketVXLAN, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketVXLAN, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeVXLAN, LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeVXLAN, LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layer(LayerTypeVXLAN).(*VXLAN); ok {
 		want := &VXLAN{
 			BaseLayer: BaseLayer{
@@ -82,7 +82,7 @@ func TestPacketVXLAN(t *testing.T) {
 
 func BenchmarkDecodePacketVXLAN(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketVXLAN, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketVXLAN, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -96,10 +96,10 @@ func TestIsomorphicPacketVXLAN(t *testing.T) {
 		GBPGroupPolicyID: 777,
 	}
 
-	b := gopacket.NewSerializeBuffer()
-	vx.SerializeTo(b, gopacket.SerializeOptions{})
+	b := gopacket131_dpdk.NewSerializeBuffer()
+	vx.SerializeTo(b, gopacket131_dpdk.SerializeOptions{})
 
-	p := gopacket.NewPacket(b.Bytes(), gopacket.DecodeFunc(decodeVXLAN), gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(b.Bytes(), gopacket131_dpdk.DecodeFunc(decodeVXLAN), gopacket131_dpdk.Default)
 	vxTranslated := p.Layer(LayerTypeVXLAN).(*VXLAN)
 	vxTranslated.BaseLayer = BaseLayer{}
 

@@ -10,7 +10,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketICMPv6RouterAdvertisement is the packet:
@@ -44,11 +44,11 @@ var testPacketICMPv6RouterAdvertisement = []byte{
 }
 
 func TestPacketICMPv6RouterAdvertisement(t *testing.T) {
-	p := gopacket.NewPacket(testPacketICMPv6RouterAdvertisement, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketICMPv6RouterAdvertisement, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeICMPv6, LayerTypeICMPv6RouterAdvertisement}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeICMPv6, LayerTypeICMPv6RouterAdvertisement}, t)
 }
 
 // testPacketICMPv6NeighborSolicitation is the packet:
@@ -68,9 +68,9 @@ var testPacketICMPv6NeighborSolicitation = []byte{
 }
 
 func TestPacketICMPv6NeighborSolicitation(t *testing.T) {
-	p := gopacket.NewPacket(testPacketICMPv6NeighborSolicitation, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketICMPv6NeighborSolicitation, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeICMPv6, LayerTypeICMPv6NeighborSolicitation}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeICMPv6, LayerTypeICMPv6NeighborSolicitation}, t)
 }

@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -15,8 +15,8 @@ import (
 	"io"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // NgReaderOptions holds options for reading a pcapng file
@@ -50,7 +50,7 @@ type NgReader struct {
 	currentOption     ngOption
 	buf               [24]byte
 	packetBuf         []byte
-	ci                gopacket.CaptureInfo
+	ci                gopacket131_dpdk.CaptureInfo
 	ancil             [1]interface{}
 	blen              int
 	firstSectionFound bool
@@ -605,14 +605,14 @@ OPTIONS:
 
 // ReadPacketData returns the next packet available from this data source.
 // If WantMixedLinkType is true, ci.AncillaryData[0] contains the link type.
-func (r *NgReader) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (r *NgReader) ReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	data, ci, _, err = r.ReadPacketDataWithOptions()
 	return
 }
 
 // ReadPacketDataWithOptions returns the next packet available from this data source.
 // If WantMixedLinkType is true, ci.AncillaryData[0] contains the link type.
-func (r *NgReader) ReadPacketDataWithOptions() (data []byte, ci gopacket.CaptureInfo, opts NgPacketOptions, err error) {
+func (r *NgReader) ReadPacketDataWithOptions() (data []byte, ci gopacket131_dpdk.CaptureInfo, opts NgPacketOptions, err error) {
 	if err = r.readPacketHeader(); err != nil {
 		return
 	}
@@ -649,7 +649,7 @@ func (r *NgReader) ReadPacketDataWithOptions() (data []byte, ci gopacket.Capture
 //
 // It is not true zero copy, as data is still copied from the underlying reader. However,
 // this method avoids allocating heap memory for every packet.
-func (r *NgReader) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (r *NgReader) ZeroCopyReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	data, ci, _, err = r.ZeroCopyReadPacketDataWithOptions()
 	return
 }
@@ -660,7 +660,7 @@ func (r *NgReader) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInf
 //
 // It is not true zero copy, as data is still copied from the underlying reader. However,
 // this method avoids allocating heap memory for every packet.
-func (r *NgReader) ZeroCopyReadPacketDataWithOptions() (data []byte, ci gopacket.CaptureInfo, opts NgPacketOptions, err error) {
+func (r *NgReader) ZeroCopyReadPacketDataWithOptions() (data []byte, ci gopacket131_dpdk.CaptureInfo, opts NgPacketOptions, err error) {
 	if err = r.readPacketHeader(); err != nil {
 		return
 	}
@@ -721,9 +721,9 @@ func (r *NgReader) NInterfaces() int {
 }
 
 // Resolution returns the timestamp resolution of acquired timestamps before scaling to NanosecondTimestampResolution.
-func (r *NgReader) Resolution() gopacket.TimestampResolution {
+func (r *NgReader) Resolution() gopacket131_dpdk.TimestampResolution {
 	if r.options.WantMixedLinkType {
-		return gopacket.TimestampResolution{}
+		return gopacket131_dpdk.TimestampResolution{}
 	}
 	return r.ifaces[0].Resolution()
 }

@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"hash/crc32"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // SCTP contains information on the top level of an SCTP packet.
@@ -24,10 +24,10 @@ type SCTP struct {
 	sPort, dPort     []byte
 }
 
-// LayerType returns gopacket.LayerTypeSCTP
-func (s *SCTP) LayerType() gopacket.LayerType { return LayerTypeSCTP }
+// LayerType returns gopacket131_dpdk.LayerTypeSCTP
+func (s *SCTP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSCTP }
 
-func decodeSCTP(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	sctp := &SCTP{}
 	err := sctp.DecodeFromBytes(data, p)
 	p.AddLayer(sctp)
@@ -38,20 +38,20 @@ func decodeSCTP(data []byte, p gopacket.PacketBuilder) error {
 	return p.NextDecoder(sctpChunkTypePrefixDecoder)
 }
 
-var sctpChunkTypePrefixDecoder = gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix)
+var sctpChunkTypePrefixDecoder = gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix)
 
 // TransportFlow returns a flow based on the source and destination SCTP port.
-func (s *SCTP) TransportFlow() gopacket.Flow {
-	return gopacket.NewFlow(EndpointSCTPPort, s.sPort, s.dPort)
+func (s *SCTP) TransportFlow() gopacket131_dpdk.Flow {
+	return gopacket131_dpdk.NewFlow(EndpointSCTPPort, s.sPort, s.dPort)
 }
 
-func decodeWithSCTPChunkTypePrefix(data []byte, p gopacket.PacketBuilder) error {
+func decodeWithSCTPChunkTypePrefix(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunkType := SCTPChunkType(data[0])
 	return chunkType.Decode(data, p)
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (s SCTP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (s SCTP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(12)
 	if err != nil {
 		return err
@@ -68,7 +68,7 @@ func (s SCTP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 	return nil
 }
 
-func (sctp *SCTP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (sctp *SCTP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 12 {
 		return errors.New("Invalid SCTP common header length")
 	}
@@ -83,12 +83,12 @@ func (sctp *SCTP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error
 	return nil
 }
 
-func (t *SCTP) CanDecode() gopacket.LayerClass {
+func (t *SCTP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeSCTP
 }
 
-func (t *SCTP) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (t *SCTP) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // SCTPChunk contains the common fields in all SCTP chunks.
@@ -189,7 +189,7 @@ type SCTPUnknownChunkType struct {
 	bytes []byte
 }
 
-func decodeSCTPChunkTypeUnknown(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPChunkTypeUnknown(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -198,11 +198,11 @@ func decodeSCTPChunkTypeUnknown(data []byte, p gopacket.PacketBuilder) error {
 	sc.bytes = data[:sc.ActualLength]
 	p.AddLayer(sc)
 	p.SetErrorLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (s SCTPUnknownChunkType) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (s SCTPUnknownChunkType) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(s.ActualLength)
 	if err != nil {
 		return err
@@ -211,8 +211,10 @@ func (s SCTPUnknownChunkType) SerializeTo(b gopacket.SerializeBuffer, opts gopac
 	return nil
 }
 
-// LayerType returns gopacket.LayerTypeSCTPUnknownChunkType.
-func (s *SCTPUnknownChunkType) LayerType() gopacket.LayerType { return LayerTypeSCTPUnknownChunkType }
+// LayerType returns gopacket131_dpdk.LayerTypeSCTPUnknownChunkType.
+func (s *SCTPUnknownChunkType) LayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeSCTPUnknownChunkType
+}
 
 // Payload returns all bytes in this header, including the decoded Type, Length,
 // and Flags.
@@ -234,8 +236,8 @@ type SCTPData struct {
 	Payload                               []byte
 }
 
-// LayerType returns gopacket.LayerTypeSCTPData.
-func (s *SCTPData) LayerType() gopacket.LayerType { return LayerTypeSCTPData }
+// LayerType returns gopacket131_dpdk.LayerTypeSCTPData.
+func (s *SCTPData) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSCTPData }
 
 // SCTPPayloadProtocol represents a payload protocol
 type SCTPPayloadProtocol uint32
@@ -307,7 +309,7 @@ func (p SCTPPayloadProtocol) String() string {
 	return fmt.Sprintf("Unknown(%d)", p)
 }
 
-func decodeSCTPData(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPData(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPDataChunk(data)
 	if err != nil {
 		return err
@@ -329,11 +331,11 @@ func decodeSCTPData(data []byte, p gopacket.PacketBuilder) error {
 	}
 	// Length is the length in bytes of the data, INCLUDING the 16-byte header.
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPData) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPData) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	payload := sc.Payload
 	length := len(payload) + 16
 
@@ -379,8 +381,8 @@ type SCTPInit struct {
 	Parameters                      []SCTPInitParameter
 }
 
-// LayerType returns either gopacket.LayerTypeSCTPInit or gopacket.LayerTypeSCTPInitAck.
-func (sc *SCTPInit) LayerType() gopacket.LayerType {
+// LayerType returns either gopacket131_dpdk.LayerTypeSCTPInit or gopacket131_dpdk.LayerTypeSCTPInitAck.
+func (sc *SCTPInit) LayerType() gopacket131_dpdk.LayerType {
 	if sc.Type == SCTPChunkTypeInitAck {
 		return LayerTypeSCTPInitAck
 	}
@@ -388,7 +390,7 @@ func (sc *SCTPInit) LayerType() gopacket.LayerType {
 	return LayerTypeSCTPInit
 }
 
-func decodeSCTPInit(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPInit(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -408,11 +410,11 @@ func decodeSCTPInit(data []byte, p gopacket.PacketBuilder) error {
 		sc.Parameters = append(sc.Parameters, p)
 	}
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPInit) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPInit) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var payload []byte
 	for _, param := range sc.Parameters {
 		payload = append(payload, SCTPParameter(param).Bytes()...)
@@ -445,11 +447,11 @@ type SCTPSack struct {
 }
 
 // LayerType return LayerTypeSCTPSack
-func (sc *SCTPSack) LayerType() gopacket.LayerType {
+func (sc *SCTPSack) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeSCTPSack
 }
 
-func decodeSCTPSack(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPSack(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -487,11 +489,11 @@ func decodeSCTPSack(data []byte, p gopacket.PacketBuilder) error {
 		bytesRemaining = bytesRemaining[4:]
 	}
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPSack) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPSack) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	length := 16 + 2*len(sc.GapACKs) + 4*len(sc.DuplicateTSNs)
 	bytes, err := b.PrependBytes(roundUpToNearest4(length))
 	if err != nil {
@@ -524,8 +526,8 @@ type SCTPHeartbeat struct {
 	Parameters []SCTPHeartbeatParameter
 }
 
-// LayerType returns gopacket.LayerTypeSCTPHeartbeat.
-func (sc *SCTPHeartbeat) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeSCTPHeartbeat.
+func (sc *SCTPHeartbeat) LayerType() gopacket131_dpdk.LayerType {
 	if sc.Type == SCTPChunkTypeHeartbeatAck {
 		return LayerTypeSCTPHeartbeatAck
 	}
@@ -533,7 +535,7 @@ func (sc *SCTPHeartbeat) LayerType() gopacket.LayerType {
 	return LayerTypeSCTPHeartbeat
 }
 
-func decodeSCTPHeartbeat(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPHeartbeat(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -548,11 +550,11 @@ func decodeSCTPHeartbeat(data []byte, p gopacket.PacketBuilder) error {
 		sc.Parameters = append(sc.Parameters, p)
 	}
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPHeartbeat) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPHeartbeat) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var payload []byte
 	for _, param := range sc.Parameters {
 		payload = append(payload, SCTPParameter(param).Bytes()...)
@@ -580,7 +582,7 @@ type SCTPError struct {
 }
 
 // LayerType returns LayerTypeSCTPAbort or LayerTypeSCTPError.
-func (sc *SCTPError) LayerType() gopacket.LayerType {
+func (sc *SCTPError) LayerType() gopacket131_dpdk.LayerType {
 	if sc.Type == SCTPChunkTypeAbort {
 		return LayerTypeSCTPAbort
 	}
@@ -588,7 +590,7 @@ func (sc *SCTPError) LayerType() gopacket.LayerType {
 	return LayerTypeSCTPError
 }
 
-func decodeSCTPError(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPError(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	// remarkably similar to decodeSCTPHeartbeat ;)
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
@@ -604,11 +606,11 @@ func decodeSCTPError(data []byte, p gopacket.PacketBuilder) error {
 		sc.Parameters = append(sc.Parameters, p)
 	}
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPError) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPError) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var payload []byte
 	for _, param := range sc.Parameters {
 		payload = append(payload, SCTPParameter(param).Bytes()...)
@@ -632,10 +634,10 @@ type SCTPShutdown struct {
 	CumulativeTSNAck uint32
 }
 
-// LayerType returns gopacket.LayerTypeSCTPShutdown.
-func (sc *SCTPShutdown) LayerType() gopacket.LayerType { return LayerTypeSCTPShutdown }
+// LayerType returns gopacket131_dpdk.LayerTypeSCTPShutdown.
+func (sc *SCTPShutdown) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSCTPShutdown }
 
-func decodeSCTPShutdown(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPShutdown(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -645,11 +647,11 @@ func decodeSCTPShutdown(data []byte, p gopacket.PacketBuilder) error {
 		CumulativeTSNAck: binary.BigEndian.Uint32(data[4:8]),
 	}
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPShutdown) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPShutdown) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(8)
 	if err != nil {
 		return err
@@ -666,10 +668,10 @@ type SCTPShutdownAck struct {
 	SCTPChunk
 }
 
-// LayerType returns gopacket.LayerTypeSCTPShutdownAck.
-func (sc *SCTPShutdownAck) LayerType() gopacket.LayerType { return LayerTypeSCTPShutdownAck }
+// LayerType returns gopacket131_dpdk.LayerTypeSCTPShutdownAck.
+func (sc *SCTPShutdownAck) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSCTPShutdownAck }
 
-func decodeSCTPShutdownAck(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPShutdownAck(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -678,11 +680,11 @@ func decodeSCTPShutdownAck(data []byte, p gopacket.PacketBuilder) error {
 		SCTPChunk: chunk,
 	}
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPShutdownAck) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPShutdownAck) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(4)
 	if err != nil {
 		return err
@@ -699,10 +701,10 @@ type SCTPCookieEcho struct {
 	Cookie []byte
 }
 
-// LayerType returns gopacket.LayerTypeSCTPCookieEcho.
-func (sc *SCTPCookieEcho) LayerType() gopacket.LayerType { return LayerTypeSCTPCookieEcho }
+// LayerType returns gopacket131_dpdk.LayerTypeSCTPCookieEcho.
+func (sc *SCTPCookieEcho) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSCTPCookieEcho }
 
-func decodeSCTPCookieEcho(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPCookieEcho(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -712,11 +714,11 @@ func decodeSCTPCookieEcho(data []byte, p gopacket.PacketBuilder) error {
 	}
 	sc.Cookie = data[4:sc.Length]
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPCookieEcho) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPCookieEcho) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	length := 4 + len(sc.Cookie)
 	bytes, err := b.PrependBytes(roundUpToNearest4(length))
 	if err != nil {
@@ -735,9 +737,9 @@ type SCTPEmptyLayer struct {
 	SCTPChunk
 }
 
-// LayerType returns either gopacket.LayerTypeSCTPShutdownComplete or
+// LayerType returns either gopacket131_dpdk.LayerTypeSCTPShutdownComplete or
 // LayerTypeSCTPCookieAck.
-func (sc *SCTPEmptyLayer) LayerType() gopacket.LayerType {
+func (sc *SCTPEmptyLayer) LayerType() gopacket131_dpdk.LayerType {
 	if sc.Type == SCTPChunkTypeShutdownComplete {
 		return LayerTypeSCTPShutdownComplete
 	}
@@ -745,7 +747,7 @@ func (sc *SCTPEmptyLayer) LayerType() gopacket.LayerType {
 	return LayerTypeSCTPCookieAck
 }
 
-func decodeSCTPEmptyLayer(data []byte, p gopacket.PacketBuilder) error {
+func decodeSCTPEmptyLayer(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	chunk, err := decodeSCTPChunk(data)
 	if err != nil {
 		return err
@@ -754,11 +756,11 @@ func decodeSCTPEmptyLayer(data []byte, p gopacket.PacketBuilder) error {
 		SCTPChunk: chunk,
 	}
 	p.AddLayer(sc)
-	return p.NextDecoder(gopacket.DecodeFunc(decodeWithSCTPChunkTypePrefix))
+	return p.NextDecoder(gopacket131_dpdk.DecodeFunc(decodeWithSCTPChunkTypePrefix))
 }
 
-// SerializeTo is for gopacket.SerializableLayer.
-func (sc SCTPEmptyLayer) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializeTo is for gopacket131_dpdk.SerializableLayer.
+func (sc SCTPEmptyLayer) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(4)
 	if err != nil {
 		return err

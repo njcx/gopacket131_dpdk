@@ -15,7 +15,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Test the function getIPv4OptionSize when the ipv4 has no options
@@ -78,7 +78,7 @@ func TestIPOptResetDuringDecoding(t *testing.T) {
 		t.Fatalf("Failed to serialize ip layer: %v", err)
 	}
 
-	err = ip.DecodeFromBytes(ipBytes, gopacket.NilDecodeFeedback)
+	err = ip.DecodeFromBytes(ipBytes, gopacket131_dpdk.NilDecodeFeedback)
 
 	if err != nil {
 		t.Fatalf("Failed to deserialize ip layer: %v", err)
@@ -91,8 +91,8 @@ func TestIPOptResetDuringDecoding(t *testing.T) {
 }
 
 func serialize(ip *IPv4) ([]byte, error) {
-	buffer := gopacket.NewSerializeBuffer()
-	err := ip.SerializeTo(buffer, gopacket.SerializeOptions{
+	buffer := gopacket131_dpdk.NewSerializeBuffer()
+	err := ip.SerializeTo(buffer, gopacket131_dpdk.SerializeOptions{
 		FixLengths:       true,
 		ComputeChecksums: true,
 	})
@@ -106,7 +106,7 @@ func TestIPv4InvalidOptionLength(t *testing.T) {
 		t.Fatalf("Failed to Decode header: %v", err)
 	}
 	var ip4 IPv4
-	err = ip4.DecodeFromBytes(b, gopacket.NilDecodeFeedback)
+	err = ip4.DecodeFromBytes(b, gopacket131_dpdk.NilDecodeFeedback)
 	if err == nil {
 		t.Fatal("Expected 'invalid IP option length' error, but got none.")
 	}
@@ -177,7 +177,7 @@ func TestIPv4Options(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Failed to Decode header: %v", err)
 		}
-		err = ip4.DecodeFromBytes(b, gopacket.NilDecodeFeedback)
+		err = ip4.DecodeFromBytes(b, gopacket131_dpdk.NilDecodeFeedback)
 		if err != nil {
 			t.Fatal("Unexpected error during decoding:", err)
 		}

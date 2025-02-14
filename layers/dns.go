@@ -1,4 +1,4 @@
-// Copyright 2014, 2018, 2024 GoPacket Authors. All rights reserved.
+// Copyright 2014, 2018, 2024 gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -13,7 +13,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // DNSClass defines the class associated with a request/response.  Different DNS
@@ -296,12 +296,12 @@ type DNS struct {
 	buffer []byte
 }
 
-// LayerType returns gopacket.LayerTypeDNS.
-func (d *DNS) LayerType() gopacket.LayerType { return LayerTypeDNS }
+// LayerType returns gopacket131_dpdk.LayerTypeDNS.
+func (d *DNS) LayerType() gopacket131_dpdk.LayerType { return LayerTypeDNS }
 
 // decodeDNS decodes the byte slice into a DNS type. It also
 // setups the application Layer in PacketBuilder.
-func decodeDNS(data []byte, p gopacket.PacketBuilder) error {
+func decodeDNS(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &DNS{}
 	err := d.DecodeFromBytes(data, p)
 	if err != nil {
@@ -313,7 +313,7 @@ func decodeDNS(data []byte, p gopacket.PacketBuilder) error {
 }
 
 // DecodeFromBytes decodes the slice into the DNS struct.
-func (d *DNS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (d *DNS) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	d.buffer = d.buffer[:0]
 
 	if len(data) < 12 {
@@ -403,14 +403,14 @@ func (d *DNS) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 	return nil
 }
 
-// CanDecode implements gopacket.DecodingLayer.
-func (d *DNS) CanDecode() gopacket.LayerClass {
+// CanDecode implements gopacket131_dpdk.DecodingLayer.
+func (d *DNS) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeDNS
 }
 
-// NextLayerType implements gopacket.DecodingLayer.
-func (d *DNS) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+// NextLayerType implements gopacket131_dpdk.DecodingLayer.
+func (d *DNS) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // Payload returns nil.
@@ -485,8 +485,8 @@ func computeSize(recs []DNSResourceRecord) int {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-func (d *DNS) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+func (d *DNS) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	dsz := 0
 	for _, q := range d.Questions {
 		dsz += len(q.Name) + 6
@@ -651,7 +651,7 @@ type DNSQuestion struct {
 	Class DNSClass
 }
 
-func (q *DNSQuestion) decode(data []byte, offset int, df gopacket.DecodeFeedback, buffer *[]byte) (int, error) {
+func (q *DNSQuestion) decode(data []byte, offset int, df gopacket131_dpdk.DecodeFeedback, buffer *[]byte) (int, error) {
 	name, endq, err := decodeName(data, offset, buffer, 1)
 	if err != nil {
 		return 0, err
@@ -728,7 +728,7 @@ type DNSResourceRecord struct {
 }
 
 // decode decodes the resource record, returning the total length of the record.
-func (rr *DNSResourceRecord) decode(data []byte, offset int, df gopacket.DecodeFeedback, buffer *[]byte) (int, error) {
+func (rr *DNSResourceRecord) decode(data []byte, offset int, df gopacket131_dpdk.DecodeFeedback, buffer *[]byte) (int, error) {
 	name, endq, err := decodeName(data, offset, buffer, 1)
 	if err != nil {
 		return 0, err
@@ -782,7 +782,7 @@ func encodeName(name []byte, data []byte, offset int) int {
 	return offset + len(name) + 2
 }
 
-func (rr *DNSResourceRecord) encode(data []byte, offset int, opts gopacket.SerializeOptions) (int, error) {
+func (rr *DNSResourceRecord) encode(data []byte, offset int, opts gopacket131_dpdk.SerializeOptions) (int, error) {
 
 	noff := encodeName(rr.Name, data, offset)
 	nSz := noff - offset

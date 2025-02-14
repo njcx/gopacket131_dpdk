@@ -14,8 +14,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 func TestPcapNonexistentFile(t *testing.T) {
@@ -50,12 +50,12 @@ func TestPcapFileRead(t *testing.T) {
 	for _, file := range []struct {
 		filename       string
 		num            int
-		expectedLayers []gopacket.LayerType
+		expectedLayers []gopacket131_dpdk.LayerType
 		err            string
 	}{
 		{filename: "test_loopback.pcap",
 			num: 24,
-			expectedLayers: []gopacket.LayerType{
+			expectedLayers: []gopacket131_dpdk.LayerType{
 				layers.LayerTypeLoopback,
 				layers.LayerTypeIPv6,
 				layers.LayerTypeTCP,
@@ -63,7 +63,7 @@ func TestPcapFileRead(t *testing.T) {
 		},
 		{filename: "test_ethernet.pcap",
 			num: 10,
-			expectedLayers: []gopacket.LayerType{
+			expectedLayers: []gopacket131_dpdk.LayerType{
 				layers.LayerTypeEthernet,
 				layers.LayerTypeIPv4,
 				layers.LayerTypeTCP,
@@ -71,7 +71,7 @@ func TestPcapFileRead(t *testing.T) {
 		},
 		{filename: "test_dns.pcap",
 			num: 10,
-			expectedLayers: []gopacket.LayerType{
+			expectedLayers: []gopacket131_dpdk.LayerType{
 				layers.LayerTypeEthernet,
 				layers.LayerTypeIPv4,
 				layers.LayerTypeUDP,
@@ -85,7 +85,7 @@ func TestPcapFileRead(t *testing.T) {
 	} {
 		t.Logf("\n\n\n\nProcessing file %s\n\n\n\n", file.filename)
 
-		packets := []gopacket.Packet{}
+		packets := []gopacket131_dpdk.Packet{}
 		if handle, err := OpenOffline(file.filename); err != nil {
 			if file.err != "" {
 				if err.Error() != file.err {
@@ -98,7 +98,7 @@ func TestPcapFileRead(t *testing.T) {
 			if file.err != "" {
 				t.Fatalf("Expected error, got none")
 			}
-			packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
+			packetSource := gopacket131_dpdk.NewPacketSource(handle, handle.LinkType())
 			for packet := range packetSource.Packets() {
 				packets = append(packets, packet)
 			}

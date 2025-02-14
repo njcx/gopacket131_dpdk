@@ -1,4 +1,4 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -16,7 +16,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type (
@@ -76,7 +76,7 @@ type ASFPresencePong struct {
 
 	// We break out entities and interactions into separate booleans as
 	// discovery is the entire point of this type of message, so we assume they
-	// are accessed. It also makes gopacket's default layer printing more
+	// are accessed. It also makes gopacket131_dpdk's default layer printing more
 	// useful.
 
 	// IPMI is true if IPMI is supported by the managed system. There is no
@@ -113,19 +113,19 @@ func (a *ASFPresencePong) SupportsDCMI() bool {
 
 // LayerType returns LayerTypeASFPresencePong. It partially satisfies Layer and
 // SerializableLayer.
-func (*ASFPresencePong) LayerType() gopacket.LayerType {
+func (*ASFPresencePong) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeASFPresencePong
 }
 
 // CanDecode returns LayerTypeASFPresencePong. It partially satisfies
 // DecodingLayer.
-func (a *ASFPresencePong) CanDecode() gopacket.LayerClass {
+func (a *ASFPresencePong) CanDecode() gopacket131_dpdk.LayerClass {
 	return a.LayerType()
 }
 
 // DecodeFromBytes makes the layer represent the provided bytes. It partially
 // satisfies DecodingLayer.
-func (a *ASFPresencePong) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (a *ASFPresencePong) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 16 {
 		df.SetTruncated()
 		return fmt.Errorf("invalid ASF presence pong payload, length %v less than 16",
@@ -147,13 +147,13 @@ func (a *ASFPresencePong) DecodeFromBytes(data []byte, df gopacket.DecodeFeedbac
 
 // NextLayerType returns LayerTypePayload, as there are no further layers to
 // decode. This partially satisfies DecodingLayer.
-func (a *ASFPresencePong) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (a *ASFPresencePong) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // SerializeTo writes the serialized fom of this layer into the SerializeBuffer,
 // partially satisfying SerializableLayer.
-func (a *ASFPresencePong) SerializeTo(b gopacket.SerializeBuffer, _ gopacket.SerializeOptions) error {
+func (a *ASFPresencePong) SerializeTo(b gopacket131_dpdk.SerializeBuffer, _ gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(16)
 	if err != nil {
 		return err
@@ -189,6 +189,6 @@ func (a *ASFPresencePong) SerializeTo(b gopacket.SerializeBuffer, _ gopacket.Ser
 
 // decodeASFPresencePong decodes the byte slice into an RMCP-ASF Presence Pong
 // struct.
-func decodeASFPresencePong(data []byte, p gopacket.PacketBuilder) error {
+func decodeASFPresencePong(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	return decodingLayerDecoder(&ASFPresencePong{}, data, p)
 }

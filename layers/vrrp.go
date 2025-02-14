@@ -11,7 +11,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 /*
@@ -88,9 +88,9 @@ type VRRPv2 struct {
 }
 
 // LayerType returns LayerTypeVRRP for VRRP v2 message.
-func (v *VRRPv2) LayerType() gopacket.LayerType { return LayerTypeVRRP }
+func (v *VRRPv2) LayerType() gopacket131_dpdk.LayerType { return LayerTypeVRRP }
 
-func (v *VRRPv2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (v *VRRPv2) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 
 	v.BaseLayer = BaseLayer{Contents: data[:len(data)]}
 	v.Version = data[0] >> 4 // high nibble == VRRP version. We're expecting v2
@@ -132,13 +132,13 @@ func (v *VRRPv2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error 
 }
 
 // CanDecode specifies the layer type in which we are attempting to unwrap.
-func (v *VRRPv2) CanDecode() gopacket.LayerClass {
+func (v *VRRPv2) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeVRRP
 }
 
 // NextLayerType specifies the next layer that should be decoded. VRRP does not contain any further payload, so we set to 0
-func (v *VRRPv2) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (v *VRRPv2) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 // The VRRP packet does not include payload data. Setting byte slice to nil
@@ -147,7 +147,7 @@ func (v *VRRPv2) Payload() []byte {
 }
 
 // decodeVRRP will parse VRRP v2
-func decodeVRRP(data []byte, p gopacket.PacketBuilder) error {
+func decodeVRRP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if len(data) < 8 {
 		return errors.New("Not a valid VRRP packet. Packet length is too small.")
 	}

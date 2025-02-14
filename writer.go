@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package gopacket
+package gopacket131_dpdk
 
 import (
 	"fmt"
@@ -51,7 +51,7 @@ type SerializeOptions struct {
 	ComputeChecksums bool
 }
 
-// SerializeBuffer is a helper used by gopacket for writing out packet layers.
+// SerializeBuffer is a helper used by gopacket131_dpdk for writing out packet layers.
 // SerializeBuffer starts off as an empty []byte.  Subsequent calls to PrependBytes
 // return byte slices before the current Bytes(), AppendBytes returns byte
 // slices after.
@@ -198,11 +198,11 @@ func (w *serializeBuffer) PushLayer(l LayerType) {
 //
 // Example:
 //
-//	buf := gopacket.NewSerializeBuffer()
-//	opts := gopacket.SerializeOptions{}
-//	gopacket.SerializeLayers(buf, opts, a, b, c)
+//	buf := gopacket131_dpdk.NewSerializeBuffer()
+//	opts := gopacket131_dpdk.SerializeOptions{}
+//	gopacket131_dpdk.SerializeLayers(buf, opts, a, b, c)
 //	firstPayload := buf.Bytes()  // contains byte representation of a(b(c))
-//	gopacket.SerializeLayers(buf, opts, d, e, f)
+//	gopacket131_dpdk.SerializeLayers(buf, opts, d, e, f)
 //	secondPayload := buf.Bytes()  // contains byte representation of d(e(f)). firstPayload is now invalidated, since the SerializeLayers call Clears buf.
 func SerializeLayers(w SerializeBuffer, opts SerializeOptions, layers ...SerializableLayer) error {
 	w.Clear()

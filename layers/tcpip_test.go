@@ -10,7 +10,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -56,7 +56,7 @@ func createUDPChecksumTestLayer() (udp *UDP) {
 }
 
 func TestIPv4UDPChecksum(t *testing.T) {
-	var serialize = make([]gopacket.SerializableLayer, 0, 2)
+	var serialize = make([]gopacket131_dpdk.SerializableLayer, 0, 2)
 	var u *UDP
 	var err error
 
@@ -68,18 +68,18 @@ func TestIPv4UDPChecksum(t *testing.T) {
 	udp.SetNetworkLayerForChecksum(ip4)
 	serialize = append(serialize, udp)
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true, ComputeChecksums: true}
-	err = gopacket.SerializeLayers(buf, opts, serialize...)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true, ComputeChecksums: true}
+	err = gopacket131_dpdk.SerializeLayers(buf, opts, serialize...)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p := gopacket.NewPacket(buf.Bytes(), LinkTypeRaw, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(buf.Bytes(), LinkTypeRaw, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Fatal("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeIPv4, LayerTypeUDP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeIPv4, LayerTypeUDP}, t)
 
 	if l, ok := p.Layer(LayerTypeUDP).(*UDP); !ok {
 		t.Fatal("No UDP layer type found in packet")
@@ -94,7 +94,7 @@ func TestIPv4UDPChecksum(t *testing.T) {
 }
 
 func TestIPv6UDPChecksumWithIPv6DstOpts(t *testing.T) {
-	var serialize = make([]gopacket.SerializableLayer, 0, 3)
+	var serialize = make([]gopacket131_dpdk.SerializableLayer, 0, 3)
 	var u *UDP
 	var err error
 
@@ -110,18 +110,18 @@ func TestIPv6UDPChecksumWithIPv6DstOpts(t *testing.T) {
 	udp.SetNetworkLayerForChecksum(ip6)
 	serialize = append(serialize, udp)
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true, ComputeChecksums: true}
-	err = gopacket.SerializeLayers(buf, opts, serialize...)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true, ComputeChecksums: true}
+	err = gopacket131_dpdk.SerializeLayers(buf, opts, serialize...)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p := gopacket.NewPacket(buf.Bytes(), LinkTypeRaw, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(buf.Bytes(), LinkTypeRaw, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Fatal("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeIPv6, LayerTypeIPv6Destination, LayerTypeUDP}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeIPv6, LayerTypeIPv6Destination, LayerTypeUDP}, t)
 
 	if l, ok := p.Layer(LayerTypeUDP).(*UDP); !ok {
 		t.Fatal("No UDP layer type found in packet")
@@ -136,7 +136,7 @@ func TestIPv6UDPChecksumWithIPv6DstOpts(t *testing.T) {
 }
 
 func TestIPv6JumbogramUDPChecksum(t *testing.T) {
-	var serialize = make([]gopacket.SerializableLayer, 0, 4)
+	var serialize = make([]gopacket131_dpdk.SerializableLayer, 0, 4)
 	var u *UDP
 	var err error
 
@@ -158,20 +158,20 @@ func TestIPv6JumbogramUDPChecksum(t *testing.T) {
 	for i := range payload {
 		payload[i] = 0xfe
 	}
-	serialize = append(serialize, gopacket.Payload(payload))
+	serialize = append(serialize, gopacket131_dpdk.Payload(payload))
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true, ComputeChecksums: true}
-	err = gopacket.SerializeLayers(buf, opts, serialize...)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true, ComputeChecksums: true}
+	err = gopacket131_dpdk.SerializeLayers(buf, opts, serialize...)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	p := gopacket.NewPacket(buf.Bytes(), LinkTypeRaw, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(buf.Bytes(), LinkTypeRaw, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Fatal("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeUDP, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeUDP, gopacket131_dpdk.LayerTypePayload}, t)
 
 	if l, ok := p.Layer(LayerTypeUDP).(*UDP); !ok {
 		t.Fatal("No UDP layer type found in packet")

@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const (
@@ -43,7 +43,7 @@ type LCM struct {
 	TotalFragments uint16
 	// Common field
 	ChannelName string
-	// Gopacket helper fields
+	// gopacket131_dpdk helper fields
 	Fragmented  bool
 	fingerprint LCMFingerprint
 	contents    []byte
@@ -56,25 +56,25 @@ type LCMFingerprint uint64
 var (
 	// lcmLayerTypes contains a map of all LCM fingerprints that we support and
 	// their LayerType
-	lcmLayerTypes  = map[LCMFingerprint]gopacket.LayerType{}
+	lcmLayerTypes  = map[LCMFingerprint]gopacket131_dpdk.LayerType{}
 	layerTypeIndex = 1001
 )
 
 // RegisterLCMLayerType allows users to register decoders for the underlying
 // LCM payload. This is done based on the fingerprint that every LCM message
 // contains and which identifies it uniquely. If num is not the zero value it
-// will be used when registering with RegisterLayerType towards gopacket,
+// will be used when registering with RegisterLayerType towards gopacket131_dpdk,
 // otherwise an incremental value starting from 1001 will be used.
 func RegisterLCMLayerType(num int, name string, fingerprint LCMFingerprint,
-	decoder gopacket.Decoder) gopacket.LayerType {
-	metadata := gopacket.LayerTypeMetadata{Name: name, Decoder: decoder}
+	decoder gopacket131_dpdk.Decoder) gopacket131_dpdk.LayerType {
+	metadata := gopacket131_dpdk.LayerTypeMetadata{Name: name, Decoder: decoder}
 
 	if num == 0 {
 		num = layerTypeIndex
 		layerTypeIndex++
 	}
 
-	lcmLayerTypes[fingerprint] = gopacket.RegisterLayerType(num, metadata)
+	lcmLayerTypes[fingerprint] = gopacket131_dpdk.RegisterLayerType(num, metadata)
 
 	return lcmLayerTypes[fingerprint]
 }
@@ -91,16 +91,16 @@ func SupportedLCMFingerprints() []LCMFingerprint {
 
 // GetLCMLayerType returns the underlying LCM message's LayerType.
 // This LayerType has to be registered by using RegisterLCMLayerType.
-func GetLCMLayerType(fingerprint LCMFingerprint) gopacket.LayerType {
+func GetLCMLayerType(fingerprint LCMFingerprint) gopacket131_dpdk.LayerType {
 	layerType, ok := lcmLayerTypes[fingerprint]
 	if !ok {
-		return gopacket.LayerTypePayload
+		return gopacket131_dpdk.LayerTypePayload
 	}
 
 	return layerType
 }
 
-func decodeLCM(data []byte, p gopacket.PacketBuilder) error {
+func decodeLCM(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	lcm := &LCM{}
 
 	err := lcm.DecodeFromBytes(data, p)
@@ -115,7 +115,7 @@ func decodeLCM(data []byte, p gopacket.PacketBuilder) error {
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (lcm *LCM) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (lcm *LCM) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 8 {
 		df.SetTruncated()
 		return errors.New("LCM < 8 bytes")
@@ -177,7 +177,7 @@ func (lcm *LCM) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 
 // CanDecode returns a set of layers that LCM objects can decode.
 // As LCM objects can only decode the LCM layer, we just return that layer.
-func (lcm LCM) CanDecode() gopacket.LayerClass {
+func (lcm LCM) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeLCM
 }
 
@@ -185,16 +185,16 @@ func (lcm LCM) CanDecode() gopacket.LayerClass {
 // As LCM packets are serialized structs with uniq fingerprints for each uniq
 // combination of data types, lookup of correct layer type is based on that
 // fingerprint.
-func (lcm LCM) NextLayerType() gopacket.LayerType {
+func (lcm LCM) NextLayerType() gopacket131_dpdk.LayerType {
 	if !lcm.Fragmented || (lcm.Fragmented && lcm.FragmentNumber == 0) {
 		return GetLCMLayerType(lcm.fingerprint)
 	}
 
-	return gopacket.LayerTypeFragment
+	return gopacket131_dpdk.LayerTypeFragment
 }
 
 // LayerType returns LayerTypeLCM
-func (lcm LCM) LayerType() gopacket.LayerType {
+func (lcm LCM) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeLCM
 }
 

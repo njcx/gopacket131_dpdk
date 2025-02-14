@@ -18,12 +18,12 @@
 //
 //	// Create our StreamFactory
 //	type httpStreamFactory struct {}
-//	func (f *httpStreamFactory) New(a, b gopacket.Flow) tcpassembly.Stream {
+//	func (f *httpStreamFactory) New(a, b gopacket131_dpdk.Flow) tcpassembly.Stream {
 //		r := tcpreader.NewReaderStream()
 //		go printRequests(&r, a, b)
 //		return &r
 //	}
-//	func printRequests(r io.Reader, a, b gopacket.Flow) {
+//	func printRequests(r io.Reader, a, b gopacket131_dpdk.Flow) {
 //		// Convert to bufio, since that's what ReadRequest wants.
 //		buf := bufio.NewReader(r)
 //		for {
@@ -49,7 +49,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/gopacket/gopacket/tcpassembly"
+	"github.com/njcx/gopacket131_dpdk/tcpassembly"
 )
 
 var discardBuffer = make([]byte, 4096)
@@ -98,7 +98,7 @@ func DiscardBytesToEOF(r io.Reader) (discarded int) {
 //		// will block.
 //		fmt.Println(tcpreader.DiscardBytesToEOF(&m.r))
 //	}
-//	func (f *myStreamFactory) New(a, b gopacket.Flow) tcpassembly.Stream {
+//	func (f *myStreamFactory) New(a, b gopacket131_dpdk.Flow) tcpassembly.Stream {
 //		s := &myStreamHandler{}
 //		go s.run()
 //		// Return the ReaderStream as the stream that assembly should populate.

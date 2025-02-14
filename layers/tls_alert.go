@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -10,7 +10,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // TLSAlertLevel defines the alert level data type
@@ -71,7 +71,7 @@ type TLSAlertRecord struct {
 }
 
 // DecodeFromBytes decodes the slice into the TLS struct.
-func (t *TLSAlertRecord) decodeFromBytes(h TLSRecordHeader, data []byte, df gopacket.DecodeFeedback) error {
+func (t *TLSAlertRecord) decodeFromBytes(h TLSRecordHeader, data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	// TLS Record Header
 	t.ContentType = h.ContentType
 	t.Version = h.Version

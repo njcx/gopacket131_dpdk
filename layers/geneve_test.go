@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 var testPacketGeneve1 = []byte{
@@ -119,13 +119,13 @@ var testPacketGeneve4 = []byte{
 }
 
 func TestDecodeGeneve1(t *testing.T) {
-	p := gopacket.NewPacket(testPacketGeneve1, LinkTypeLinuxSLL, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketGeneve1, LinkTypeLinuxSLL, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeLinuxSLL, LayerTypeIPv4, LayerTypeUDP, LayerTypeGeneve,
-		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload,
+		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload,
 	}, t)
 	if got, ok := p.Layer(LayerTypeGeneve).(*Geneve); ok {
 		want := &Geneve{
@@ -147,13 +147,13 @@ func TestDecodeGeneve1(t *testing.T) {
 }
 
 func TestDecodeGeneve2(t *testing.T) {
-	p := gopacket.NewPacket(testPacketGeneve2, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketGeneve2, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeGeneve,
-		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload,
+		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload,
 	}, t)
 	if got, ok := p.Layer(LayerTypeGeneve).(*Geneve); ok {
 		want := &Geneve{
@@ -175,13 +175,13 @@ func TestDecodeGeneve2(t *testing.T) {
 }
 
 func TestDecodeGeneve3(t *testing.T) {
-	p := gopacket.NewPacket(testPacketGeneve3, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketGeneve3, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeGeneve,
-		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload,
+		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload,
 	}, t)
 	if got, ok := p.Layer(LayerTypeGeneve).(*Geneve); ok {
 		want := &Geneve{
@@ -211,13 +211,13 @@ func TestDecodeGeneve3(t *testing.T) {
 }
 
 func TestDecodeGeneve4(t *testing.T) {
-	p := gopacket.NewPacket(testPacketGeneve4, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketGeneve4, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeGeneve,
-		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload,
+		LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload,
 	}, t)
 	if got, ok := p.Layer(LayerTypeGeneve).(*Geneve); ok {
 		want := &Geneve{
@@ -248,7 +248,7 @@ func TestDecodeGeneve4(t *testing.T) {
 
 func BenchmarkDecodeGeneve1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketGeneve1, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketGeneve1, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -276,8 +276,8 @@ func TestGeneveSerializeToNoCrashWithWrongLengths(t *testing.T) {
 		},
 	}
 
-	b := gopacket.NewSerializeBuffer()
-	gn.SerializeTo(b, gopacket.SerializeOptions{})
+	b := gopacket131_dpdk.NewSerializeBuffer()
+	gn.SerializeTo(b, gopacket131_dpdk.SerializeOptions{})
 }
 
 func TestIsomorphicPacketGeneve(t *testing.T) {
@@ -304,10 +304,10 @@ func TestIsomorphicPacketGeneve(t *testing.T) {
 		},
 	}
 
-	b := gopacket.NewSerializeBuffer()
-	gn.SerializeTo(b, gopacket.SerializeOptions{})
+	b := gopacket131_dpdk.NewSerializeBuffer()
+	gn.SerializeTo(b, gopacket131_dpdk.SerializeOptions{})
 
-	p := gopacket.NewPacket(b.Bytes(), gopacket.DecodeFunc(decodeGeneve), gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(b.Bytes(), gopacket131_dpdk.DecodeFunc(decodeGeneve), gopacket131_dpdk.Default)
 	gnTranslated := p.Layer(LayerTypeGeneve).(*Geneve)
 	gnTranslated.BaseLayer = BaseLayer{}
 
@@ -363,10 +363,10 @@ func TestIsomorphicPacketGeneveFixLengths(t *testing.T) {
 		},
 	}
 
-	b := gopacket.NewSerializeBuffer()
-	gnWrongLengths.SerializeTo(b, gopacket.SerializeOptions{FixLengths: true})
+	b := gopacket131_dpdk.NewSerializeBuffer()
+	gnWrongLengths.SerializeTo(b, gopacket131_dpdk.SerializeOptions{FixLengths: true})
 
-	p := gopacket.NewPacket(b.Bytes(), gopacket.DecodeFunc(decodeGeneve), gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(b.Bytes(), gopacket131_dpdk.DecodeFunc(decodeGeneve), gopacket131_dpdk.Default)
 	gnTranslated := p.Layer(LayerTypeGeneve).(*Geneve)
 	gnTranslated.BaseLayer = BaseLayer{}
 

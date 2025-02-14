@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-// The pcapdump binary implements a tcpdump-like command line tool with gopacket
+// The pcapdump binary implements a tcpdump-like command line tool with gopacket131_dpdk
 // using pcap as a backend data collection mechanism.
 package main
 
@@ -29,12 +29,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/examples/util"
-	"github.com/gopacket/gopacket/ip4defrag"
-	"github.com/gopacket/gopacket/layers" // pulls in all layers decoders
-	"github.com/gopacket/gopacket/pcap"
-	"github.com/gopacket/gopacket/reassembly"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/examples/util"
+	"github.com/njcx/gopacket131_dpdk/ip4defrag"
+	"github.com/njcx/gopacket131_dpdk/layers" // pulls in all layers decoders
+	"github.com/njcx/gopacket131_dpdk/pcap"
+	"github.com/njcx/gopacket131_dpdk/reassembly"
 )
 
 var maxcount = flag.Int("c", -1, "Only grab this many packets, then exit")
@@ -262,7 +262,7 @@ type tcpStreamFactory struct {
 	doHTTP bool
 }
 
-func (factory *tcpStreamFactory) New(net, transport gopacket.Flow, tcp *layers.TCP, ac reassembly.AssemblerContext) reassembly.Stream {
+func (factory *tcpStreamFactory) New(net, transport gopacket131_dpdk.Flow, tcp *layers.TCP, ac reassembly.AssemblerContext) reassembly.Stream {
 	Debug("* NEW: %s %s\n", net, transport)
 	fsmOptions := reassembly.TCPSimpleFSMOptions{
 		SupportMissingEstablishment: *allowmissinginit,
@@ -306,10 +306,10 @@ func (factory *tcpStreamFactory) WaitGoRoutines() {
  * The assembler context
  */
 type Context struct {
-	CaptureInfo gopacket.CaptureInfo
+	CaptureInfo gopacket131_dpdk.CaptureInfo
 }
 
-func (c *Context) GetCaptureInfo() gopacket.CaptureInfo {
+func (c *Context) GetCaptureInfo() gopacket131_dpdk.CaptureInfo {
 	return c.CaptureInfo
 }
 
@@ -322,7 +322,7 @@ type tcpStream struct {
 	tcpstate       *reassembly.TCPSimpleFSM
 	fsmerr         bool
 	optchecker     reassembly.TCPOptionCheck
-	net, transport gopacket.Flow
+	net, transport gopacket131_dpdk.Flow
 	isDNS          bool
 	isHTTP         bool
 	reversed       bool
@@ -333,7 +333,7 @@ type tcpStream struct {
 	sync.Mutex
 }
 
-func (t *tcpStream) Accept(tcp *layers.TCP, ci gopacket.CaptureInfo, dir reassembly.TCPFlowDirection, nextSeq reassembly.Sequence, start *bool, ac reassembly.AssemblerContext) bool {
+func (t *tcpStream) Accept(tcp *layers.TCP, ci gopacket131_dpdk.CaptureInfo, dir reassembly.TCPFlowDirection, nextSeq reassembly.Sequence, start *bool, ac reassembly.AssemblerContext) bool {
 	// FSM
 	if !t.tcpstate.CheckState(tcp, dir) {
 		Error("FSM", "%s: Packet rejected by FSM (state:%s)\n", t.ident, t.tcpstate.String())
@@ -417,7 +417,7 @@ func (t *tcpStream) ReassembledSG(sg reassembly.ScatterGather, ac reassembly.Ass
 	data := sg.Fetch(length)
 	if t.isDNS {
 		dns := &layers.DNS{}
-		var decoded []gopacket.LayerType
+		var decoded []gopacket131_dpdk.LayerType
 		if len(data) < 2 {
 			if len(data) > 0 {
 				sg.KeepFrom(0)
@@ -432,12 +432,12 @@ func (t *tcpStream) ReassembledSG(sg reassembly.ScatterGather, ac reassembly.Ass
 			sg.KeepFrom(0)
 			return
 		}
-		p := gopacket.NewDecodingLayerParser(layers.LayerTypeDNS, dns)
+		p := gopacket131_dpdk.NewDecodingLayerParser(layers.LayerTypeDNS, dns)
 		err := p.DecodeLayers(data[2:], &decoded)
 		if err != nil {
 			Error("DNS-parser", "Failed to decode DNS: %v\n", err)
 		} else {
-			Debug("DNS: %s\n", gopacket.LayerDump(dns))
+			Debug("DNS: %s\n", gopacket131_dpdk.LayerDump(dns))
 		}
 		if len(data) > 2+int(dnsSize) {
 			sg.KeepFrom(2 + int(dnsSize))
@@ -518,16 +518,16 @@ func main() {
 		}
 	}
 
-	var dec gopacket.Decoder
+	var dec gopacket131_dpdk.Decoder
 	var ok bool
 	decoder_name := *decoder
 	if decoder_name == "" {
 		decoder_name = fmt.Sprintf("%s", handle.LinkType())
 	}
-	if dec, ok = gopacket.DecodersByLayerName[decoder_name]; !ok {
+	if dec, ok = gopacket131_dpdk.DecodersByLayerName[decoder_name]; !ok {
 		log.Fatalln("No decoder named", decoder_name)
 	}
-	source := gopacket.NewPacketSource(handle, dec)
+	source := gopacket131_dpdk.NewPacketSource(handle, dec)
 	source.Lazy = *lazy
 	source.NoCopy = true
 	Info("Starting to read packets\n")
@@ -570,7 +570,7 @@ func main() {
 			if newip4.Length != l {
 				stats.ipdefrag++
 				Debug("Decoding re-assembled packet: %s\n", newip4.NextLayerType())
-				pb, ok := packet.(gopacket.PacketBuilder)
+				pb, ok := packet.(gopacket131_dpdk.PacketBuilder)
 				if !ok {
 					panic("Not a PacketBuilder")
 				}

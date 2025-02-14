@@ -1,6 +1,6 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 
-package gopacket
+package gopacket131_dpdk
 
 // Created by gen.go, don't edit manually
 // Generated at 2019-06-18 11:37:31.308731293 +0600 +06 m=+0.000842599

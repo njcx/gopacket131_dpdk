@@ -1,4 +1,4 @@
-// Copyright 2018 The GoPacket Authors. All rights reserved.
+// Copyright 2018 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 func ngMustDecode(s string) []byte {
@@ -40,7 +40,7 @@ var ngPacketSource = [...][]byte{
 
 type ngFileReadTestPacket struct {
 	data []byte
-	ci   gopacket.CaptureInfo
+	ci   gopacket131_dpdk.CaptureInfo
 	err  error
 }
 
@@ -150,7 +150,7 @@ func ngRunFileReadTest(test ngFileReadTest, be string, zerocopy bool, t *testing
 
 	for i, packet := range test.packets {
 		var data []byte
-		var ci gopacket.CaptureInfo
+		var ci gopacket131_dpdk.CaptureInfo
 		var err error
 
 		if zerocopy {
@@ -222,7 +222,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -231,7 +231,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -240,7 +240,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -249,7 +249,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  len(ngPacketSource[3]),
@@ -321,7 +321,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -330,7 +330,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  128,
@@ -339,7 +339,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+2000*1000).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -348,7 +348,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+3000*1000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  128,
@@ -385,7 +385,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -394,7 +394,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  128,
@@ -403,7 +403,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+2000*1000).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -412,7 +412,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+3000*1000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  128,
@@ -449,7 +449,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -458,7 +458,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+2000*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  96,
@@ -467,7 +467,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+3000*1000).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -476,7 +476,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+4000*1000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  96,
@@ -514,7 +514,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -553,7 +553,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -563,7 +563,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[4],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*1000).UTC(),
 					Length:         len(ngPacketSource[4]),
 					CaptureLength:  len(ngPacketSource[4]),
@@ -573,7 +573,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+2000*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  96,
@@ -583,7 +583,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+3000*1000).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -593,7 +593,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+4000*1000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  96,
@@ -626,7 +626,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -673,7 +673,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -682,7 +682,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa+1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  128,
@@ -691,7 +691,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa+2000).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -700,7 +700,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa+3000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  128,
@@ -732,7 +732,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -741,7 +741,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -773,7 +773,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -782,7 +782,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -791,7 +791,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -800,7 +800,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  len(ngPacketSource[3]),
@@ -832,7 +832,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -841,7 +841,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -850,7 +850,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -859,7 +859,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*2000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  len(ngPacketSource[3]),
@@ -891,7 +891,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -900,7 +900,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:315],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  315,
@@ -909,7 +909,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -918,7 +918,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:315],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  315,
@@ -1053,7 +1053,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -1062,7 +1062,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -1071,7 +1071,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -1080,7 +1080,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*2000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  len(ngPacketSource[3]),
@@ -1126,7 +1126,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -1135,7 +1135,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -1144,7 +1144,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -1153,7 +1153,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*2000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  len(ngPacketSource[3]),
@@ -1195,7 +1195,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -1204,7 +1204,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -1213,7 +1213,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -1222,7 +1222,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+1000*2000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  len(ngPacketSource[3]),
@@ -1282,7 +1282,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -1291,7 +1291,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  128,
@@ -1300,7 +1300,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -1360,7 +1360,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -1369,7 +1369,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  len(ngPacketSource[1]),
@@ -1378,7 +1378,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  96,
@@ -1387,7 +1387,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000+2000*1000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  96,
@@ -1528,7 +1528,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -1537,7 +1537,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  128,
@@ -1546,7 +1546,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  128,
@@ -1639,7 +1639,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  96,
@@ -1648,7 +1648,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:96],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  96,
@@ -1657,7 +1657,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[0][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  128,
@@ -1666,7 +1666,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[1][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[1]),
 					CaptureLength:  128,
@@ -1675,7 +1675,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Time{},
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  128,
@@ -1684,7 +1684,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[3][:128],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[3]),
 					CaptureLength:  128,
@@ -1716,7 +1716,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -1765,7 +1765,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),
@@ -1774,7 +1774,7 @@ var tests = []ngFileReadTest{
 			},
 			{
 				data: ngPacketSource[2],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(0, 0x4c39764ca47aa*1000).UTC(),
 					Length:         len(ngPacketSource[2]),
 					CaptureLength:  len(ngPacketSource[2]),
@@ -1807,7 +1807,7 @@ var tests = []ngFileReadTest{
 		packets: []ngFileReadTestPacket{
 			{
 				data: ngPacketSource[0],
-				ci: gopacket.CaptureInfo{
+				ci: gopacket131_dpdk.CaptureInfo{
 					Timestamp:      time.Unix(1519128000, 195312500).UTC(),
 					Length:         len(ngPacketSource[0]),
 					CaptureLength:  len(ngPacketSource[0]),

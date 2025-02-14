@@ -1,4 +1,4 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -13,8 +13,8 @@ import (
 	"io"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 const snoopMagic uint64 = 0x736e6f6f70000000 //8 byte in big endian
@@ -66,7 +66,7 @@ var (
 	}
 )
 
-// LinkType return the mapped gopacket LinkType
+// LinkType return the mapped gopacket131_dpdk LinkType
 func (r *SnoopReader) LinkType() (*layers.LinkType, error) {
 	if _, ok := layerTypes[r.header.linkType]; ok {
 		lt := layerTypes[r.header.linkType]
@@ -112,7 +112,7 @@ func (r *SnoopReader) readHeader() error {
 	return nil
 }
 
-func (r *SnoopReader) readPacketHeader() (ci gopacket.CaptureInfo, err error) {
+func (r *SnoopReader) readPacketHeader() (ci gopacket131_dpdk.CaptureInfo, err error) {
 
 	if _, err = io.ReadFull(r.r, r.buf[:]); err != nil {
 		return
@@ -142,7 +142,7 @@ func (r *SnoopReader) readPacketHeader() (ci gopacket.CaptureInfo, err error) {
 }
 
 // ReadPacketData reads next packet data.
-func (r *SnoopReader) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (r *SnoopReader) ReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	if ci, err = r.readPacketHeader(); err != nil {
 		return
 	}
@@ -157,7 +157,7 @@ func (r *SnoopReader) ReadPacketData() (data []byte, ci gopacket.CaptureInfo, er
 //
 // It is not true zero copy, as data is still copied from the underlying SnoopReader. However,
 // this method avoids allocating heap memory for every packet.
-func (r *SnoopReader) ZeroCopyReadPacketData() (data []byte, ci gopacket.CaptureInfo, err error) {
+func (r *SnoopReader) ZeroCopyReadPacketData() (data []byte, ci gopacket131_dpdk.CaptureInfo, err error) {
 	if ci, err = r.readPacketHeader(); err != nil {
 		return
 	}

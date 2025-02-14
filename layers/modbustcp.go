@@ -1,4 +1,4 @@
-// Copyright 2018, The GoPacket Authors, All rights reserved.
+// Copyright 2018, The gopacket131_dpdk Authors, All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -12,14 +12,14 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 //******************************************************************************
 //
 // ModbusTCP Decoding Layer
 // ------------------------------------------
-// This file provides a GoPacket decoding layer for ModbusTCP.
+// This file provides a gopacket131_dpdk decoding layer for ModbusTCP.
 //
 //******************************************************************************
 
@@ -63,7 +63,7 @@ type ModbusTCP struct {
 //******************************************************************************
 
 // LayerType returns the layer type of the ModbusTCP object, which is LayerTypeModbusTCP.
-func (d *ModbusTCP) LayerType() gopacket.LayerType {
+func (d *ModbusTCP) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeModbusTCP
 }
 
@@ -76,7 +76,7 @@ func (d *ModbusTCP) LayerType() gopacket.LayerType {
 // If it fails, it returns an error (non nil).
 //
 // This function is employed in layertypes.go to register the ModbusTCP layer.
-func decodeModbusTCP(data []byte, p gopacket.PacketBuilder) error {
+func decodeModbusTCP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 
 	// Attempt to decode the byte slice.
 	d := &ModbusTCP{}
@@ -101,7 +101,7 @@ func decodeModbusTCP(data []byte, p gopacket.PacketBuilder) error {
 // Upon succeeds, it loads the ModbusTCP object with information about the packet
 // and returns nil.
 // Upon failure, it returns an error (non nil).
-func (d *ModbusTCP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (d *ModbusTCP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 
 	// If the data block is too short to be a MBAP record, then return an error.
 	if len(data) < mbapRecordSizeInBytes+modbusPDUMinimumRecordSizeInBytes {
@@ -138,8 +138,8 @@ func (d *ModbusTCP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) err
 //******************************************************************************
 
 // NextLayerType returns the layer type of the ModbusTCP payload, which is LayerTypePayload.
-func (d *ModbusTCP) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (d *ModbusTCP) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 //******************************************************************************
@@ -150,6 +150,6 @@ func (d *ModbusTCP) Payload() []byte {
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode
-func (s *ModbusTCP) CanDecode() gopacket.LayerClass {
+func (s *ModbusTCP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeModbusTCP
 }

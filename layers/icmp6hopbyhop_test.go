@@ -10,7 +10,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 var icmp6HopByHopData = []byte{
@@ -57,12 +57,12 @@ func TestPacketICMPv6WithHopByHop(t *testing.T) {
 	var ethLayerResp Ethernet
 	var ipV6LayerResp IPv6
 	var icmpLayerResp ICMPv6
-	var payload gopacket.Payload
+	var payload gopacket131_dpdk.Payload
 
-	parser := gopacket.NewDecodingLayerParser(LayerTypeEthernet, &ethLayerResp, &ipV6LayerResp, &icmpLayerResp, &payload)
+	parser := gopacket131_dpdk.NewDecodingLayerParser(LayerTypeEthernet, &ethLayerResp, &ipV6LayerResp, &icmpLayerResp, &payload)
 	parser.IgnoreUnsupported = true // avoid `No decoder for layer type ICMPv6RouterAdvertisement` error
 
-	respLayers := make([]gopacket.LayerType, 0)
+	respLayers := make([]gopacket131_dpdk.LayerType, 0)
 	err := parser.DecodeLayers(icmp6HopByHopData, &respLayers)
 
 	if err != nil {
@@ -76,11 +76,11 @@ func TestPacketICMPv6WithHopByHop(t *testing.T) {
 		t.Errorf("expected ICMP layer's TypeCode to be %d but was %d", expectedType, actualType)
 	}
 
-	p := gopacket.NewPacket(icmp6HopByHopData, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(icmp6HopByHopData, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6}, t)
-	// See https://github.com/google/gopacket/issues/517
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv6, LayerTypeIPv6HopByHop, LayerTypeICMPv6}, t)
+	// See https://github.com/google/gopacket131_dpdk/issues/517
 	// checkSerialization(p, t)
 }

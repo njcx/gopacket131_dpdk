@@ -9,7 +9,7 @@
 
 // This binary pulls the list of known MAC
 // prefixes from IEEE and writes them out to a go file which is compiled
-// into gopacket.  It should be run as follows:
+// into gopacket131_dpdk.  It should be run as follows:
 //
 //	go run gen.go | gofmt > valid_mac_prefixes.go
 package main

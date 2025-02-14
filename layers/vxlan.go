@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 //  VXLAN is specifed in RFC 7348 https://tools.ietf.org/html/rfc7348
@@ -37,20 +37,20 @@ type VXLAN struct {
 }
 
 // LayerType returns LayerTypeVXLAN
-func (vx *VXLAN) LayerType() gopacket.LayerType { return LayerTypeVXLAN }
+func (vx *VXLAN) LayerType() gopacket131_dpdk.LayerType { return LayerTypeVXLAN }
 
 // CanDecode returns the layer type this DecodingLayer can decode
-func (vx *VXLAN) CanDecode() gopacket.LayerClass {
+func (vx *VXLAN) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeVXLAN
 }
 
 // NextLayerType retuns the next layer we should see after vxlan
-func (vx *VXLAN) NextLayerType() gopacket.LayerType {
+func (vx *VXLAN) NextLayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeEthernet
 }
 
 // DecodeFromBytes takes a byte buffer and decodes
-func (vx *VXLAN) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (vx *VXLAN) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 8 {
 		return errors.New("vxlan packet too small")
 	}
@@ -77,7 +77,7 @@ func (vx *VXLAN) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error 
 
 }
 
-func decodeVXLAN(data []byte, p gopacket.PacketBuilder) error {
+func decodeVXLAN(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	vx := &VXLAN{}
 	err := vx.DecodeFromBytes(data, p)
 	if err != nil {
@@ -89,9 +89,9 @@ func decodeVXLAN(data []byte, p gopacket.PacketBuilder) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (vx *VXLAN) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (vx *VXLAN) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(8)
 	if err != nil {
 		return err

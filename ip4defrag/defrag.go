@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // Quick and Easy to use debug code to trace
@@ -327,7 +327,7 @@ func (f *fragmentList) build(in *layers.IPv4) (*layers.IPv4, error) {
 
 // ipv4 is a struct to be used as a key.
 type ipv4 struct {
-	ip4 gopacket.Flow
+	ip4 gopacket131_dpdk.Flow
 	id  uint16
 }
 

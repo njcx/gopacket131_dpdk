@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type STPSwitchID struct {
@@ -37,16 +37,16 @@ type STP struct {
 	FDelay            uint16
 }
 
-// LayerType returns gopacket.LayerTypeSTP.
-func (s *STP) LayerType() gopacket.LayerType { return LayerTypeSTP }
+// LayerType returns gopacket131_dpdk.LayerTypeSTP.
+func (s *STP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSTP }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (s *STP) CanDecode() gopacket.LayerClass {
+func (s *STP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeSTP
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (stp *STP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (stp *STP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	stpLength := 35
 	if len(data) < stpLength {
 		df.SetTruncated()
@@ -77,8 +77,8 @@ func (stp *STP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (stp *STP) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (stp *STP) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
 // Check if the priority value is correct.
@@ -94,9 +94,9 @@ func checkPriority(prio uint16) (uint16, error) {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (s *STP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (s *STP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var flags uint8 = 0x00
 	bytes, err := b.PrependBytes(35)
 	if err != nil {
@@ -144,7 +144,7 @@ func (s *STP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 	return nil
 }
 
-func decodeSTP(data []byte, p gopacket.PacketBuilder) error {
+func decodeSTP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	stp := &STP{}
 	return decodingLayerDecoder(stp, data, p)
 }

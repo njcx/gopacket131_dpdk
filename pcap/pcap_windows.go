@@ -17,8 +17,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 	"golang.org/x/sys/windows"
 )
 
@@ -439,7 +439,7 @@ func pcapLookupnet(device string) (netp, maskp uint32, err error) {
 	return
 }
 
-func (b *BPF) pcapOfflineFilter(ci gopacket.CaptureInfo, data []byte) bool {
+func (b *BPF) pcapOfflineFilter(ci gopacket131_dpdk.CaptureInfo, data []byte) bool {
 	var hdr pcapPkthdr
 	hdr.Ts.Sec = int32(ci.Timestamp.Unix())
 	hdr.Ts.Usec = int32(ci.Timestamp.Nanosecond() / 1000)

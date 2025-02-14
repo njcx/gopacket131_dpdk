@@ -8,7 +8,7 @@ package layers
 import (
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketRadiotap0 is the packet:
@@ -22,11 +22,11 @@ var testPacketRadiotap0 = []byte{
 }
 
 func TestPacketRadiotap0(t *testing.T) {
-	p := gopacket.NewPacket(testPacketRadiotap0, LayerTypeRadioTap, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketRadiotap0, LayerTypeRadioTap, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
 	rt := p.Layer(LayerTypeRadioTap).(*RadioTap)
 	if rt.ChannelFrequency != 2412 || rt.DBMAntennaSignal != -58 || rt.Antenna != 7 {
 		t.Error("Radiotap decode error")
@@ -37,7 +37,7 @@ func TestPacketRadiotap0(t *testing.T) {
 }
 func BenchmarkDecodePacketRadiotap0(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketRadiotap0, LayerTypeRadioTap, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketRadiotap0, LayerTypeRadioTap, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -56,11 +56,11 @@ var testPacketRadiotap1 = []byte{
 }
 
 func TestPacketRadiotap1(t *testing.T) {
-	p := gopacket.NewPacket(testPacketRadiotap1, LayerTypeRadioTap, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketRadiotap1, LayerTypeRadioTap, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap, LayerTypeDot11}, t)
 	rt := p.Layer(LayerTypeRadioTap).(*RadioTap)
 	if rt.ChannelFrequency != 2412 || rt.DBMAntennaSignal != -36 || rt.Antenna != 5 {
 		t.Error("Radiotap decode error")
@@ -77,7 +77,7 @@ func TestPacketRadiotap1(t *testing.T) {
 }
 func BenchmarkDecodePacketRadiotap1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketRadiotap1, LayerTypeRadioTap, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketRadiotap1, LayerTypeRadioTap, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -94,11 +94,11 @@ var testPacketRadiotap2 = []byte{
 }
 
 func TestPacketRadiotap2(t *testing.T) {
-	p := gopacket.NewPacket(testPacketRadiotap2, LayerTypeRadioTap, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketRadiotap2, LayerTypeRadioTap, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap}, t)
 	rt := p.Layer(LayerTypeRadioTap).(*RadioTap)
 	if rt.ChannelFrequency != 2412 || rt.DBMAntennaSignal != -58 || rt.Antenna != 7 {
 		t.Error("Radiotap decode error")
@@ -124,11 +124,11 @@ var testPacketRadiotap3 = []byte{
 }
 
 func TestPacketRadiotap3(t *testing.T) {
-	p := gopacket.NewPacket(testPacketRadiotap3, LayerTypeRadioTap, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketRadiotap3, LayerTypeRadioTap, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeRadioTap}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeRadioTap}, t)
 	rt := p.Layer(LayerTypeRadioTap).(*RadioTap)
 
 	if !rt.HE.Data1.DataMCSKnown() {

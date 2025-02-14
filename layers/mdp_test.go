@@ -1,4 +1,4 @@
-// Copyright 2024 GoPacket Authors. All rights reserved.
+// Copyright 2024 gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Frame 6: 279 bytes on wire (2232 bits), 279 bytes captured (2232 bits)
@@ -88,11 +88,11 @@ var testMDPFrame = []byte{
 }
 
 func TestPacketMDP(t *testing.T) {
-	p := gopacket.NewPacket(testMDPFrame, LinkTypeIEEE80211Radio, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testMDPFrame, LinkTypeIEEE80211Radio, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{
+	checkLayers(p, []gopacket131_dpdk.LayerType{
 		LayerTypeRadioTap, LayerTypeDot11, LayerTypeDot11Data, LayerTypeLLC, LayerTypeSNAP, LayerTypeMDP,
 	}, t)
 

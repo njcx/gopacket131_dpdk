@@ -1,4 +1,4 @@
-// Copyright 2012, 2018, 2024 GoPacket Authors. All rights reserved.
+// Copyright 2012, 2018, 2024 gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -12,13 +12,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func FuzzDecodeFromBytes(f *testing.F) {
 	f.Fuzz(func(t *testing.T, bytes []byte) {
 		dns := DNS{}
-		dns.DecodeFromBytes(bytes, gopacket.NilDecodeFeedback)
+		dns.DecodeFromBytes(bytes, gopacket131_dpdk.NilDecodeFeedback)
 	})
 }
 
@@ -42,11 +42,11 @@ var testPacketDNSNilRdata = []byte{
 }
 
 func TestPacketDNSNilRdata(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDNSNilRdata, LayerTypeDNS, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testPacketDNSNilRdata, LayerTypeDNS, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeDNS}, t)
 }
 
 // testPacketDNSRegression is the packet:
@@ -68,15 +68,15 @@ var testPacketDNSRegression = []byte{
 }
 
 func TestPacketDNSRegression(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDNSRegression, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testPacketDNSRegression, LinkTypeEthernet, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
 }
 func BenchmarkDecodePacketDNSRegression(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketDNSRegression, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketDNSRegression, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
@@ -95,11 +95,11 @@ var testParseDNSTypeTXT = []byte{
 }
 
 func TestParseDNSTypeTXT(t *testing.T) {
-	p := gopacket.NewPacket(testParseDNSTypeTXT, LinkTypeNull, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testParseDNSTypeTXT, LinkTypeNull, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
 	answers := p.Layer(LayerTypeDNS).(*DNS).Answers
 	if len(answers) != 1 {
 		t.Error("Failed to parse 1 DNS answer")
@@ -123,11 +123,11 @@ var testParseDNSBadVers = []byte{
 var testParseDNSBadVersResponseCode = DNSResponseCodeBadVers
 
 func TestParseDNSBadVers(t *testing.T) {
-	p := gopacket.NewPacket(testParseDNSBadVers, LinkTypeNull, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testParseDNSBadVers, LinkTypeNull, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
 	questions := p.Layer(LayerTypeDNS).(*DNS).Questions
 	if len(questions) != 1 {
 		t.Error("Failed to parse 1 DNS question")
@@ -163,11 +163,11 @@ var testParseDNSBadCookie = []byte{
 var testParseDNSBadCookieResponseCode = DNSResponseCodeBadCookie
 
 func TestParseDNSBadCookie(t *testing.T) {
-	p := gopacket.NewPacket(testParseDNSBadCookie, LinkTypeNull, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testParseDNSBadCookie, LinkTypeNull, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
 	questions := p.Layer(LayerTypeDNS).(*DNS).Questions
 	if len(questions) != 1 {
 		t.Error("Failed to parse 1 DNS question")
@@ -206,11 +206,11 @@ var testParseDNSTypeURIPriority = uint16(10)
 var testParseDNSTypeURIWeight = uint16(5)
 
 func TestParseDNSTypeURI(t *testing.T) {
-	p := gopacket.NewPacket(testParseDNSTypeURI, LinkTypeNull, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testParseDNSTypeURI, LinkTypeNull, testDecodeOptions)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeLoopback, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
 	answers := p.Layer(LayerTypeDNS).(*DNS).Answers
 	if len(answers) != 1 {
 		t.Error("Failed to parse 1 DNS answer")
@@ -243,12 +243,12 @@ var testParseDNSTypeOPT = []byte{
 }
 
 func TestParseDNSTypeOPT(t *testing.T) {
-	p := gopacket.NewPacket(testParseDNSTypeOPT, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testParseDNSTypeOPT, LinkTypeEthernet, testDecodeOptions)
 
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeUDP, LayerTypeDNS}, t)
 	questions := p.Layer(LayerTypeDNS).(*DNS).Questions
 	if len(questions) != 1 {
 		t.Error("Failed to parse 1 DNS question")
@@ -370,7 +370,7 @@ func TestEncodeDNSTypeRRSIG(t *testing.T) {
 		},
 	}
 	wireData := make([]byte, len(testParseDNSTypeRRSIG))
-	rr.encode(wireData, 0, gopacket.SerializeOptions{})
+	rr.encode(wireData, 0, gopacket131_dpdk.SerializeOptions{})
 	if !bytes.Equal(wireData, testParseDNSTypeRRSIG) {
 		t.Errorf("Incorrect RRSIG wire format, expected \n%v,\ngot \n%v\n", testParseDNSTypeRRSIG, wireData)
 	}
@@ -442,7 +442,7 @@ func TestEncodeDNSTypeDNSKEY(t *testing.T) {
 		},
 	}
 	wireData := make([]byte, len(testParseDNSTypeDNSKEY))
-	rr.encode(wireData, 0, gopacket.SerializeOptions{})
+	rr.encode(wireData, 0, gopacket131_dpdk.SerializeOptions{})
 	if !bytes.Equal(wireData, testParseDNSTypeDNSKEY) {
 		t.Errorf("Incorrect DNSKEY wire format, expected \n%v,\ngot \n%v\n", testParseDNSTypeDNSKEY, wireData)
 	}
@@ -502,17 +502,17 @@ var testParseDNSTypeSVCB = [][]byte{
 }
 
 func TestParseDNSTypeSVCB(t *testing.T) {
-	decodeOptions := gopacket.DecodeOptions{
+	decodeOptions := gopacket131_dpdk.DecodeOptions{
 		Lazy:   true,
 		NoCopy: true,
 	}
-	serializeOptions := gopacket.SerializeOptions{
+	serializeOptions := gopacket131_dpdk.SerializeOptions{
 		FixLengths:       true,
 		ComputeChecksums: true,
 	}
 
 	for idx, data := range testParseDNSTypeSVCB {
-		packet := gopacket.NewPacket(data, LayerTypeDNS, decodeOptions)
+		packet := gopacket131_dpdk.NewPacket(data, LayerTypeDNS, decodeOptions)
 		layer := packet.Layer(LayerTypeDNS)
 		if layer == nil {
 			t.Errorf("test-%v: no DNS layer", idx)
@@ -524,8 +524,8 @@ func TestParseDNSTypeSVCB(t *testing.T) {
 			continue
 		}
 
-		buffer := gopacket.NewSerializeBuffer()
-		err := gopacket.SerializeLayers(buffer, serializeOptions, dns)
+		buffer := gopacket131_dpdk.NewSerializeBuffer()
+		err := gopacket131_dpdk.SerializeLayers(buffer, serializeOptions, dns)
 		if err != nil {
 			t.Errorf("test-%v: %v\n", idx, err)
 			continue
@@ -533,7 +533,7 @@ func TestParseDNSTypeSVCB(t *testing.T) {
 		encoded := buffer.Bytes()
 
 		// Check that we can still decode it.
-		p2 := gopacket.NewPacket(encoded, LayerTypeDNS, decodeOptions)
+		p2 := gopacket131_dpdk.NewPacket(encoded, LayerTypeDNS, decodeOptions)
 		l2 := p2.Layer(LayerTypeDNS)
 		if l2 == nil {
 			t.Errorf("test-%v: p2: no DNS layer", idx)
@@ -757,9 +757,9 @@ func TestDNSEncodeQuery(t *testing.T) {
 			Class: DNSClassIN,
 		})
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dns)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dns)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -767,7 +767,7 @@ func TestDNSEncodeQuery(t *testing.T) {
 		t.Errorf("fix lengths did not adjust QDCount, expected %d got %d", len(dns.Questions), dns.QDCount)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDNS, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDNS, testDecodeOptions)
 	dns2 := p2.Layer(LayerTypeDNS).(*DNS)
 	testDNSEqual(t, dns, dns2)
 }
@@ -799,9 +799,9 @@ func TestDNSEncodeQueryWithOPT(t *testing.T) {
 			},
 		})
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dns)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dns)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -812,7 +812,7 @@ func TestDNSEncodeQueryWithOPT(t *testing.T) {
 		t.Errorf("fix lengths did not adjust ARCount, expected %d got %d", len(dns.Additionals), dns.ARCount)
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDNS, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDNS, testDecodeOptions)
 	dns2 := p2.Layer(LayerTypeDNS).(*DNS)
 	testDNSEqual(t, dns, dns2)
 }
@@ -873,9 +873,9 @@ func TestDNSEncodeResponse(t *testing.T) {
 			CNAME: []byte("example2.com"),
 		})
 
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, dns)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, dns)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -888,7 +888,7 @@ func TestDNSEncodeResponse(t *testing.T) {
 		}
 	}
 
-	p2 := gopacket.NewPacket(buf.Bytes(), LayerTypeDNS, testDecodeOptions)
+	p2 := gopacket131_dpdk.NewPacket(buf.Bytes(), LayerTypeDNS, testDecodeOptions)
 	dns2 := p2.Layer(LayerTypeDNS).(*DNS)
 	testDNSEqual(t, dns, dns2)
 }
@@ -910,7 +910,7 @@ var testDNSMalformedPacket = []byte{
 }
 
 func TestDNSMalformedPacket(t *testing.T) {
-	p := gopacket.NewPacket(testDNSMalformedPacket, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testDNSMalformedPacket, LinkTypeEthernet, testDecodeOptions)
 	if errLayer := p.ErrorLayer(); errLayer == nil {
 		t.Error("No error layer on invalid DNS name")
 	} else if err := errLayer.Error(); !strings.Contains(err.Error(), "invalid index") {
@@ -943,7 +943,7 @@ var testDNSMalformedPacket2 = []byte{
 }
 
 func TestDNSMalformedPacket2(t *testing.T) {
-	p := gopacket.NewPacket(testDNSMalformedPacket2, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testDNSMalformedPacket2, LinkTypeEthernet, testDecodeOptions)
 	if errLayer := p.ErrorLayer(); errLayer == nil {
 		t.Error("No error layer on invalid DNS name")
 	} else if err := errLayer.Error(); !strings.Contains(err.Error(), "offset pointer too high") {
@@ -1028,7 +1028,7 @@ var testBlankNameRootQuery = []byte{
 }
 
 func TestBlankNameRootQuery(t *testing.T) {
-	p := gopacket.NewPacket(testBlankNameRootQuery, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testBlankNameRootQuery, LinkTypeEthernet, testDecodeOptions)
 	if err := p.ErrorLayer(); err != nil {
 		t.Error("Error layer on blank DNS name field:", err)
 	}
@@ -1227,7 +1227,7 @@ var testAnotherMalformedDNS = []byte{
 }
 
 func TestAnotherMalformedDNS(t *testing.T) {
-	p := gopacket.NewPacket(testAnotherMalformedDNS, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testAnotherMalformedDNS, LinkTypeEthernet, testDecodeOptions)
 	if errLayer := p.ErrorLayer(); errLayer == nil {
 		t.Error("No error layer on invalid DNS name")
 	} else if err := errLayer.Error(); !strings.Contains(err.Error(), "offset too high") {
@@ -1262,7 +1262,7 @@ var testMalformedDNSAgain = []byte{
 }
 
 func TestMalformedDNSAgain(t *testing.T) {
-	p := gopacket.NewPacket(testMalformedDNSAgain, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testMalformedDNSAgain, LinkTypeEthernet, testDecodeOptions)
 	if errLayer := p.ErrorLayer(); errLayer == nil {
 		t.Error("No error layer on invalid DNS name")
 	} else if err := errLayer.Error(); !strings.Contains(err.Error(), "walked out of range") {
@@ -1295,7 +1295,7 @@ var testMalformedDNSOhGodMakeItStop = []byte{
 }
 
 func TestMalformedDNSOhGodMakeItStop(t *testing.T) {
-	p := gopacket.NewPacket(testMalformedDNSOhGodMakeItStop, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testMalformedDNSOhGodMakeItStop, LinkTypeEthernet, testDecodeOptions)
 	if errLayer := p.ErrorLayer(); errLayer == nil {
 		t.Error("No error layer on invalid DNS name")
 	} else if err := errLayer.Error(); !strings.Contains(err.Error(), "offset pointer too high") {
@@ -1314,7 +1314,7 @@ var testMalformedDNSOPT = []byte{
 }
 
 func TestMalformedDNSOPT(t *testing.T) {
-	p := gopacket.NewPacket(testMalformedDNSOPT, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testMalformedDNSOPT, LinkTypeEthernet, testDecodeOptions)
 	if errLayer := p.ErrorLayer(); errLayer == nil {
 		t.Error("No error layer on invalid DNS name")
 	} else if err := errLayer.Error(); !strings.Contains(err.Error(), "Malformed DNSOPT record") {
@@ -1399,7 +1399,7 @@ var testPacketDNSPanic7 = []byte{
 }
 
 func TestPacketDNSPanic7(t *testing.T) {
-	p := gopacket.NewPacket(testPacketDNSPanic7, LinkTypeEthernet, testDecodeOptions)
+	p := gopacket131_dpdk.NewPacket(testPacketDNSPanic7, LinkTypeEthernet, testDecodeOptions)
 	if errLayer := p.ErrorLayer(); errLayer == nil {
 		t.Error("No error layer on invalid DNS name")
 	} else if err := errLayer.Error(); !strings.Contains(err.Error(), "resource record length exceeds data") {
@@ -1422,13 +1422,13 @@ func TestDNSPacketWriteAnswer(t *testing.T) {
 			IP:    net.IP{15: 1},
 		},
 	}}
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{ComputeChecksums: true, FixLengths: true}
-	if err := gopacket.SerializeLayers(buf, opts, dns); err != nil {
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{ComputeChecksums: true, FixLengths: true}
+	if err := gopacket131_dpdk.SerializeLayers(buf, opts, dns); err != nil {
 		t.Fatal(err)
 	}
 	dns2 := &DNS{}
-	if err := dns2.DecodeFromBytes(buf.Bytes(), gopacket.NilDecodeFeedback); err != nil {
+	if err := dns2.DecodeFromBytes(buf.Bytes(), gopacket131_dpdk.NilDecodeFeedback); err != nil {
 		t.Fatalf("could not decode: %v", err)
 	}
 	if want, got := 2, len(dns2.Answers); want != got {
@@ -1438,7 +1438,7 @@ func TestDNSPacketWriteAnswer(t *testing.T) {
 	} else if got, want := string(dns2.Answers[1].Name), "www.example.com"; got != want {
 		t.Fatalf("unexpected second answer name %q, want %q", got, want)
 	}
-	t.Log(gopacket.LayerString(dns2))
+	t.Log(gopacket131_dpdk.LayerString(dns2))
 	if want, got := 86, len(buf.Bytes()); want != got {
 		t.Fatalf("Encoded size, want %d got %d", want, got)
 	}

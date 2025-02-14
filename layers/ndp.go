@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type NDPChassisType uint8
@@ -219,12 +219,12 @@ type NortelDiscovery struct {
 	NumLinks  uint8
 }
 
-// LayerType returns gopacket.LayerTypeNortelDiscovery.
-func (c *NortelDiscovery) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeNortelDiscovery.
+func (c *NortelDiscovery) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeNortelDiscovery
 }
 
-func decodeNortelDiscovery(data []byte, p gopacket.PacketBuilder) error {
+func decodeNortelDiscovery(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	c := &NortelDiscovery{}
 	if len(data) < 11 {
 		return fmt.Errorf("Invalid NortelDiscovery packet length %d", len(data))

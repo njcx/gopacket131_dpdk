@@ -1,4 +1,4 @@
-// Copyright 2019 The GoPacket Authors. All rights reserved.
+// Copyright 2019 The gopacket131_dpdk Authors. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file in the root of the source tree.
@@ -10,7 +10,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestRMCPDecodeFromBytes(t *testing.T) {
@@ -20,7 +20,7 @@ func TestRMCPDecodeFromBytes(t *testing.T) {
 	}
 
 	rmcp := &RMCP{}
-	if err := rmcp.DecodeFromBytes(b, gopacket.NilDecodeFeedback); err != nil {
+	if err := rmcp.DecodeFromBytes(b, gopacket131_dpdk.NilDecodeFeedback); err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 	if !bytes.Equal(rmcp.BaseLayer.Payload, []byte{}) {
@@ -44,8 +44,8 @@ func TestRMCPDecodeFromBytes(t *testing.T) {
 }
 
 func serializeRMCP(rmcp *RMCP) ([]byte, error) {
-	sb := gopacket.NewSerializeBuffer()
-	err := rmcp.SerializeTo(sb, gopacket.SerializeOptions{})
+	sb := gopacket131_dpdk.NewSerializeBuffer()
+	err := rmcp.SerializeTo(sb, gopacket131_dpdk.SerializeOptions{})
 	return sb.Bytes(), err
 }
 

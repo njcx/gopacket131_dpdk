@@ -52,44 +52,44 @@ main()
         # TODO: make options
         local extra=""
         extra="$extra -debug"
-        extra="$extra -cpuprofile "$out/gopacket/cpu.prof""
-        extra="$extra -memprofile "$out/gopacket/mem.prof""
+        extra="$extra -cpuprofile "$out/gopacket131_dpdk/cpu.prof""
+        extra="$extra -memprofile "$out/gopacket131_dpdk/mem.prof""
 
         [ ! -f "$src" ] && usage "Missing pcap"
         [ ! -d "$out" ] && ( mkdir "$out" || die "Failed to create $out" )
 
-        mkdir -p "$out/gopacket/all" || die "Failed to create $out/gopacket/all"
+        mkdir -p "$out/gopacket131_dpdk/all" || die "Failed to create $out/gopacket131_dpdk/all"
         mkdir -p "$out/tcpflow/all" || die "Faield to create $out/tcpflow/all"
 
         echo " * Running go reassembly"
-        time ./reassemblydump -r "$src" $debug -output "$out/gopacket/all" $extra -writeincomplete -ignorefsmerr -nooptcheck -allowmissinginit port 80 &> "$out/gopacket.txt" || die "Failed to run reassmbly. Check $out/gopacket.txt"
+        time ./reassemblydump -r "$src" $debug -output "$out/gopacket131_dpdk/all" $extra -writeincomplete -ignorefsmerr -nooptcheck -allowmissinginit port 80 &> "$out/gopacket131_dpdk.txt" || die "Failed to run reassmbly. Check $out/gopacket131_dpdk.txt"
         echo " * Running tcpflow"
         time tcpflow -e http -r "$src" -o "$out/tcpflow/all" port 80 &> "$out/tcpflow.txt" || die "Failed to run tcpflow. Check $out/tcpflow.txt"
 
-        echo " * Creating sha256sum symlinks for gopacket"
-        rename "$out/gopacket/all" '*' || die "Failed to rename in $out/gopacket"
+        echo " * Creating sha256sum symlinks for gopacket131_dpdk"
+        rename "$out/gopacket131_dpdk/all" '*' || die "Failed to rename in $out/gopacket131_dpdk"
         echo " * Creating sha256sum symlinks for tcpflow"
         rename "$out/tcpflow/all" '*HTTPBODY*' || die "Failed to rename in $out/tcpflow"
 
         # Remove identical files
         echo " * Finding identical files"
         local nb=0
-        mkdir -p "$out/gopacket/sha256-equal"
+        mkdir -p "$out/gopacket131_dpdk/sha256-equal"
         mkdir -p "$out/tcpflow/sha256-equal"
-        for f in "$out/gopacket/sha256/"*; do
+        for f in "$out/gopacket131_dpdk/sha256/"*; do
                 local f="$(basename "$f")"
                 [ -f "$out/tcpflow/sha256/$f" ] && {
                         debug "    $f"
-                        mv "$out/gopacket/sha256/$f" "$out/gopacket/sha256-equal"
+                        mv "$out/gopacket131_dpdk/sha256/$f" "$out/gopacket131_dpdk/sha256-equal"
                         mv "$out/tcpflow/sha256/$f"  "$out/tcpflow/sha256-equal"
                         nb=$((nb+1))
                 }
         done
         echo "   →  found $nb files"
 
-        echo " * Diffing {gopacket,tcpflow}/sha256"
+        echo " * Diffing {gopacket131_dpdk,tcpflow}/sha256"
         local rc=0
-        for p in "gopacket" "tcpflow"; do
+        for p in "gopacket131_dpdk" "tcpflow"; do
                 local nb=$(ls -1 "$out/$p/sha256/" | wc -l)
                 if [ $nb -ne 0 ]; then
                         rc=$((rc+1))

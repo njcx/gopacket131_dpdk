@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // IPSecAH is the authentication header for IPv4/6 defined in
@@ -26,9 +26,9 @@ type IPSecAH struct {
 }
 
 // LayerType returns LayerTypeIPSecAH.
-func (i *IPSecAH) LayerType() gopacket.LayerType { return LayerTypeIPSecAH }
+func (i *IPSecAH) LayerType() gopacket131_dpdk.LayerType { return LayerTypeIPSecAH }
 
-func decodeIPSecAH(data []byte, p gopacket.PacketBuilder) error {
+func decodeIPSecAH(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if len(data) < 12 {
 		p.SetTruncated()
 		return errors.New("IPSec AH packet less than 12 bytes")
@@ -64,9 +64,9 @@ type IPSecESP struct {
 }
 
 // LayerType returns LayerTypeIPSecESP.
-func (i *IPSecESP) LayerType() gopacket.LayerType { return LayerTypeIPSecESP }
+func (i *IPSecESP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeIPSecESP }
 
-func decodeIPSecESP(data []byte, p gopacket.PacketBuilder) error {
+func decodeIPSecESP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	i := &IPSecESP{
 		BaseLayer: BaseLayer{data, nil},
 		SPI:       binary.BigEndian.Uint32(data[:4]),

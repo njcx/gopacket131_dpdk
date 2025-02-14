@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // testPacketGRE is the packet:
@@ -37,11 +37,11 @@ var testPacketGRE = []byte{
 }
 
 func TestPacketGRE(t *testing.T) {
-	p := gopacket.NewPacket(testPacketGRE, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketGRE, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layer(LayerTypeGRE).(*GRE); ok {
 		want := &GRE{
 			BaseLayer: BaseLayer{testPacketGRE[34:38], testPacketGRE[38:]},
@@ -55,11 +55,11 @@ func TestPacketGRE(t *testing.T) {
 
 func BenchmarkDecodePacketGRE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketGRE, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketGRE, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
-var testIPv4OverGRE = []gopacket.SerializableLayer{
+var testIPv4OverGRE = []gopacket131_dpdk.SerializableLayer{
 	&Ethernet{
 		SrcMAC:       net.HardwareAddr{142, 122, 18, 195, 169, 113},
 		DstMAC:       net.HardwareAddr{58, 86, 107, 105, 89, 94},
@@ -93,7 +93,7 @@ var testIPv4OverGRE = []gopacket.SerializableLayer{
 		Id:       4724,
 		Seq:      1,
 	},
-	gopacket.Payload{
+	gopacket131_dpdk.Payload{
 		0xc8, 0x92, 0xa3, 0x54, 0x00, 0x00, 0x00, 0x00, 0x38, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
 		0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
@@ -102,32 +102,32 @@ var testIPv4OverGRE = []gopacket.SerializableLayer{
 }
 
 func TestIPv4OverGREEncode(t *testing.T) {
-	b := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{
+	b := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{
 		ComputeChecksums: true,
 		FixLengths:       true,
 	}
-	if err := gopacket.SerializeLayers(b, opts, testIPv4OverGRE...); err != nil {
+	if err := gopacket131_dpdk.SerializeLayers(b, opts, testIPv4OverGRE...); err != nil {
 		t.Errorf("Unable to serialize: %v", err)
 	}
-	p := gopacket.NewPacket(b.Bytes(), LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(b.Bytes(), LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, want := b.Bytes(), testPacketGRE; !reflect.DeepEqual(want, got) {
 		t.Errorf("Encoding mismatch, \nwant: %v\ngot %v\n", want, got)
 	}
 }
 
 func BenchmarkEncodePacketGRE(b *testing.B) {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{
 		ComputeChecksums: true,
 		FixLengths:       true,
 	}
 	for i := 0; i < b.N; i++ {
-		gopacket.SerializeLayers(buf, opts, testIPv4OverGRE...)
+		gopacket131_dpdk.SerializeLayers(buf, opts, testIPv4OverGRE...)
 		buf.Clear()
 	}
 }
@@ -157,11 +157,11 @@ var testPacketEthernetOverGRE = []byte{
 }
 
 func TestPacketEthernetOverGRE(t *testing.T) {
-	p := gopacket.NewPacket(testPacketEthernetOverGRE, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketEthernetOverGRE, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, ok := p.Layer(LayerTypeGRE).(*GRE); ok {
 		want := &GRE{
 			BaseLayer: BaseLayer{testPacketEthernetOverGRE[34:38], testPacketEthernetOverGRE[38:]},
@@ -175,11 +175,11 @@ func TestPacketEthernetOverGRE(t *testing.T) {
 
 func BenchmarkDecodePacketEthernetOverGRE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		gopacket.NewPacket(testPacketEthernetOverGRE, LinkTypeEthernet, gopacket.NoCopy)
+		gopacket131_dpdk.NewPacket(testPacketEthernetOverGRE, LinkTypeEthernet, gopacket131_dpdk.NoCopy)
 	}
 }
 
-var testEthernetOverGRE = []gopacket.SerializableLayer{
+var testEthernetOverGRE = []gopacket131_dpdk.SerializableLayer{
 	&Ethernet{
 		SrcMAC:       net.HardwareAddr{0xd6, 0xb9, 0xd8, 0x80, 0x56, 0xef},
 		DstMAC:       net.HardwareAddr{0xea, 0x6b, 0x4c, 0xd3, 0x55, 0x13},
@@ -218,7 +218,7 @@ var testEthernetOverGRE = []gopacket.SerializableLayer{
 		Id:       3842,
 		Seq:      1,
 	},
-	gopacket.Payload{
+	gopacket131_dpdk.Payload{
 		0x82, 0xd9, 0xb1, 0x54, 0x00, 0x00, 0x00, 0x00, 0xb5, 0xe6, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
 		0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
@@ -227,37 +227,37 @@ var testEthernetOverGRE = []gopacket.SerializableLayer{
 }
 
 func TestEthernetOverGREEncode(t *testing.T) {
-	b := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{
+	b := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{
 		ComputeChecksums: true,
 		FixLengths:       true,
 	}
-	if err := gopacket.SerializeLayers(b, opts, testEthernetOverGRE...); err != nil {
+	if err := gopacket131_dpdk.SerializeLayers(b, opts, testEthernetOverGRE...); err != nil {
 		t.Errorf("Unable to serialize: %v", err)
 	}
-	p := gopacket.NewPacket(b.Bytes(), LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(b.Bytes(), LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
-	checkLayers(p, []gopacket.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket.LayerTypePayload}, t)
+	checkLayers(p, []gopacket131_dpdk.LayerType{LayerTypeEthernet, LayerTypeIPv4, LayerTypeGRE, LayerTypeEthernet, LayerTypeIPv4, LayerTypeICMPv4, gopacket131_dpdk.LayerTypePayload}, t)
 	if got, want := b.Bytes(), testPacketEthernetOverGRE; !reflect.DeepEqual(want, got) {
 		t.Errorf("Encoding mismatch, \nwant: %v\ngot %v\n", want, got)
 	}
 }
 
 func BenchmarkEncodePacketEthernetOverGRE(b *testing.B) {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{
 		ComputeChecksums: true,
 		FixLengths:       true,
 	}
 	for i := 0; i < b.N; i++ {
-		gopacket.SerializeLayers(buf, opts, testEthernetOverGRE...)
+		gopacket131_dpdk.SerializeLayers(buf, opts, testEthernetOverGRE...)
 		buf.Clear()
 	}
 }
 
-var testGREChecksum = map[uint16][]gopacket.SerializableLayer{
+var testGREChecksum = map[uint16][]gopacket131_dpdk.SerializableLayer{
 	0x77ff: {
 		&Ethernet{
 			SrcMAC:       net.HardwareAddr{0xc2, 0x00, 0x57, 0x75, 0x00, 0x00},
@@ -291,7 +291,7 @@ var testGREChecksum = map[uint16][]gopacket.SerializableLayer{
 			Id:       2,
 			Seq:      0,
 		},
-		gopacket.Payload{
+		gopacket131_dpdk.Payload{
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xbe, 0x70, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd,
 			0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd,
 			0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd, 0xab, 0xcd,
@@ -332,7 +332,7 @@ var testGREChecksum = map[uint16][]gopacket.SerializableLayer{
 			SrcPort: 41781,
 			DstPort: 33434,
 		},
-		gopacket.Payload{
+		gopacket131_dpdk.Payload{
 			0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
 			0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f,
 		},
@@ -340,8 +340,8 @@ var testGREChecksum = map[uint16][]gopacket.SerializableLayer{
 }
 
 func TestGREChecksum(t *testing.T) {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{
 		ComputeChecksums: true,
 		FixLengths:       true,
 	}
@@ -351,11 +351,11 @@ func TestGREChecksum(t *testing.T) {
 			t.Errorf("Failed to set network layer: %v", err)
 			continue
 		}
-		if err := gopacket.SerializeLayers(buf, opts, packet...); err != nil {
+		if err := gopacket131_dpdk.SerializeLayers(buf, opts, packet...); err != nil {
 			t.Errorf("Failed to serialize packet: %v", err)
 			continue
 		}
-		p := gopacket.NewPacket(buf.Bytes(), LinkTypeEthernet, gopacket.Default)
+		p := gopacket131_dpdk.NewPacket(buf.Bytes(), LinkTypeEthernet, gopacket131_dpdk.Default)
 		t.Log(p)
 		if p.ErrorLayer() != nil {
 			t.Error("Failed to decode packet:", p.ErrorLayer().Error())
@@ -369,13 +369,13 @@ func TestGREChecksum(t *testing.T) {
 	}
 }
 
-func setNetworkLayer(layers []gopacket.SerializableLayer) error {
+func setNetworkLayer(layers []gopacket131_dpdk.SerializableLayer) error {
 	type setNetworkLayerForChecksum interface {
-		SetNetworkLayerForChecksum(gopacket.NetworkLayer) error
+		SetNetworkLayerForChecksum(gopacket131_dpdk.NetworkLayer) error
 	}
-	var l gopacket.NetworkLayer
+	var l gopacket131_dpdk.NetworkLayer
 	for _, layer := range layers {
-		if n, ok := layer.(gopacket.NetworkLayer); ok {
+		if n, ok := layer.(gopacket131_dpdk.NetworkLayer); ok {
 			l = n
 		}
 		if s, ok := layer.(setNetworkLayerForChecksum); ok {

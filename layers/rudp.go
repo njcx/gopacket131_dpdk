@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type RUDP struct {
@@ -38,10 +38,10 @@ type RUDPHeaderEACK struct {
 	SeqsReceivedOK []uint32
 }
 
-// LayerType returns gopacket.LayerTypeRUDP.
-func (r *RUDP) LayerType() gopacket.LayerType { return LayerTypeRUDP }
+// LayerType returns gopacket131_dpdk.LayerTypeRUDP.
+func (r *RUDP) LayerType() gopacket131_dpdk.LayerType { return LayerTypeRUDP }
 
-func decodeRUDP(data []byte, p gopacket.PacketBuilder) error {
+func decodeRUDP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	r := &RUDP{
 		SYN:          data[0]&0x80 != 0,
 		ACK:          data[0]&0x40 != 0,
@@ -86,9 +86,9 @@ func decodeRUDP(data []byte, p gopacket.PacketBuilder) error {
 	}
 	p.AddLayer(r)
 	p.SetTransportLayer(r)
-	return p.NextDecoder(gopacket.LayerTypePayload)
+	return p.NextDecoder(gopacket131_dpdk.LayerTypePayload)
 }
 
-func (r *RUDP) TransportFlow() gopacket.Flow {
-	return gopacket.NewFlow(EndpointRUDPPort, []byte{byte(r.SrcPort)}, []byte{byte(r.DstPort)})
+func (r *RUDP) TransportFlow() gopacket131_dpdk.Flow {
+	return gopacket131_dpdk.NewFlow(EndpointRUDPPort, []byte{byte(r.SrcPort)}, []byte{byte(r.DstPort)})
 }

@@ -10,8 +10,8 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 /*
@@ -54,7 +54,7 @@ func NewTCPOptionCheck() TCPOptionCheck {
 }
 
 // Accept checks whether the packet should be accepted by checking TCP options
-func (t *TCPOptionCheck) Accept(tcp *layers.TCP, ci gopacket.CaptureInfo, dir TCPFlowDirection, nextSeq Sequence, start *bool) error {
+func (t *TCPOptionCheck) Accept(tcp *layers.TCP, ci gopacket131_dpdk.CaptureInfo, dir TCPFlowDirection, nextSeq Sequence, start *bool) error {
 	options := t.getOptions(dir)
 	if tcp.SYN {
 		mss := -1

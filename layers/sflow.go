@@ -77,7 +77,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // SFlowRecord holds both flow sample records and counter sample records.
@@ -132,7 +132,7 @@ func (sdf SFlowSourceFormat) String() string {
 	}
 }
 
-func decodeSFlow(data []byte, p gopacket.PacketBuilder) error {
+func decodeSFlow(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	s := &SFlowDatagram{}
 	err := s.DecodeFromBytes(data, p)
 	if err != nil {
@@ -260,13 +260,15 @@ func (st SFlowSampleType) String() string {
 	}
 }
 
-func (s *SFlowDatagram) LayerType() gopacket.LayerType { return LayerTypeSFlow }
+func (s *SFlowDatagram) LayerType() gopacket131_dpdk.LayerType { return LayerTypeSFlow }
 
 func (d *SFlowDatagram) Payload() []byte { return nil }
 
-func (d *SFlowDatagram) CanDecode() gopacket.LayerClass { return LayerTypeSFlow }
+func (d *SFlowDatagram) CanDecode() gopacket131_dpdk.LayerClass { return LayerTypeSFlow }
 
-func (d *SFlowDatagram) NextLayerType() gopacket.LayerType { return gopacket.LayerTypePayload }
+func (d *SFlowDatagram) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
+}
 
 // SFlowIPType determines what form the IP address being decoded will
 // take. This is an XDR union type allowing for both IPv4 and IPv6
@@ -299,7 +301,7 @@ func (s SFlowIPType) Length() int {
 	}
 }
 
-func (s *SFlowDatagram) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (s *SFlowDatagram) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	var agentAddressType SFlowIPType
 
 	data, s.DatagramVersion = data[4:], binary.BigEndian.Uint32(data[:4])
@@ -975,7 +977,7 @@ func (rt SFlowFlowRecordType) String() string {
 // can be used to build up a complete picture of the
 // traffic patterns on a network.
 //
-// The raw packet header is sent back into gopacket for
+// The raw packet header is sent back into gopacket131_dpdk for
 // decoding, and the resulting gopackt.Packet is stored
 // in the Header member
 type SFlowRawPacketFlowRecord struct {
@@ -984,7 +986,7 @@ type SFlowRawPacketFlowRecord struct {
 	FrameLength    uint32
 	PayloadRemoved uint32
 	HeaderLength   uint32
-	Header         gopacket.Packet
+	Header         gopacket131_dpdk.Packet
 }
 
 // Raw packet record types have the following structure:
@@ -1075,7 +1077,7 @@ func decodeRawPacketFlowRecord(data *[]byte) (SFlowRawPacketFlowRecord, error) {
 	*data, rec.HeaderLength = (*data)[4:], binary.BigEndian.Uint32((*data)[:4])
 	headerLenWithPadding := int(rec.HeaderLength + ((4 - rec.HeaderLength) % 4))
 	*data, header = (*data)[headerLenWithPadding:], (*data)[:headerLenWithPadding]
-	rec.Header = gopacket.NewPacket(header, LayerTypeEthernet, gopacket.Default)
+	rec.Header = gopacket131_dpdk.NewPacket(header, LayerTypeEthernet, gopacket131_dpdk.Default)
 	return rec, nil
 }
 

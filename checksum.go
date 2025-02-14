@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-package gopacket
+package gopacket131_dpdk
 
 // ChecksumVerificationResult provides information about a checksum verification.
 // The checksums are represented using uint32 to fit even the largest checksums.

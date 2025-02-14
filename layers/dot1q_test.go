@@ -10,14 +10,14 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // test harness to ensure the dot1q layer can be encoded/decoded properly
 // return error if decoded data not match.
 func testEncodeDecodeDot1Q(dot1Q *Dot1Q) error {
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{}
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{}
 	expectedDot1Q := dot1Q
 
 	err := dot1Q.SerializeTo(buf, opts)
@@ -26,7 +26,7 @@ func testEncodeDecodeDot1Q(dot1Q *Dot1Q) error {
 	}
 
 	newDot1q := &Dot1Q{}
-	err = newDot1q.DecodeFromBytes(buf.Bytes(), gopacket.NilDecodeFeedback)
+	err = newDot1q.DecodeFromBytes(buf.Bytes(), gopacket131_dpdk.NilDecodeFeedback)
 	if err != nil {
 		return err
 	}

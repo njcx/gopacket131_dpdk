@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Geneve is specifed here https://tools.ietf.org/html/draft-ietf-nvo3-geneve-03
@@ -51,9 +51,9 @@ type GeneveOption struct {
 }
 
 // LayerType returns LayerTypeGeneve
-func (gn *Geneve) LayerType() gopacket.LayerType { return LayerTypeGeneve }
+func (gn *Geneve) LayerType() gopacket131_dpdk.LayerType { return LayerTypeGeneve }
 
-func decodeGeneveOption(data []byte, gn *Geneve, df gopacket.DecodeFeedback) (*GeneveOption, uint8, error) {
+func decodeGeneveOption(data []byte, gn *Geneve, df gopacket131_dpdk.DecodeFeedback) (*GeneveOption, uint8, error) {
 	if len(data) < 3 {
 		df.SetTruncated()
 		return nil, 0, errors.New("geneve option too small")
@@ -75,7 +75,7 @@ func decodeGeneveOption(data []byte, gn *Geneve, df gopacket.DecodeFeedback) (*G
 	return opt, opt.Length, nil
 }
 
-func (gn *Geneve) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (gn *Geneve) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 7 {
 		df.SetTruncated()
 		return errors.New("geneve packet too short")
@@ -114,19 +114,19 @@ func (gn *Geneve) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error
 	return nil
 }
 
-func (gn *Geneve) NextLayerType() gopacket.LayerType {
+func (gn *Geneve) NextLayerType() gopacket131_dpdk.LayerType {
 	return gn.Protocol.LayerType()
 }
 
-func decodeGeneve(data []byte, p gopacket.PacketBuilder) error {
+func decodeGeneve(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	gn := &Geneve{}
 	return decodingLayerDecoder(gn, data, p)
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (gn *Geneve) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (gn *Geneve) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var optionsLength int
 	for _, o := range gn.Options {
 		dataLen := len(o.Data) & ^3

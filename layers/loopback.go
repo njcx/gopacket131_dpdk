@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // Loopback contains the header for loopback encapsulation.  This header is
@@ -23,10 +23,10 @@ type Loopback struct {
 }
 
 // LayerType returns LayerTypeLoopback.
-func (l *Loopback) LayerType() gopacket.LayerType { return LayerTypeLoopback }
+func (l *Loopback) LayerType() gopacket131_dpdk.LayerType { return LayerTypeLoopback }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (l *Loopback) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (l *Loopback) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 4 {
 		return errors.New("Loopback packet too small")
 	}
@@ -50,18 +50,18 @@ func (l *Loopback) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) erro
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (l *Loopback) CanDecode() gopacket.LayerClass {
+func (l *Loopback) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeLoopback
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (l *Loopback) NextLayerType() gopacket.LayerType {
+func (l *Loopback) NextLayerType() gopacket131_dpdk.LayerType {
 	return l.Family.LayerType()
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-func (l *Loopback) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+func (l *Loopback) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	bytes, err := b.PrependBytes(4)
 	if err != nil {
 		return err
@@ -70,9 +70,9 @@ func (l *Loopback) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Seriali
 	return nil
 }
 
-func decodeLoopback(data []byte, p gopacket.PacketBuilder) error {
+func decodeLoopback(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	l := Loopback{}
-	if err := l.DecodeFromBytes(data, gopacket.NilDecodeFeedback); err != nil {
+	if err := l.DecodeFromBytes(data, gopacket131_dpdk.NilDecodeFeedback); err != nil {
 		return err
 	}
 	p.AddLayer(&l)

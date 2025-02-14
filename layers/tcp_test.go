@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 func TestTCPOptionKindString(t *testing.T) {
@@ -57,9 +57,9 @@ func TestTCPSerializePadding(t *testing.T) {
 		OptionType:   TCPOptionKindNop,
 		OptionLength: 1,
 	})
-	buf := gopacket.NewSerializeBuffer()
-	opts := gopacket.SerializeOptions{FixLengths: true}
-	err := gopacket.SerializeLayers(buf, opts, tcp)
+	buf := gopacket131_dpdk.NewSerializeBuffer()
+	opts := gopacket131_dpdk.SerializeOptions{FixLengths: true}
+	err := gopacket131_dpdk.SerializeLayers(buf, opts, tcp)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -85,7 +85,7 @@ var testPacketTCPOptionDecode = []byte{
 }
 
 func TestPacketTCPOptionDecode(t *testing.T) {
-	p := gopacket.NewPacket(testPacketTCPOptionDecode, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketTCPOptionDecode, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode packet:", p.ErrorLayer().Error())
 	}
@@ -128,7 +128,7 @@ var testPacketMPTCPOptionDecode = []byte{
 }
 
 func TestPacketMPTCPOptionDecode(t *testing.T) {
-	p := gopacket.NewPacket(testPacketMPTCPOptionDecode, LinkTypeEthernet, gopacket.Default)
+	p := gopacket131_dpdk.NewPacket(testPacketMPTCPOptionDecode, LinkTypeEthernet, gopacket131_dpdk.Default)
 	if p.ErrorLayer() != nil {
 		t.Error("Failed to decode MPTCP packet:", p.ErrorLayer().Error())
 	}

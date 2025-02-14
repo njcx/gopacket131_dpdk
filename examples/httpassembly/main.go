@@ -4,7 +4,7 @@
 // that can be found in the LICENSE file in the root of the source
 // tree.
 
-// This binary provides sample code for using the gopacket TCP assembler and TCP
+// This binary provides sample code for using the gopacket131_dpdk TCP assembler and TCP
 // stream reader.  It reads packets off the wire and reconstructs HTTP requests
 // it sees, logging them.
 package main
@@ -17,12 +17,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/examples/util"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/pcap"
-	"github.com/gopacket/gopacket/tcpassembly"
-	"github.com/gopacket/gopacket/tcpassembly/tcpreader"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/examples/util"
+	"github.com/njcx/gopacket131_dpdk/layers"
+	"github.com/njcx/gopacket131_dpdk/pcap"
+	"github.com/njcx/gopacket131_dpdk/tcpassembly"
+	"github.com/njcx/gopacket131_dpdk/tcpassembly/tcpreader"
 )
 
 var iface = flag.String("i", "eth0", "Interface to get packets from")
@@ -38,11 +38,11 @@ type httpStreamFactory struct{}
 
 // httpStream will handle the actual decoding of http requests.
 type httpStream struct {
-	net, transport gopacket.Flow
+	net, transport gopacket131_dpdk.Flow
 	r              tcpreader.ReaderStream
 }
 
-func (h *httpStreamFactory) New(net, transport gopacket.Flow) tcpassembly.Stream {
+func (h *httpStreamFactory) New(net, transport gopacket131_dpdk.Flow) tcpassembly.Stream {
 	hstream := &httpStream{
 		net:       net,
 		transport: transport,
@@ -99,7 +99,7 @@ func main() {
 
 	log.Println("reading in packets")
 	// Read in packets, pass to assembler.
-	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
+	packetSource := gopacket131_dpdk.NewPacketSource(handle, handle.LinkType())
 	packets := packetSource.Packets()
 	ticker := time.Tick(time.Minute)
 	for {

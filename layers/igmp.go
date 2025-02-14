@@ -13,7 +13,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type IGMPType uint8
@@ -259,10 +259,10 @@ func igmpTimeDecode(t uint8) time.Duration {
 }
 
 // LayerType returns LayerTypeIGMP for the V1,2,3 message protocol formats.
-func (i *IGMP) LayerType() gopacket.LayerType      { return LayerTypeIGMP }
-func (i *IGMPv1or2) LayerType() gopacket.LayerType { return LayerTypeIGMP }
+func (i *IGMP) LayerType() gopacket131_dpdk.LayerType      { return LayerTypeIGMP }
+func (i *IGMPv1or2) LayerType() gopacket131_dpdk.LayerType { return LayerTypeIGMP }
 
-func (i *IGMPv1or2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *IGMPv1or2) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 8 {
 		return errors.New("IGMP Packet too small")
 	}
@@ -275,16 +275,16 @@ func (i *IGMPv1or2) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) err
 	return nil
 }
 
-func (i *IGMPv1or2) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (i *IGMPv1or2) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
-func (i *IGMPv1or2) CanDecode() gopacket.LayerClass {
+func (i *IGMPv1or2) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeIGMP
 }
 
 // DecodeFromBytes decodes the given bytes into this layer.
-func (i *IGMP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (i *IGMP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 1 {
 		return errors.New("IGMP packet is too small")
 	}
@@ -305,20 +305,20 @@ func (i *IGMP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // CanDecode returns the set of layer types that this DecodingLayer can decode.
-func (i *IGMP) CanDecode() gopacket.LayerClass {
+func (i *IGMP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeIGMP
 }
 
 // NextLayerType returns the layer type contained by this DecodingLayer.
-func (i *IGMP) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (i *IGMP) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 // decodeIGMP will parse IGMP v1,2 or 3 protocols. Checks against the
 // IGMP type are performed against byte[0], logic then iniitalizes and
 // passes the appropriate struct (IGMP or IGMPv1or2) to
 // decodingLayerDecoder.
-func decodeIGMP(data []byte, p gopacket.PacketBuilder) error {
+func decodeIGMP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	if len(data) < 1 {
 		return errors.New("IGMP packet is too small")
 	}

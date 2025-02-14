@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // LLDPTLVType is the type of each TLV value in a LinkLayerDiscovery packet.
@@ -760,13 +760,13 @@ type LLDPInfoProfinet struct {
 	PNIOPTCPStatus    LLDPPNIOPTCPStatus
 }
 
-// LayerType returns gopacket.LayerTypeLinkLayerDiscovery.
-func (c *LinkLayerDiscovery) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeLinkLayerDiscovery.
+func (c *LinkLayerDiscovery) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeLinkLayerDiscovery
 }
 
 // SerializeTo serializes LLDP packet to bytes and writes on SerializeBuffer.
-func (c *LinkLayerDiscovery) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+func (c *LinkLayerDiscovery) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	chassIDLen := c.ChassisID.serializedLen()
 	portIDLen := c.PortID.serializedLen()
 	vb, err := b.AppendBytes(chassIDLen + portIDLen + 4) // +4 for TTL
@@ -798,7 +798,7 @@ func (c *LinkLayerDiscovery) SerializeTo(b gopacket.SerializeBuffer, opts gopack
 
 }
 
-func decodeLinkLayerDiscovery(data []byte, p gopacket.PacketBuilder) error {
+func decodeLinkLayerDiscovery(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	var vals []LinkLayerDiscoveryValue
 	vData := data[0:]
 	for len(vData) > 0 {
@@ -1210,8 +1210,8 @@ func (l *LinkLayerDiscoveryInfo) DecodeProfinet() (info LLDPInfoProfinet, err er
 	return
 }
 
-// LayerType returns gopacket.LayerTypeLinkLayerDiscoveryInfo.
-func (c *LinkLayerDiscoveryInfo) LayerType() gopacket.LayerType {
+// LayerType returns gopacket131_dpdk.LayerTypeLinkLayerDiscoveryInfo.
+func (c *LinkLayerDiscoveryInfo) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeLinkLayerDiscoveryInfo
 }
 

@@ -16,7 +16,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 	"golang.org/x/sys/unix"
 )
 
@@ -71,7 +71,7 @@ var defaultOptions = Options{
 }
 
 // BPFSniffer is a struct used to track state of a BSD BPF ethernet sniffer
-// such that gopacket's PacketDataSource interface is implemented.
+// such that gopacket131_dpdk's PacketDataSource interface is implemented.
 type BPFSniffer struct {
 	options           *Options
 	sniffDeviceName   string
@@ -177,7 +177,7 @@ func (b *BPFSniffer) pickBpfDevice() {
 	panic("failed to acquire a BPF device for read-write access")
 }
 
-func (b *BPFSniffer) ReadPacketData() ([]byte, gopacket.CaptureInfo, error) {
+func (b *BPFSniffer) ReadPacketData() ([]byte, gopacket131_dpdk.CaptureInfo, error) {
 	var err error
 	if b.readBytesConsumed >= b.lastReadLen {
 		b.readBytesConsumed = 0
@@ -185,7 +185,7 @@ func (b *BPFSniffer) ReadPacketData() ([]byte, gopacket.CaptureInfo, error) {
 		b.lastReadLen, err = syscall.Read(b.fd, b.readBuffer)
 		if err != nil {
 			b.lastReadLen = 0
-			return nil, gopacket.CaptureInfo{}, err
+			return nil, gopacket131_dpdk.CaptureInfo{}, err
 		}
 	}
 	hdr := (*unix.BpfHdr)(unsafe.Pointer(&b.readBuffer[b.readBytesConsumed]))
@@ -193,7 +193,7 @@ func (b *BPFSniffer) ReadPacketData() ([]byte, gopacket.CaptureInfo, error) {
 	b.readBytesConsumed += bpfWordAlign(int(hdr.Hdrlen) + int(hdr.Caplen))
 
 	if frameStart+int(hdr.Caplen) > len(b.readBuffer) {
-		captureInfo := gopacket.CaptureInfo{
+		captureInfo := gopacket131_dpdk.CaptureInfo{
 			Timestamp:     time.Unix(int64(hdr.Tstamp.Sec), int64(hdr.Tstamp.Usec)*1000),
 			CaptureLength: 0,
 			Length:        0,
@@ -202,7 +202,7 @@ func (b *BPFSniffer) ReadPacketData() ([]byte, gopacket.CaptureInfo, error) {
 	}
 
 	rawFrame := b.readBuffer[frameStart : frameStart+int(hdr.Caplen)]
-	captureInfo := gopacket.CaptureInfo{
+	captureInfo := gopacket131_dpdk.CaptureInfo{
 		Timestamp:     time.Unix(int64(hdr.Tstamp.Sec), int64(hdr.Tstamp.Usec)*1000),
 		CaptureLength: len(rawFrame),
 		Length:        len(rawFrame),

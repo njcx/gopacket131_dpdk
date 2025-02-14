@@ -12,14 +12,14 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 //******************************************************************************
 //
 // Network Time Protocol (NTP) Decoding Layer
 // ------------------------------------------
-// This file provides a GoPacket decoding layer for NTP.
+// This file provides a gopacket131_dpdk decoding layer for NTP.
 //
 //******************************************************************************
 //
@@ -253,7 +253,7 @@ type NTP struct {
 //******************************************************************************
 
 // LayerType returns the layer type of the NTP object, which is LayerTypeNTP.
-func (d *NTP) LayerType() gopacket.LayerType {
+func (d *NTP) LayerType() gopacket131_dpdk.LayerType {
 	return LayerTypeNTP
 }
 
@@ -266,7 +266,7 @@ func (d *NTP) LayerType() gopacket.LayerType {
 // If it fails, it returns an error (non nil).
 //
 // This function is employed in layertypes.go to register the NTP layer.
-func decodeNTP(data []byte, p gopacket.PacketBuilder) error {
+func decodeNTP(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 
 	// Attempt to decode the byte slice.
 	d := &NTP{}
@@ -291,7 +291,7 @@ func decodeNTP(data []byte, p gopacket.PacketBuilder) error {
 // Upon succeeds, it loads the NTP object with information about the packet
 // and returns nil.
 // Upon failure, it returns an error (non nil).
-func (d *NTP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (d *NTP) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 
 	// If the data block is too short to be a NTP record, then return an error.
 	if len(data) < ntpMinimumRecordSizeInBytes {
@@ -347,9 +347,9 @@ func (d *NTP) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (d *NTP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (d *NTP) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	data, err := b.PrependBytes(ntpMinimumRecordSizeInBytes)
 	if err != nil {
 		return err
@@ -388,17 +388,17 @@ func (d *NTP) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOpt
 // CanDecode returns a set of layers that NTP objects can decode.
 // As NTP objects can only decide the NTP layer, we can return just that layer.
 // Apparently a single layer type implements LayerClass.
-func (d *NTP) CanDecode() gopacket.LayerClass {
+func (d *NTP) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeNTP
 }
 
 //******************************************************************************
 
-// NextLayerType specifies the next layer that GoPacket should attempt to
+// NextLayerType specifies the next layer that gopacket131_dpdk should attempt to
 // analyse after this (NTP) layer. As NTP packets do not contain any payload
 // bytes, there are no further layers to analyse.
-func (d *NTP) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypeZero
+func (d *NTP) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypeZero
 }
 
 //******************************************************************************

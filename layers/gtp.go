@@ -11,7 +11,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 const gtpMinimumSizeInBytes int = 8
@@ -41,10 +41,10 @@ type GTPv1U struct {
 }
 
 // LayerType returns LayerTypeGTPV1U
-func (g *GTPv1U) LayerType() gopacket.LayerType { return LayerTypeGTPv1U }
+func (g *GTPv1U) LayerType() gopacket131_dpdk.LayerType { return LayerTypeGTPv1U }
 
 // DecodeFromBytes analyses a byte slice and attempts to decode it as a GTPv1U packet
-func (g *GTPv1U) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (g *GTPv1U) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	hLen := gtpMinimumSizeInBytes
 	dLen := len(data)
 	if dLen < hLen {
@@ -106,9 +106,9 @@ func (g *GTPv1U) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error 
 }
 
 // SerializeTo writes the serialized form of this layer into the
-// SerializationBuffer, implementing gopacket.SerializableLayer.
-// See the docs for gopacket.SerializableLayer for more info.
-func (g *GTPv1U) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.SerializeOptions) error {
+// SerializationBuffer, implementing gopacket131_dpdk.SerializableLayer.
+// See the docs for gopacket131_dpdk.SerializableLayer for more info.
+func (g *GTPv1U) SerializeTo(b gopacket131_dpdk.SerializeBuffer, opts gopacket131_dpdk.SerializeOptions) error {
 	var nextExtensionHeaderType byte
 	for i := len(g.GTPExtensionHeaders) - 1; i >= 0; i-- {
 		g.ExtensionHeaderFlag = true
@@ -167,14 +167,14 @@ func (g *GTPv1U) SerializeTo(b gopacket.SerializeBuffer, opts gopacket.Serialize
 }
 
 // CanDecode returns a set of layers that GTP objects can decode.
-func (g *GTPv1U) CanDecode() gopacket.LayerClass {
+func (g *GTPv1U) CanDecode() gopacket131_dpdk.LayerClass {
 	return LayerTypeGTPv1U
 }
 
-// NextLayerType specifies the next layer that GoPacket should attempt to
-func (g *GTPv1U) NextLayerType() gopacket.LayerType {
+// NextLayerType specifies the next layer that gopacket131_dpdk should attempt to
+func (g *GTPv1U) NextLayerType() gopacket131_dpdk.LayerType {
 	if len(g.LayerPayload()) == 0 {
-		return gopacket.LayerTypeZero
+		return gopacket131_dpdk.LayerTypeZero
 	}
 	version := uint8(g.LayerPayload()[0]) >> 4
 	if version == 4 {
@@ -186,7 +186,7 @@ func (g *GTPv1U) NextLayerType() gopacket.LayerType {
 	}
 }
 
-func decodeGTPv1u(data []byte, p gopacket.PacketBuilder) error {
+func decodeGTPv1u(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	gtp := &GTPv1U{}
 	err := gtp.DecodeFromBytes(data, p)
 	if err != nil {

@@ -11,18 +11,18 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 // EnumMetadata keeps track of a set of metadata for each enumeration value
 // for protocol enumerations.
 type EnumMetadata struct {
 	// DecodeWith is the decoder to use to decode this protocol's data.
-	DecodeWith gopacket.Decoder
+	DecodeWith gopacket131_dpdk.Decoder
 	// Name is the name of the enumeration value.
 	Name string
 	// LayerType is the layer type implied by the given enum.
-	LayerType gopacket.LayerType
+	LayerType gopacket131_dpdk.LayerType
 }
 
 // EthernetType is an enumeration of ethernet type values, and acts as a decoder
@@ -279,7 +279,7 @@ const (
 )
 
 // Decode a raw v4 or v6 IP packet.
-func decodeIPv4or6(data []byte, p gopacket.PacketBuilder) error {
+func decodeIPv4or6(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	version := data[0] >> 4
 	switch version {
 	case 4:
@@ -292,159 +292,159 @@ func decodeIPv4or6(data []byte, p gopacket.PacketBuilder) error {
 
 func initActualTypeData() {
 	// Each of the XXXTypeMetadata arrays contains mappings of how to handle enum
-	// values for various enum types in gopacket/layers.
+	// values for various enum types in gopacket131_dpdk/layers.
 	// These arrays are actually created by gen2.go and stored in
 	// enums_generated.go.
 	//
 	// So, EthernetTypeMetadata[2] contains information on how to handle EthernetType
 	// 2, including which name to give it and which decoder to use to decode
 	// packet data of that type.  These arrays are filled by default with all of the
-	// protocols gopacket/layers knows how to handle, but users of the library can
+	// protocols gopacket131_dpdk/layers knows how to handle, but users of the library can
 	// add new decoders or override existing ones.  For example, if you write a better
 	// TCP decoder, you can override IPProtocolMetadata[IPProtocolTCP].DecodeWith
-	// with your new decoder, and all gopacket/layers decoding will use your new
+	// with your new decoder, and all gopacket131_dpdk/layers decoding will use your new
 	// decoder whenever they encounter that IPProtocol.
 
 	// Here we link up all enumerations with their respective names and decoders.
-	EthernetTypeMetadata[EthernetTypeLLC] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeLLC), Name: "LLC", LayerType: LayerTypeLLC}
-	EthernetTypeMetadata[EthernetTypeIPv4] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
-	EthernetTypeMetadata[EthernetTypeIPv6] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
-	EthernetTypeMetadata[EthernetTypeARP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeARP), Name: "ARP", LayerType: LayerTypeARP}
-	EthernetTypeMetadata[EthernetTypeDot1Q] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot1Q), Name: "Dot1Q", LayerType: LayerTypeDot1Q}
-	EthernetTypeMetadata[EthernetTypePPP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodePPP), Name: "PPP", LayerType: LayerTypePPP}
-	EthernetTypeMetadata[EthernetTypePPPoEDiscovery] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodePPPoE), Name: "PPPoEDiscovery", LayerType: LayerTypePPPoE}
-	EthernetTypeMetadata[EthernetTypePPPoESession] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodePPPoE), Name: "PPPoESession", LayerType: LayerTypePPPoE}
-	EthernetTypeMetadata[EthernetTypeEthernetCTP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeEthernetCTP), Name: "EthernetCTP", LayerType: LayerTypeEthernetCTP}
-	EthernetTypeMetadata[EthernetTypeCiscoDiscovery] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeCiscoDiscovery), Name: "CiscoDiscovery", LayerType: LayerTypeCiscoDiscovery}
-	EthernetTypeMetadata[EthernetTypeNortelDiscovery] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeNortelDiscovery), Name: "NortelDiscovery", LayerType: LayerTypeNortelDiscovery}
-	EthernetTypeMetadata[EthernetTypeLinkLayerDiscovery] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeLinkLayerDiscovery), Name: "LinkLayerDiscovery", LayerType: LayerTypeLinkLayerDiscovery}
-	EthernetTypeMetadata[EthernetTypeMPLSUnicast] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeMPLS), Name: "MPLSUnicast", LayerType: LayerTypeMPLS}
-	EthernetTypeMetadata[EthernetTypeMPLSMulticast] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeMPLS), Name: "MPLSMulticast", LayerType: LayerTypeMPLS}
-	EthernetTypeMetadata[EthernetTypeEAPOL] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeEAPOL), Name: "EAPOL", LayerType: LayerTypeEAPOL}
-	EthernetTypeMetadata[EthernetTypeQinQ] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot1Q), Name: "Dot1Q", LayerType: LayerTypeDot1Q}
-	EthernetTypeMetadata[EthernetTypeTransparentEthernetBridging] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeEthernet), Name: "TransparentEthernetBridging", LayerType: LayerTypeEthernet}
-	EthernetTypeMetadata[EthernetTypeERSPAN] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeERSPANII), Name: "ERSPAN Type II", LayerType: LayerTypeERSPANII}
-	EthernetTypeMetadata[EthernetTypeMerakiDiscoveryProtocol] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeMDP), Name: "MDP", LayerType: LayerTypeMDP}
+	EthernetTypeMetadata[EthernetTypeLLC] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeLLC), Name: "LLC", LayerType: LayerTypeLLC}
+	EthernetTypeMetadata[EthernetTypeIPv4] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
+	EthernetTypeMetadata[EthernetTypeIPv6] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
+	EthernetTypeMetadata[EthernetTypeARP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeARP), Name: "ARP", LayerType: LayerTypeARP}
+	EthernetTypeMetadata[EthernetTypeDot1Q] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot1Q), Name: "Dot1Q", LayerType: LayerTypeDot1Q}
+	EthernetTypeMetadata[EthernetTypePPP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodePPP), Name: "PPP", LayerType: LayerTypePPP}
+	EthernetTypeMetadata[EthernetTypePPPoEDiscovery] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodePPPoE), Name: "PPPoEDiscovery", LayerType: LayerTypePPPoE}
+	EthernetTypeMetadata[EthernetTypePPPoESession] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodePPPoE), Name: "PPPoESession", LayerType: LayerTypePPPoE}
+	EthernetTypeMetadata[EthernetTypeEthernetCTP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeEthernetCTP), Name: "EthernetCTP", LayerType: LayerTypeEthernetCTP}
+	EthernetTypeMetadata[EthernetTypeCiscoDiscovery] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeCiscoDiscovery), Name: "CiscoDiscovery", LayerType: LayerTypeCiscoDiscovery}
+	EthernetTypeMetadata[EthernetTypeNortelDiscovery] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeNortelDiscovery), Name: "NortelDiscovery", LayerType: LayerTypeNortelDiscovery}
+	EthernetTypeMetadata[EthernetTypeLinkLayerDiscovery] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeLinkLayerDiscovery), Name: "LinkLayerDiscovery", LayerType: LayerTypeLinkLayerDiscovery}
+	EthernetTypeMetadata[EthernetTypeMPLSUnicast] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeMPLS), Name: "MPLSUnicast", LayerType: LayerTypeMPLS}
+	EthernetTypeMetadata[EthernetTypeMPLSMulticast] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeMPLS), Name: "MPLSMulticast", LayerType: LayerTypeMPLS}
+	EthernetTypeMetadata[EthernetTypeEAPOL] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeEAPOL), Name: "EAPOL", LayerType: LayerTypeEAPOL}
+	EthernetTypeMetadata[EthernetTypeQinQ] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot1Q), Name: "Dot1Q", LayerType: LayerTypeDot1Q}
+	EthernetTypeMetadata[EthernetTypeTransparentEthernetBridging] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeEthernet), Name: "TransparentEthernetBridging", LayerType: LayerTypeEthernet}
+	EthernetTypeMetadata[EthernetTypeERSPAN] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeERSPANII), Name: "ERSPAN Type II", LayerType: LayerTypeERSPANII}
+	EthernetTypeMetadata[EthernetTypeMerakiDiscoveryProtocol] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeMDP), Name: "MDP", LayerType: LayerTypeMDP}
 
-	IPProtocolMetadata[IPProtocolIPv4] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
-	IPProtocolMetadata[IPProtocolTCP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeTCP), Name: "TCP", LayerType: LayerTypeTCP}
-	IPProtocolMetadata[IPProtocolUDP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeUDP), Name: "UDP", LayerType: LayerTypeUDP}
-	IPProtocolMetadata[IPProtocolICMPv4] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeICMPv4), Name: "ICMPv4", LayerType: LayerTypeICMPv4}
-	IPProtocolMetadata[IPProtocolICMPv6] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeICMPv6), Name: "ICMPv6", LayerType: LayerTypeICMPv6}
-	IPProtocolMetadata[IPProtocolSCTP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTP), Name: "SCTP", LayerType: LayerTypeSCTP}
-	IPProtocolMetadata[IPProtocolIPv6] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
-	IPProtocolMetadata[IPProtocolIPIP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
-	IPProtocolMetadata[IPProtocolEtherIP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeEtherIP), Name: "EtherIP", LayerType: LayerTypeEtherIP}
-	IPProtocolMetadata[IPProtocolRUDP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeRUDP), Name: "RUDP", LayerType: LayerTypeRUDP}
-	IPProtocolMetadata[IPProtocolGRE] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeGRE), Name: "GRE", LayerType: LayerTypeGRE}
-	IPProtocolMetadata[IPProtocolIPv6HopByHop] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6HopByHop), Name: "IPv6HopByHop", LayerType: LayerTypeIPv6HopByHop}
-	IPProtocolMetadata[IPProtocolIPv6Routing] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6Routing), Name: "IPv6Routing", LayerType: LayerTypeIPv6Routing}
-	IPProtocolMetadata[IPProtocolIPv6Fragment] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6Fragment), Name: "IPv6Fragment", LayerType: LayerTypeIPv6Fragment}
-	IPProtocolMetadata[IPProtocolIPv6Destination] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6Destination), Name: "IPv6Destination", LayerType: LayerTypeIPv6Destination}
-	IPProtocolMetadata[IPProtocolOSPF] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeOSPF), Name: "OSPF", LayerType: LayerTypeOSPF}
-	IPProtocolMetadata[IPProtocolAH] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPSecAH), Name: "IPSecAH", LayerType: LayerTypeIPSecAH}
-	IPProtocolMetadata[IPProtocolESP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPSecESP), Name: "IPSecESP", LayerType: LayerTypeIPSecESP}
-	IPProtocolMetadata[IPProtocolUDPLite] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeUDPLite), Name: "UDPLite", LayerType: LayerTypeUDPLite}
-	IPProtocolMetadata[IPProtocolMPLSInIP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeMPLS), Name: "MPLS", LayerType: LayerTypeMPLS}
-	IPProtocolMetadata[IPProtocolNoNextHeader] = EnumMetadata{DecodeWith: gopacket.DecodePayload, Name: "NoNextHeader", LayerType: gopacket.LayerTypePayload}
-	IPProtocolMetadata[IPProtocolIGMP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIGMP), Name: "IGMP", LayerType: LayerTypeIGMP}
-	IPProtocolMetadata[IPProtocolVRRP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeVRRP), Name: "VRRP", LayerType: LayerTypeVRRP}
+	IPProtocolMetadata[IPProtocolIPv4] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
+	IPProtocolMetadata[IPProtocolTCP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeTCP), Name: "TCP", LayerType: LayerTypeTCP}
+	IPProtocolMetadata[IPProtocolUDP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeUDP), Name: "UDP", LayerType: LayerTypeUDP}
+	IPProtocolMetadata[IPProtocolICMPv4] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeICMPv4), Name: "ICMPv4", LayerType: LayerTypeICMPv4}
+	IPProtocolMetadata[IPProtocolICMPv6] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeICMPv6), Name: "ICMPv6", LayerType: LayerTypeICMPv6}
+	IPProtocolMetadata[IPProtocolSCTP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTP), Name: "SCTP", LayerType: LayerTypeSCTP}
+	IPProtocolMetadata[IPProtocolIPv6] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
+	IPProtocolMetadata[IPProtocolIPIP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
+	IPProtocolMetadata[IPProtocolEtherIP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeEtherIP), Name: "EtherIP", LayerType: LayerTypeEtherIP}
+	IPProtocolMetadata[IPProtocolRUDP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeRUDP), Name: "RUDP", LayerType: LayerTypeRUDP}
+	IPProtocolMetadata[IPProtocolGRE] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeGRE), Name: "GRE", LayerType: LayerTypeGRE}
+	IPProtocolMetadata[IPProtocolIPv6HopByHop] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6HopByHop), Name: "IPv6HopByHop", LayerType: LayerTypeIPv6HopByHop}
+	IPProtocolMetadata[IPProtocolIPv6Routing] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6Routing), Name: "IPv6Routing", LayerType: LayerTypeIPv6Routing}
+	IPProtocolMetadata[IPProtocolIPv6Fragment] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6Fragment), Name: "IPv6Fragment", LayerType: LayerTypeIPv6Fragment}
+	IPProtocolMetadata[IPProtocolIPv6Destination] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6Destination), Name: "IPv6Destination", LayerType: LayerTypeIPv6Destination}
+	IPProtocolMetadata[IPProtocolOSPF] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeOSPF), Name: "OSPF", LayerType: LayerTypeOSPF}
+	IPProtocolMetadata[IPProtocolAH] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPSecAH), Name: "IPSecAH", LayerType: LayerTypeIPSecAH}
+	IPProtocolMetadata[IPProtocolESP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPSecESP), Name: "IPSecESP", LayerType: LayerTypeIPSecESP}
+	IPProtocolMetadata[IPProtocolUDPLite] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeUDPLite), Name: "UDPLite", LayerType: LayerTypeUDPLite}
+	IPProtocolMetadata[IPProtocolMPLSInIP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeMPLS), Name: "MPLS", LayerType: LayerTypeMPLS}
+	IPProtocolMetadata[IPProtocolNoNextHeader] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodePayload, Name: "NoNextHeader", LayerType: gopacket131_dpdk.LayerTypePayload}
+	IPProtocolMetadata[IPProtocolIGMP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIGMP), Name: "IGMP", LayerType: LayerTypeIGMP}
+	IPProtocolMetadata[IPProtocolVRRP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeVRRP), Name: "VRRP", LayerType: LayerTypeVRRP}
 
-	SCTPChunkTypeMetadata[SCTPChunkTypeData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPData), Name: "Data"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeInit] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPInit), Name: "Init"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeInitAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPInit), Name: "InitAck"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeSack] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPSack), Name: "Sack"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeHeartbeat] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPHeartbeat), Name: "Heartbeat"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeHeartbeatAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPHeartbeat), Name: "HeartbeatAck"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeAbort] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPError), Name: "Abort"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeError] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPError), Name: "Error"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeShutdown] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPShutdown), Name: "Shutdown"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeShutdownAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPShutdownAck), Name: "ShutdownAck"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeCookieEcho] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPCookieEcho), Name: "CookieEcho"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeCookieAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPEmptyLayer), Name: "CookieAck"}
-	SCTPChunkTypeMetadata[SCTPChunkTypeShutdownComplete] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeSCTPEmptyLayer), Name: "ShutdownComplete"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPData), Name: "Data"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeInit] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPInit), Name: "Init"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeInitAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPInit), Name: "InitAck"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeSack] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPSack), Name: "Sack"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeHeartbeat] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPHeartbeat), Name: "Heartbeat"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeHeartbeatAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPHeartbeat), Name: "HeartbeatAck"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeAbort] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPError), Name: "Abort"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeError] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPError), Name: "Error"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeShutdown] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPShutdown), Name: "Shutdown"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeShutdownAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPShutdownAck), Name: "ShutdownAck"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeCookieEcho] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPCookieEcho), Name: "CookieEcho"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeCookieAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPEmptyLayer), Name: "CookieAck"}
+	SCTPChunkTypeMetadata[SCTPChunkTypeShutdownComplete] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeSCTPEmptyLayer), Name: "ShutdownComplete"}
 
-	PPPTypeMetadata[PPPTypeIPv4] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4), Name: "IPv4"}
-	PPPTypeMetadata[PPPTypeIPv6] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6), Name: "IPv6"}
-	PPPTypeMetadata[PPPTypeMPLSUnicast] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeMPLS), Name: "MPLSUnicast"}
-	PPPTypeMetadata[PPPTypeMPLSMulticast] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeMPLS), Name: "MPLSMulticast"}
+	PPPTypeMetadata[PPPTypeIPv4] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4), Name: "IPv4"}
+	PPPTypeMetadata[PPPTypeIPv6] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6), Name: "IPv6"}
+	PPPTypeMetadata[PPPTypeMPLSUnicast] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeMPLS), Name: "MPLSUnicast"}
+	PPPTypeMetadata[PPPTypeMPLSMulticast] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeMPLS), Name: "MPLSMulticast"}
 
-	PPPoECodeMetadata[PPPoECodeSession] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodePPP), Name: "PPP"}
+	PPPoECodeMetadata[PPPoECodeSession] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodePPP), Name: "PPP"}
 
-	LinkTypeMetadata[LinkTypeEthernet] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeEthernet), Name: "Ethernet"}
-	LinkTypeMetadata[LinkTypePPP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodePPP), Name: "PPP"}
-	LinkTypeMetadata[LinkTypeFDDI] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeFDDI), Name: "FDDI"}
-	LinkTypeMetadata[LinkTypeNull] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeLoopback), Name: "Null"}
-	LinkTypeMetadata[LinkTypeIEEE802_11] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11), Name: "Dot11"}
-	LinkTypeMetadata[LinkTypeLoop] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeLoopback), Name: "Loop"}
-	LinkTypeMetadata[LinkTypeIEEE802_11] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11), Name: "802.11"}
-	LinkTypeMetadata[LinkTypeRaw] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4or6), Name: "Raw"}
+	LinkTypeMetadata[LinkTypeEthernet] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeEthernet), Name: "Ethernet"}
+	LinkTypeMetadata[LinkTypePPP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodePPP), Name: "PPP"}
+	LinkTypeMetadata[LinkTypeFDDI] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeFDDI), Name: "FDDI"}
+	LinkTypeMetadata[LinkTypeNull] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeLoopback), Name: "Null"}
+	LinkTypeMetadata[LinkTypeIEEE802_11] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11), Name: "Dot11"}
+	LinkTypeMetadata[LinkTypeLoop] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeLoopback), Name: "Loop"}
+	LinkTypeMetadata[LinkTypeIEEE802_11] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11), Name: "802.11"}
+	LinkTypeMetadata[LinkTypeRaw] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4or6), Name: "Raw"}
 	// See https://github.com/the-tcpdump-group/libpcap/blob/170f717e6e818cdc4bcbbfd906b63088eaa88fa0/pcap/dlt.h#L85
 	// Or https://github.com/wireshark/wireshark/blob/854cfe53efe44080609c78053ecfb2342ad84a08/wiretap/pcap-common.c#L508
 	if runtime.GOOS == "openbsd" {
-		LinkTypeMetadata[14] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4or6), Name: "Raw"}
+		LinkTypeMetadata[14] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4or6), Name: "Raw"}
 	} else {
-		LinkTypeMetadata[12] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4or6), Name: "Raw"}
+		LinkTypeMetadata[12] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4or6), Name: "Raw"}
 	}
-	LinkTypeMetadata[LinkTypePFLog] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodePFLog), Name: "PFLog"}
-	LinkTypeMetadata[LinkTypeIEEE80211Radio] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeRadioTap), Name: "RadioTap"}
-	LinkTypeMetadata[LinkTypeLinuxUSB] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeUSB), Name: "USB"}
-	LinkTypeMetadata[LinkTypeLinuxSLL] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeLinuxSLL), Name: "Linux SLL"}
-	LinkTypeMetadata[LinkTypePrismHeader] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodePrismHeader), Name: "Prism"}
-	LinkTypeMetadata[LinkTypeLinuxSLL2] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeLinuxSLL2), Name: "Linux SLL2"}
+	LinkTypeMetadata[LinkTypePFLog] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodePFLog), Name: "PFLog"}
+	LinkTypeMetadata[LinkTypeIEEE80211Radio] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeRadioTap), Name: "RadioTap"}
+	LinkTypeMetadata[LinkTypeLinuxUSB] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeUSB), Name: "USB"}
+	LinkTypeMetadata[LinkTypeLinuxSLL] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeLinuxSLL), Name: "Linux SLL"}
+	LinkTypeMetadata[LinkTypePrismHeader] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodePrismHeader), Name: "Prism"}
+	LinkTypeMetadata[LinkTypeLinuxSLL2] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeLinuxSLL2), Name: "Linux SLL2"}
 
-	FDDIFrameControlMetadata[FDDIFrameControlLLC] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeLLC), Name: "LLC"}
+	FDDIFrameControlMetadata[FDDIFrameControlLLC] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeLLC), Name: "LLC"}
 
-	EAPOLTypeMetadata[EAPOLTypeEAP] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeEAP), Name: "EAP", LayerType: LayerTypeEAP}
-	EAPOLTypeMetadata[EAPOLTypeKey] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeEAPOLKey), Name: "EAPOLKey", LayerType: LayerTypeEAPOLKey}
+	EAPOLTypeMetadata[EAPOLTypeEAP] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeEAP), Name: "EAP", LayerType: LayerTypeEAP}
+	EAPOLTypeMetadata[EAPOLTypeKey] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeEAPOLKey), Name: "EAPOLKey", LayerType: LayerTypeEAPOLKey}
 
-	ProtocolFamilyMetadata[ProtocolFamilyIPv4] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
-	ProtocolFamilyMetadata[ProtocolFamilyIPv6BSD] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
-	ProtocolFamilyMetadata[ProtocolFamilyIPv6FreeBSD] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
-	ProtocolFamilyMetadata[ProtocolFamilyIPv6Darwin] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
-	ProtocolFamilyMetadata[ProtocolFamilyIPv6Linux] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
+	ProtocolFamilyMetadata[ProtocolFamilyIPv4] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv4), Name: "IPv4", LayerType: LayerTypeIPv4}
+	ProtocolFamilyMetadata[ProtocolFamilyIPv6BSD] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
+	ProtocolFamilyMetadata[ProtocolFamilyIPv6FreeBSD] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
+	ProtocolFamilyMetadata[ProtocolFamilyIPv6Darwin] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
+	ProtocolFamilyMetadata[ProtocolFamilyIPv6Linux] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeIPv6), Name: "IPv6", LayerType: LayerTypeIPv6}
 
-	Dot11TypeMetadata[Dot11TypeMgmtAssociationReq] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtAssociationReq), Name: "MgmtAssociationReq", LayerType: LayerTypeDot11MgmtAssociationReq}
-	Dot11TypeMetadata[Dot11TypeMgmtAssociationResp] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtAssociationResp), Name: "MgmtAssociationResp", LayerType: LayerTypeDot11MgmtAssociationResp}
-	Dot11TypeMetadata[Dot11TypeMgmtReassociationReq] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtReassociationReq), Name: "MgmtReassociationReq", LayerType: LayerTypeDot11MgmtReassociationReq}
-	Dot11TypeMetadata[Dot11TypeMgmtReassociationResp] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtReassociationResp), Name: "MgmtReassociationResp", LayerType: LayerTypeDot11MgmtReassociationResp}
-	Dot11TypeMetadata[Dot11TypeMgmtProbeReq] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtProbeReq), Name: "MgmtProbeReq", LayerType: LayerTypeDot11MgmtProbeReq}
-	Dot11TypeMetadata[Dot11TypeMgmtProbeResp] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtProbeResp), Name: "MgmtProbeResp", LayerType: LayerTypeDot11MgmtProbeResp}
-	Dot11TypeMetadata[Dot11TypeMgmtMeasurementPilot] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtMeasurementPilot), Name: "MgmtMeasurementPilot", LayerType: LayerTypeDot11MgmtMeasurementPilot}
-	Dot11TypeMetadata[Dot11TypeMgmtBeacon] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtBeacon), Name: "MgmtBeacon", LayerType: LayerTypeDot11MgmtBeacon}
-	Dot11TypeMetadata[Dot11TypeMgmtATIM] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtATIM), Name: "MgmtATIM", LayerType: LayerTypeDot11MgmtATIM}
-	Dot11TypeMetadata[Dot11TypeMgmtDisassociation] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtDisassociation), Name: "MgmtDisassociation", LayerType: LayerTypeDot11MgmtDisassociation}
-	Dot11TypeMetadata[Dot11TypeMgmtAuthentication] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtAuthentication), Name: "MgmtAuthentication", LayerType: LayerTypeDot11MgmtAuthentication}
-	Dot11TypeMetadata[Dot11TypeMgmtDeauthentication] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtDeauthentication), Name: "MgmtDeauthentication", LayerType: LayerTypeDot11MgmtDeauthentication}
-	Dot11TypeMetadata[Dot11TypeMgmtAction] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtAction), Name: "MgmtAction", LayerType: LayerTypeDot11MgmtAction}
-	Dot11TypeMetadata[Dot11TypeMgmtActionNoAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11MgmtActionNoAck), Name: "MgmtActionNoAck", LayerType: LayerTypeDot11MgmtActionNoAck}
-	Dot11TypeMetadata[Dot11TypeCtrl] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11Ctrl), Name: "Ctrl", LayerType: LayerTypeDot11Ctrl}
-	Dot11TypeMetadata[Dot11TypeCtrlWrapper] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11Ctrl), Name: "CtrlWrapper", LayerType: LayerTypeDot11Ctrl}
-	Dot11TypeMetadata[Dot11TypeCtrlBlockAckReq] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlBlockAckReq), Name: "CtrlBlockAckReq", LayerType: LayerTypeDot11CtrlBlockAckReq}
-	Dot11TypeMetadata[Dot11TypeCtrlBlockAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlBlockAck), Name: "CtrlBlockAck", LayerType: LayerTypeDot11CtrlBlockAck}
-	Dot11TypeMetadata[Dot11TypeCtrlPowersavePoll] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlPowersavePoll), Name: "CtrlPowersavePoll", LayerType: LayerTypeDot11CtrlPowersavePoll}
-	Dot11TypeMetadata[Dot11TypeCtrlRTS] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlRTS), Name: "CtrlRTS", LayerType: LayerTypeDot11CtrlRTS}
-	Dot11TypeMetadata[Dot11TypeCtrlCTS] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlCTS), Name: "CtrlCTS", LayerType: LayerTypeDot11CtrlCTS}
-	Dot11TypeMetadata[Dot11TypeCtrlAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlAck), Name: "CtrlAck", LayerType: LayerTypeDot11CtrlAck}
-	Dot11TypeMetadata[Dot11TypeCtrlCFEnd] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlCFEnd), Name: "CtrlCFEnd", LayerType: LayerTypeDot11CtrlCFEnd}
-	Dot11TypeMetadata[Dot11TypeCtrlCFEndAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11CtrlCFEndAck), Name: "CtrlCFEndAck", LayerType: LayerTypeDot11CtrlCFEndAck}
-	Dot11TypeMetadata[Dot11TypeData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11Data), Name: "Data", LayerType: LayerTypeDot11Data}
-	Dot11TypeMetadata[Dot11TypeDataCFAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataCFAck), Name: "DataCFAck", LayerType: LayerTypeDot11DataCFAck}
-	Dot11TypeMetadata[Dot11TypeDataCFPoll] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataCFPoll), Name: "DataCFPoll", LayerType: LayerTypeDot11DataCFPoll}
-	Dot11TypeMetadata[Dot11TypeDataCFAckPoll] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataCFAckPoll), Name: "DataCFAckPoll", LayerType: LayerTypeDot11DataCFAckPoll}
-	Dot11TypeMetadata[Dot11TypeDataNull] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataNull), Name: "DataNull", LayerType: LayerTypeDot11DataNull}
-	Dot11TypeMetadata[Dot11TypeDataCFAckNoData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataCFAckNoData), Name: "DataCFAckNoData", LayerType: LayerTypeDot11DataCFAckNoData}
-	Dot11TypeMetadata[Dot11TypeDataCFPollNoData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataCFPollNoData), Name: "DataCFPollNoData", LayerType: LayerTypeDot11DataCFPollNoData}
-	Dot11TypeMetadata[Dot11TypeDataCFAckPollNoData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataCFAckPollNoData), Name: "DataCFAckPollNoData", LayerType: LayerTypeDot11DataCFAckPollNoData}
-	Dot11TypeMetadata[Dot11TypeDataQOSData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataQOSData), Name: "DataQOSData", LayerType: LayerTypeDot11DataQOSData}
-	Dot11TypeMetadata[Dot11TypeDataQOSDataCFAck] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataQOSDataCFAck), Name: "DataQOSDataCFAck", LayerType: LayerTypeDot11DataQOSDataCFAck}
-	Dot11TypeMetadata[Dot11TypeDataQOSDataCFPoll] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataQOSDataCFPoll), Name: "DataQOSDataCFPoll", LayerType: LayerTypeDot11DataQOSDataCFPoll}
-	Dot11TypeMetadata[Dot11TypeDataQOSDataCFAckPoll] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataQOSDataCFAckPoll), Name: "DataQOSDataCFAckPoll", LayerType: LayerTypeDot11DataQOSDataCFAckPoll}
-	Dot11TypeMetadata[Dot11TypeDataQOSNull] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataQOSNull), Name: "DataQOSNull", LayerType: LayerTypeDot11DataQOSNull}
-	Dot11TypeMetadata[Dot11TypeDataQOSCFPollNoData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataQOSCFPollNoData), Name: "DataQOSCFPollNoData", LayerType: LayerTypeDot11DataQOSCFPollNoData}
-	Dot11TypeMetadata[Dot11TypeDataQOSCFAckPollNoData] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeDot11DataQOSCFAckPollNoData), Name: "DataQOSCFAckPollNoData", LayerType: LayerTypeDot11DataQOSCFAckPollNoData}
+	Dot11TypeMetadata[Dot11TypeMgmtAssociationReq] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtAssociationReq), Name: "MgmtAssociationReq", LayerType: LayerTypeDot11MgmtAssociationReq}
+	Dot11TypeMetadata[Dot11TypeMgmtAssociationResp] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtAssociationResp), Name: "MgmtAssociationResp", LayerType: LayerTypeDot11MgmtAssociationResp}
+	Dot11TypeMetadata[Dot11TypeMgmtReassociationReq] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtReassociationReq), Name: "MgmtReassociationReq", LayerType: LayerTypeDot11MgmtReassociationReq}
+	Dot11TypeMetadata[Dot11TypeMgmtReassociationResp] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtReassociationResp), Name: "MgmtReassociationResp", LayerType: LayerTypeDot11MgmtReassociationResp}
+	Dot11TypeMetadata[Dot11TypeMgmtProbeReq] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtProbeReq), Name: "MgmtProbeReq", LayerType: LayerTypeDot11MgmtProbeReq}
+	Dot11TypeMetadata[Dot11TypeMgmtProbeResp] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtProbeResp), Name: "MgmtProbeResp", LayerType: LayerTypeDot11MgmtProbeResp}
+	Dot11TypeMetadata[Dot11TypeMgmtMeasurementPilot] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtMeasurementPilot), Name: "MgmtMeasurementPilot", LayerType: LayerTypeDot11MgmtMeasurementPilot}
+	Dot11TypeMetadata[Dot11TypeMgmtBeacon] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtBeacon), Name: "MgmtBeacon", LayerType: LayerTypeDot11MgmtBeacon}
+	Dot11TypeMetadata[Dot11TypeMgmtATIM] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtATIM), Name: "MgmtATIM", LayerType: LayerTypeDot11MgmtATIM}
+	Dot11TypeMetadata[Dot11TypeMgmtDisassociation] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtDisassociation), Name: "MgmtDisassociation", LayerType: LayerTypeDot11MgmtDisassociation}
+	Dot11TypeMetadata[Dot11TypeMgmtAuthentication] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtAuthentication), Name: "MgmtAuthentication", LayerType: LayerTypeDot11MgmtAuthentication}
+	Dot11TypeMetadata[Dot11TypeMgmtDeauthentication] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtDeauthentication), Name: "MgmtDeauthentication", LayerType: LayerTypeDot11MgmtDeauthentication}
+	Dot11TypeMetadata[Dot11TypeMgmtAction] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtAction), Name: "MgmtAction", LayerType: LayerTypeDot11MgmtAction}
+	Dot11TypeMetadata[Dot11TypeMgmtActionNoAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11MgmtActionNoAck), Name: "MgmtActionNoAck", LayerType: LayerTypeDot11MgmtActionNoAck}
+	Dot11TypeMetadata[Dot11TypeCtrl] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11Ctrl), Name: "Ctrl", LayerType: LayerTypeDot11Ctrl}
+	Dot11TypeMetadata[Dot11TypeCtrlWrapper] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11Ctrl), Name: "CtrlWrapper", LayerType: LayerTypeDot11Ctrl}
+	Dot11TypeMetadata[Dot11TypeCtrlBlockAckReq] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlBlockAckReq), Name: "CtrlBlockAckReq", LayerType: LayerTypeDot11CtrlBlockAckReq}
+	Dot11TypeMetadata[Dot11TypeCtrlBlockAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlBlockAck), Name: "CtrlBlockAck", LayerType: LayerTypeDot11CtrlBlockAck}
+	Dot11TypeMetadata[Dot11TypeCtrlPowersavePoll] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlPowersavePoll), Name: "CtrlPowersavePoll", LayerType: LayerTypeDot11CtrlPowersavePoll}
+	Dot11TypeMetadata[Dot11TypeCtrlRTS] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlRTS), Name: "CtrlRTS", LayerType: LayerTypeDot11CtrlRTS}
+	Dot11TypeMetadata[Dot11TypeCtrlCTS] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlCTS), Name: "CtrlCTS", LayerType: LayerTypeDot11CtrlCTS}
+	Dot11TypeMetadata[Dot11TypeCtrlAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlAck), Name: "CtrlAck", LayerType: LayerTypeDot11CtrlAck}
+	Dot11TypeMetadata[Dot11TypeCtrlCFEnd] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlCFEnd), Name: "CtrlCFEnd", LayerType: LayerTypeDot11CtrlCFEnd}
+	Dot11TypeMetadata[Dot11TypeCtrlCFEndAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11CtrlCFEndAck), Name: "CtrlCFEndAck", LayerType: LayerTypeDot11CtrlCFEndAck}
+	Dot11TypeMetadata[Dot11TypeData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11Data), Name: "Data", LayerType: LayerTypeDot11Data}
+	Dot11TypeMetadata[Dot11TypeDataCFAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataCFAck), Name: "DataCFAck", LayerType: LayerTypeDot11DataCFAck}
+	Dot11TypeMetadata[Dot11TypeDataCFPoll] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataCFPoll), Name: "DataCFPoll", LayerType: LayerTypeDot11DataCFPoll}
+	Dot11TypeMetadata[Dot11TypeDataCFAckPoll] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataCFAckPoll), Name: "DataCFAckPoll", LayerType: LayerTypeDot11DataCFAckPoll}
+	Dot11TypeMetadata[Dot11TypeDataNull] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataNull), Name: "DataNull", LayerType: LayerTypeDot11DataNull}
+	Dot11TypeMetadata[Dot11TypeDataCFAckNoData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataCFAckNoData), Name: "DataCFAckNoData", LayerType: LayerTypeDot11DataCFAckNoData}
+	Dot11TypeMetadata[Dot11TypeDataCFPollNoData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataCFPollNoData), Name: "DataCFPollNoData", LayerType: LayerTypeDot11DataCFPollNoData}
+	Dot11TypeMetadata[Dot11TypeDataCFAckPollNoData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataCFAckPollNoData), Name: "DataCFAckPollNoData", LayerType: LayerTypeDot11DataCFAckPollNoData}
+	Dot11TypeMetadata[Dot11TypeDataQOSData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataQOSData), Name: "DataQOSData", LayerType: LayerTypeDot11DataQOSData}
+	Dot11TypeMetadata[Dot11TypeDataQOSDataCFAck] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataQOSDataCFAck), Name: "DataQOSDataCFAck", LayerType: LayerTypeDot11DataQOSDataCFAck}
+	Dot11TypeMetadata[Dot11TypeDataQOSDataCFPoll] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataQOSDataCFPoll), Name: "DataQOSDataCFPoll", LayerType: LayerTypeDot11DataQOSDataCFPoll}
+	Dot11TypeMetadata[Dot11TypeDataQOSDataCFAckPoll] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataQOSDataCFAckPoll), Name: "DataQOSDataCFAckPoll", LayerType: LayerTypeDot11DataQOSDataCFAckPoll}
+	Dot11TypeMetadata[Dot11TypeDataQOSNull] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataQOSNull), Name: "DataQOSNull", LayerType: LayerTypeDot11DataQOSNull}
+	Dot11TypeMetadata[Dot11TypeDataQOSCFPollNoData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataQOSCFPollNoData), Name: "DataQOSCFPollNoData", LayerType: LayerTypeDot11DataQOSCFPollNoData}
+	Dot11TypeMetadata[Dot11TypeDataQOSCFAckPollNoData] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeDot11DataQOSCFAckPollNoData), Name: "DataQOSCFAckPollNoData", LayerType: LayerTypeDot11DataQOSCFAckPollNoData}
 
-	USBTransportTypeMetadata[USBTransportTypeInterrupt] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeUSBInterrupt), Name: "Interrupt", LayerType: LayerTypeUSBInterrupt}
-	USBTransportTypeMetadata[USBTransportTypeControl] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeUSBControl), Name: "Control", LayerType: LayerTypeUSBControl}
-	USBTransportTypeMetadata[USBTransportTypeBulk] = EnumMetadata{DecodeWith: gopacket.DecodeFunc(decodeUSBBulk), Name: "Bulk", LayerType: LayerTypeUSBBulk}
+	USBTransportTypeMetadata[USBTransportTypeInterrupt] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeUSBInterrupt), Name: "Interrupt", LayerType: LayerTypeUSBInterrupt}
+	USBTransportTypeMetadata[USBTransportTypeControl] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeUSBControl), Name: "Control", LayerType: LayerTypeUSBControl}
+	USBTransportTypeMetadata[USBTransportTypeBulk] = EnumMetadata{DecodeWith: gopacket131_dpdk.DecodeFunc(decodeUSBBulk), Name: "Bulk", LayerType: LayerTypeUSBBulk}
 }

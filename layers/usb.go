@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/gopacket/gopacket"
+	"github.com/njcx/gopacket131_dpdk"
 )
 
 type USBEventType uint8
@@ -126,9 +126,9 @@ type USB struct {
 	IsoNumDesc             uint32
 }
 
-func (u *USB) LayerType() gopacket.LayerType { return LayerTypeUSB }
+func (u *USB) LayerType() gopacket131_dpdk.LayerType { return LayerTypeUSB }
 
-func (m *USB) NextLayerType() gopacket.LayerType {
+func (m *USB) NextLayerType() gopacket131_dpdk.LayerType {
 	if m.Setup {
 		return LayerTypeUSBRequestBlockSetup
 	} else if m.Data {
@@ -137,13 +137,13 @@ func (m *USB) NextLayerType() gopacket.LayerType {
 	return m.TransferType.LayerType()
 }
 
-func decodeUSB(data []byte, p gopacket.PacketBuilder) error {
+func decodeUSB(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &USB{}
 
 	return decodingLayerDecoder(d, data, p)
 }
 
-func (m *USB) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *USB) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	if len(data) < 40 {
 		df.SetTruncated()
 		return errors.New("USB < 40 bytes")
@@ -210,13 +210,15 @@ type USBRequestBlockSetup struct {
 	Length      uint16
 }
 
-func (u *USBRequestBlockSetup) LayerType() gopacket.LayerType { return LayerTypeUSBRequestBlockSetup }
-
-func (m *USBRequestBlockSetup) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (u *USBRequestBlockSetup) LayerType() gopacket131_dpdk.LayerType {
+	return LayerTypeUSBRequestBlockSetup
 }
 
-func (m *USBRequestBlockSetup) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *USBRequestBlockSetup) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
+}
+
+func (m *USBRequestBlockSetup) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.RequestType = data[0]
 	m.Request = USBRequestBlockSetupRequest(data[1])
 	m.Value = binary.LittleEndian.Uint16(data[2:4])
@@ -227,7 +229,7 @@ func (m *USBRequestBlockSetup) DecodeFromBytes(data []byte, df gopacket.DecodeFe
 	return nil
 }
 
-func decodeUSBRequestBlockSetup(data []byte, p gopacket.PacketBuilder) error {
+func decodeUSBRequestBlockSetup(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &USBRequestBlockSetup{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -236,18 +238,18 @@ type USBControl struct {
 	BaseLayer
 }
 
-func (u *USBControl) LayerType() gopacket.LayerType { return LayerTypeUSBControl }
+func (u *USBControl) LayerType() gopacket131_dpdk.LayerType { return LayerTypeUSBControl }
 
-func (m *USBControl) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (m *USBControl) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
-func (m *USBControl) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *USBControl) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Contents = data
 	return nil
 }
 
-func decodeUSBControl(data []byte, p gopacket.PacketBuilder) error {
+func decodeUSBControl(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &USBControl{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -256,18 +258,18 @@ type USBInterrupt struct {
 	BaseLayer
 }
 
-func (u *USBInterrupt) LayerType() gopacket.LayerType { return LayerTypeUSBInterrupt }
+func (u *USBInterrupt) LayerType() gopacket131_dpdk.LayerType { return LayerTypeUSBInterrupt }
 
-func (m *USBInterrupt) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (m *USBInterrupt) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
-func (m *USBInterrupt) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *USBInterrupt) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Contents = data
 	return nil
 }
 
-func decodeUSBInterrupt(data []byte, p gopacket.PacketBuilder) error {
+func decodeUSBInterrupt(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &USBInterrupt{}
 	return decodingLayerDecoder(d, data, p)
 }
@@ -276,18 +278,18 @@ type USBBulk struct {
 	BaseLayer
 }
 
-func (u *USBBulk) LayerType() gopacket.LayerType { return LayerTypeUSBBulk }
+func (u *USBBulk) LayerType() gopacket131_dpdk.LayerType { return LayerTypeUSBBulk }
 
-func (m *USBBulk) NextLayerType() gopacket.LayerType {
-	return gopacket.LayerTypePayload
+func (m *USBBulk) NextLayerType() gopacket131_dpdk.LayerType {
+	return gopacket131_dpdk.LayerTypePayload
 }
 
-func (m *USBBulk) DecodeFromBytes(data []byte, df gopacket.DecodeFeedback) error {
+func (m *USBBulk) DecodeFromBytes(data []byte, df gopacket131_dpdk.DecodeFeedback) error {
 	m.Contents = data
 	return nil
 }
 
-func decodeUSBBulk(data []byte, p gopacket.PacketBuilder) error {
+func decodeUSBBulk(data []byte, p gopacket131_dpdk.PacketBuilder) error {
 	d := &USBBulk{}
 	return decodingLayerDecoder(d, data, p)
 }

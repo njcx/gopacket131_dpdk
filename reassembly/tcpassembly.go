@@ -8,8 +8,8 @@
 //
 // The reassembly package implements uni-directional TCP reassembly, for use in
 // packet-sniffing applications.  The caller reads packets off the wire, then
-// presents them to an Assembler in the form of gopacket layers.TCP packets
-// (github.com/gopacket/gopacket, github.com/gopacket/gopacket/layers).
+// presents them to an Assembler in the form of gopacket131_dpdk layers.TCP packets
+// (github.com/njcx/gopacket131_dpdk, github.com/njcx/gopacket131_dpdk/layers).
 //
 // The Assembler uses a user-supplied
 // StreamFactory to create a user-defined Stream interface, then passes packet
@@ -28,8 +28,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
+	"github.com/njcx/gopacket131_dpdk"
+	"github.com/njcx/gopacket131_dpdk/layers"
 )
 
 // TODO:
@@ -39,7 +39,7 @@ import (
 
 var defaultDebug = false
 
-var debugLog = flag.Bool("assembly_debug_log", defaultDebug, "If true, the github.com/gopacket/gopacket/reassembly library will log verbose debugging information (at least one line per packet)")
+var debugLog = flag.Bool("assembly_debug_log", defaultDebug, "If true, the github.com/njcx/gopacket131_dpdk/reassembly library will log verbose debugging information (at least one line per packet)")
 
 const invalidSequence = -1
 const uint32Max = 0xFFFFFFFF
@@ -99,7 +99,7 @@ type ScatterGather interface {
 	// Tell to keep from offset
 	KeepFrom(offset int)
 	// Return CaptureInfo of packet corresponding to given offset
-	CaptureInfo(offset int) gopacket.CaptureInfo
+	CaptureInfo(offset int) gopacket131_dpdk.CaptureInfo
 	// Return some info about the reassembled chunks
 	Info() (direction TCPFlowDirection, start bool, end bool, skip int)
 	// Return some stats regarding the state of the stream
@@ -111,7 +111,7 @@ type byteContainer interface {
 	getBytes() []byte
 	length() int
 	convertToPages(*pageCache, int, AssemblerContext) (*page, *page, int)
-	captureInfo() gopacket.CaptureInfo
+	captureInfo() gopacket131_dpdk.CaptureInfo
 	assemblerContext() AssemblerContext
 	release(*pageCache) int
 	isStart() bool
@@ -157,9 +157,9 @@ func (rl *reassemblyObject) KeepFrom(offset int) {
 	rl.toKeep = offset
 }
 
-func (rl *reassemblyObject) CaptureInfo(offset int) gopacket.CaptureInfo {
+func (rl *reassemblyObject) CaptureInfo(offset int) gopacket131_dpdk.CaptureInfo {
 	if offset < 0 {
-		return gopacket.CaptureInfo{}
+		return gopacket131_dpdk.CaptureInfo{}
 	}
 
 	current := 0
@@ -170,7 +170,7 @@ func (rl *reassemblyObject) CaptureInfo(offset int) gopacket.CaptureInfo {
 		current += r.length()
 	}
 	// Invalid offset
-	return gopacket.CaptureInfo{}
+	return gopacket131_dpdk.CaptureInfo{}
 }
 
 func (rl *reassemblyObject) Info() (TCPFlowDirection, bool, bool, int) {
@@ -244,7 +244,7 @@ type page struct {
 func (p *page) getBytes() []byte {
 	return p.bytes
 }
-func (p *page) captureInfo() gopacket.CaptureInfo {
+func (p *page) captureInfo() gopacket131_dpdk.CaptureInfo {
 	return p.ac.GetCaptureInfo()
 }
 func (p *page) assemblerContext() AssemblerContext {
@@ -293,7 +293,7 @@ type livePacket struct {
 func (lp *livePacket) getBytes() []byte {
 	return lp.bytes
 }
-func (lp *livePacket) captureInfo() gopacket.CaptureInfo {
+func (lp *livePacket) captureInfo() gopacket131_dpdk.CaptureInfo {
 	return lp.ac.GetCaptureInfo()
 }
 func (lp *livePacket) assemblerContext() AssemblerContext {
@@ -363,7 +363,7 @@ func (lp *livePacket) release(*pageCache) int {
 //  3. Call ReassemblyComplete one time, after which the stream is dereferenced by assembly.
 type Stream interface {
 	// Tell whether the TCP packet should be accepted, start could be modified to force a start even if no SYN have been seen
-	Accept(tcp *layers.TCP, ci gopacket.CaptureInfo, dir TCPFlowDirection, nextSeq Sequence, start *bool, ac AssemblerContext) bool
+	Accept(tcp *layers.TCP, ci gopacket131_dpdk.CaptureInfo, dir TCPFlowDirection, nextSeq Sequence, start *bool, ac AssemblerContext) bool
 
 	// ReassembledSG is called zero or more times.
 	// ScatterGather is reused after each Reassembled call,
@@ -385,10 +385,10 @@ type Stream interface {
 // new TCP session.
 type StreamFactory interface {
 	// New should return a new stream for the given TCP key.
-	New(netFlow, tcpFlow gopacket.Flow, tcp *layers.TCP, ac AssemblerContext) Stream
+	New(netFlow, tcpFlow gopacket131_dpdk.Flow, tcp *layers.TCP, ac AssemblerContext) Stream
 }
 
-type key [2]gopacket.Flow
+type key [2]gopacket131_dpdk.Flow
 
 func (k *key) String() string {
 	return fmt.Sprintf("%s:%s", k[0], k[1])
@@ -602,20 +602,20 @@ func (a *Assembler) Dump() string {
 
 // AssemblerContext provides method to get metadata
 type AssemblerContext interface {
-	GetCaptureInfo() gopacket.CaptureInfo
+	GetCaptureInfo() gopacket131_dpdk.CaptureInfo
 }
 
 // Implements AssemblerContext for Assemble()
-type assemblerSimpleContext gopacket.CaptureInfo
+type assemblerSimpleContext gopacket131_dpdk.CaptureInfo
 
-func (asc *assemblerSimpleContext) GetCaptureInfo() gopacket.CaptureInfo {
-	return gopacket.CaptureInfo(*asc)
+func (asc *assemblerSimpleContext) GetCaptureInfo() gopacket131_dpdk.CaptureInfo {
+	return gopacket131_dpdk.CaptureInfo(*asc)
 }
 
 // Assemble calls AssembleWithContext with the current timestamp, useful for
 // packets being read directly off the wire.
-func (a *Assembler) Assemble(netFlow gopacket.Flow, t *layers.TCP) {
-	ctx := assemblerSimpleContext(gopacket.CaptureInfo{Timestamp: time.Now()})
+func (a *Assembler) Assemble(netFlow gopacket131_dpdk.Flow, t *layers.TCP) {
+	ctx := assemblerSimpleContext(gopacket131_dpdk.CaptureInfo{Timestamp: time.Now()})
 	a.AssembleWithContext(netFlow, t, &ctx)
 }
 
@@ -637,7 +637,7 @@ type assemblerAction struct {
 //	zero or one call to StreamFactory.New, creating a stream
 //	zero or one call to ReassembledSG on a single stream
 //	zero or one call to ReassemblyComplete on the same stream
-func (a *Assembler) AssembleWithContext(netFlow gopacket.Flow, t *layers.TCP, ac AssemblerContext) {
+func (a *Assembler) AssembleWithContext(netFlow gopacket131_dpdk.Flow, t *layers.TCP, ac AssemblerContext) {
 	var conn *connection
 	var half *halfconnection
 	var rev *halfconnection
