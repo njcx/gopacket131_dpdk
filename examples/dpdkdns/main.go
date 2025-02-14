@@ -10,7 +10,7 @@ import (
 )
 
 func processPacket(data []byte) {
-	packet := gopacket131_dpdk.NewPacket(data, layers.LayerTypeEthernet, gopacket_dpdk.Default)
+	packet := gopacket131_dpdk.NewPacket(data, layers.LayerTypeEthernet, gopacket131_dpdk.Default)
 	ethernetLayer := packet.Layer(layers.LayerTypeEthernet)
 	if ethernetLayer != nil {
 		eth, _ := ethernetLayer.(*layers.Ethernet)
