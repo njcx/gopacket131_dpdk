@@ -18,6 +18,11 @@ const (
 	BURST_SIZE = 32
 )
 
+var (
+	initializedOnce sync.Once
+	dpdkMutex       sync.Mutex
+)
+
 type BandwidthStats struct {
 	RxBytesPerSecond   float64 // Received bandwidth (bytes/s)
 	TxBytesPerSecond   float64 // Transmitted bandwidth (bytes/s)
@@ -53,36 +58,42 @@ type DPDKHandle struct {
 
 func InitDPDK(args []string) error {
 
-	if len(args) == 0 {
-		args = []string{""}
-	}
-	argc := C.int(len(args))
-	cargs := make([]*C.char, len(args))
-	for i, arg := range args {
-		cargs[i] = C.CString(arg)
-		defer C.free(unsafe.Pointer(cargs[i]))
-	}
-	ret := C.init_dpdk(argc, (**C.char)(&cargs[0]))
-	if ret < 0 {
-		return fmt.Errorf("DPDK initialization failed: %d", ret)
-	}
-	return nil
+	var initErr error
+	initializedOnce.Do(func() {
+		dpdkMutex.Lock()
+		defer dpdkMutex.Unlock()
+
+		now := time.Now().UTC().Format("2006-01-02 15:04:05")
+		fmt.Printf("[%s] Initializing DPDK...\n", now)
+
+		if len(args) == 0 {
+			args = []string{"gopacket131_dpdk"}
+		}
+		argc := C.int(len(args))
+		cargs := make([]*C.char, len(args))
+		for i, arg := range args {
+			cargs[i] = C.CString(arg)
+			defer C.free(unsafe.Pointer(cargs[i]))
+		}
+		ret := C.init_dpdk(argc, (**C.char)(&cargs[0]))
+		if ret < 0 {
+			initErr = fmt.Errorf("DPDK initialization failed: %d", ret)
+			return
+		}
+		fmt.Printf("[%s] DPDK initialization successful\n", now)
+	})
+
+	return initErr
 
 }
 
-func NewDPDKHandle(portID uint16, bpfExpression string) (*DPDKHandle, error) {
+func NewDPDKHandle(portID uint16) (*DPDKHandle, error) {
 	handle := &DPDKHandle{
 		portID:    portID,
 		mbufs:     make([]*C.struct_rte_mbuf, BURST_SIZE),
 		bpfFilter: &C.dpdk_bpf_filter{},
 	}
-	if bpfExpression != "" {
-		cExpr := C.CString(bpfExpression)
-		defer C.free(unsafe.Pointer(cExpr))
-		if ret := C.init_bpf_filter(handle.bpfFilter, cExpr, 0xffffff00); ret != 0 {
-			return nil, fmt.Errorf("BPF filter initialization failed: %d", ret)
-		}
-	}
+
 	if ret := C.init_port(C.uint16_t(portID)); ret != 0 {
 		return nil, fmt.Errorf("port initialization failed: %d", ret)
 	}
@@ -93,7 +104,24 @@ func NewDPDKHandle(portID uint16, bpfExpression string) (*DPDKHandle, error) {
 	return handle, nil
 }
 
+func (h *DPDKHandle) SetBPFFilter(bpfExpression string) (err error) {
+
+	if bpfExpression != "" {
+		cExpr := C.CString(bpfExpression)
+		defer C.free(unsafe.Pointer(cExpr))
+		if ret := C.init_bpf_filter(h.bpfFilter, cExpr, 0xffffff00); ret != 0 {
+			return fmt.Errorf("BPF filter initialization failed: %d", ret)
+		}
+	}
+
+	return nil
+
+}
+
 func (h *DPDKHandle) Close() {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+
 	if h.bpfFilter != nil {
 		C.free_bpf_filter(h.bpfFilter)
 	}
@@ -164,6 +192,16 @@ func (h *DPDKHandle) ReadPacketData() ([]byte, gopacket131_dpdk.CaptureInfo, err
 		Timestamp:     time.Now(), // Current timestamp when packet is captured
 		CaptureLength: len(packet),
 		Length:        totalLength,
+	}
+
+	if h.bpfFilter != nil {
+		if C.apply_bpf_filter(h.bpfFilter,
+			(*C.uchar)(unsafe.Pointer(data)),
+			C.uint32_t(length)) == 0 {
+			C.free_mbuf(mbuf)
+			h.currentIdx++
+			return nil, gopacket131_dpdk.CaptureInfo{}, nil
+		}
 	}
 
 	C.free_mbuf(mbuf)
